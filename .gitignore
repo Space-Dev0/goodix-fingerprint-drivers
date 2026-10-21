@@ -1,0 +1,32 @@
+# Large binary images and ISOs
+drivers.iso
+FingerPrint.zip
+FingerPrint/
+goodix-fp-dump/
+goodix-fingerprint-reversing/
+*.pcapng
+*.bin
+*.pgm
+*.gif
+*.png
+
+# Temporary scratch and build folders
+scratch/
+build/
+dist/
+wheels/
+*.egg-info
+.venv/
+__pycache__/
+*.py[oc]
+*.o
+*.a
+*.so
+*.so.*
+
+# Editor and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
