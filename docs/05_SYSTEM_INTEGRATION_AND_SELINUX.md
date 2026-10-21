@@ -81,40 +81,49 @@ Binary analysis using `gdb` and `objdump` revealed:
 4. Even if `TBB_MALLOC_USE_HUGE_PAGES=0` is set in the environment, TBB checks the environment variable **after** opening `/proc/sys/vm/nr_hugepages`.
 5. Under Fedora's default security policy, the `fprintd_t` SELinux domain is strictly prohibited from reading kernel VM tunables (`sysctl_vm_t`). The kernel denies the `openat()` syscall with `-EACCES` and emits an audit event.
 
-### 2.2 Keep the sysctl out of fprintd's service namespace
+### 2.2 Permanent SELinux Policy Module (`fprintd_hugepages`)
 
-The installer sets `TBB_MALLOC_USE_HUGE_PAGES=0` and adds this systemd service
-setting:
+> [!NOTE]
+> Attempting to hide the path with `InaccessiblePaths=-/proc/sys/vm/nr_hugepages` in systemd fails on Fedora/RHEL with `code=exited, status=226/NAMESPACE` because systemd is denied mount permissions over `/proc/sys/vm/*` under the targeted SELinux policy.
 
-```ini
-InaccessiblePaths=-/proc/sys/vm/nr_hugepages
+The robust and clean solution is installing a minimal SELinux policy module that grants `fprintd_t` read access to `sysctl_vm_t:file`:
+
+`selinux/fprintd_hugepages.te`:
+```te
+module fprintd_hugepages 1.0;
+
+require {
+	type sysctl_vm_t;
+	type fprintd_t;
+	class file { getattr open read };
+}
+
+# Allow fprintd to check hugepage settings without AVC denials
+allow fprintd_t sysctl_vm_t:file { getattr open read };
 ```
 
-`InaccessiblePaths=` hides that one path inside the `fprintd` service's mount
-namespace. It does not change the host sysctl or grant `fprintd` access to
-other VM settings. The leading `-` tells systemd to ignore the path if it is
-absent. This avoids generating an SELinux allow rule for a probe the service
-does not need.
+Install the precompiled module included in this repository:
+```bash
+sudo semodule -i selinux/fprintd_hugepages.pp
+```
 
-After installing or changing the drop-in, reload systemd and restart fprintd:
+Or recompile from source:
+```bash
+checkmodule -M -m -o selinux/fprintd_hugepages.mod selinux/fprintd_hugepages.te
+semodule_package -o selinux/fprintd_hugepages.pp -m selinux/fprintd_hugepages.mod
+sudo semodule -i selinux/fprintd_hugepages.pp
+```
 
+After installing the policy module, reload systemd and restart `fprintd`:
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl restart fprintd
-systemctl show fprintd -p InaccessiblePaths
 ```
 
-Then exercise enrollment or verification and inspect recent denials:
-
+Verify that no denials occur:
 ```bash
-fprintd-enroll
 sudo ausearch -m AVC -c fprintd -ts recent -i
 ```
-
-The `InaccessiblePaths` property should include `/proc/sys/vm/nr_hugepages`.
-Do not generate a policy module from all `fprintd` audit events: that can
-silently authorize denials unrelated to this known TBB probe. If the AVC
-continues or names a different path, investigate that denial separately.
 
 ---
 
@@ -143,8 +152,6 @@ Create `/etc/systemd/system/fprintd.service.d/sigfm.conf`:
 ```ini
 [Service]
 Environment="OPENCV_NUM_THREADS=1" "TBB_MALLOC_USE_HUGE_PAGES=0"
-# TBB probes this sysctl even when huge-page allocation is disabled.
-InaccessiblePaths=-/proc/sys/vm/nr_hugepages
 ```
 
 Reload and restart:

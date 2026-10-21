@@ -184,6 +184,13 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
   FpiSsm *ssm = user_data;
   FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
 
+  if (!self->scan_ssm || self->scan_ssm != ssm)
+    {
+      if (error)
+        g_error_free (error);
+      return;
+    }
+
   if (error)
     {
       fp_err ("581a: Failed to capture baseline image: %s", error->message);
@@ -200,6 +207,7 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
       return;
     }
 
+  g_clear_pointer (&self->calibration_img, g_free);
   self->calibration_img = g_malloc0 (GOODIX_581A_FRAME_SIZE * sizeof (GoodixTls5xxPix));
   /* Save the untouched-pad frame as the reference for subsequent Mode 5
    * captures. The image callback subtracts this baseline before filtering.
@@ -215,6 +223,14 @@ on_581a_touch_detected (FpDevice *dev, guint8 *data, guint16 length,
                         gpointer user_data, GError *error)
 {
   FpiSsm *ssm = user_data;
+  FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
+
+  if (!self->scan_ssm || self->scan_ssm != ssm)
+    {
+      if (error)
+        g_error_free (error);
+      return;
+    }
 
   if (error)
     {
@@ -242,6 +258,13 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
 {
   FpiSsm *ssm = user_data;
   FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
+
+  if (!self->scan_ssm || self->scan_ssm != ssm)
+    {
+      if (error)
+        g_error_free (error);
+      return;
+    }
 
   if (error)
     {
@@ -395,6 +418,13 @@ on_581a_touch_up (FpDevice *dev, guint8 *data, guint16 length,
 {
   FpiSsm *ssm = user_data;
   FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
+
+  if (!self->scan_ssm || self->scan_ssm != ssm)
+    {
+      if (error)
+        g_error_free (error);
+      return;
+    }
 
   if (error)
     {

@@ -1,0 +1,10 @@
+module fprintd_hugepages 1.0;
+
+require {
+	type sysctl_vm_t;
+	type fprintd_t;
+	class file { getattr open read };
+}
+
+#============= fprintd_t ==============
+allow fprintd_t sysctl_vm_t:file { getattr open read };
