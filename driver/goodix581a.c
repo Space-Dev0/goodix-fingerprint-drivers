@@ -1,5 +1,4 @@
 // Goodix 27c6:581a (Xiaomi GM168) driver for libfprint
-// Reverse-engineered by Antigravity pair programming session
 
 #include "drivers/goodixtls/goodix5xx.h"
 #include "fp-device.h"
@@ -62,6 +61,10 @@ enum scan_581a_states {
   SCAN_581A_NUM_STATES,
 };
 
+/* One scan action captures a Mode 1 ambient reference, waits for FDT touch,
+ * captures Mode 5, then waits for finger-up. Keep the baseline across touches
+ * in an enrollment action so samples share the same reference.
+ */
 static void
 on_tls_init_ready (FpDevice *dev, gpointer user_data, GError *error)
 {
@@ -86,6 +89,9 @@ activate_run_state (FpiSsm *ssm, FpDevice *dev)
   static const guint8 c4_payload[] = {0x01, 0x00};
   static const guint8 d2_payload[] = {0x00, 0x00};
 
+  /* Firmware requires this command order; TLS must be established before
+   * uploading the sensor-specific MCU configuration.
+   */
   switch (fpi_ssm_get_cur_state (ssm))
     {
     case ACTIVATE_READ_AND_NOP:
@@ -195,6 +201,9 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
     }
 
   self->calibration_img = g_malloc0 (GOODIX_581A_FRAME_SIZE * sizeof (GoodixTls5xxPix));
+  /* Save the untouched-pad frame as the reference for subsequent Mode 5
+   * captures. The image callback subtracts this baseline before filtering.
+   */
   goodixtls5xx_decode_frame (self->calibration_img, length, data, 0, 4);
 
   fp_dbg ("581a: Ambient baseline acquired successfully!");
@@ -255,13 +264,13 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
 
   gint32 raw[GOODIX_581A_FRAME_SIZE];
   for (int i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
-    raw[i] = self->calibration_img[i] > raw_frame[i]
+    raw[i] = (self->calibration_img && self->calibration_img[i] > raw_frame[i])
                ? (gint32) (self->calibration_img[i] - raw_frame[i])
                : 0;
 
-  /* 7-tap separable Gaussian/lowpass filter [1, 6, 15, 20, 15, 6, 1] / 64
-   * on the baseline-corrected frame. Reduces slow capacitive pad curvature;
-   * it also attenuates some ridge frequencies.
+  /* Estimate the slowly varying pad background with a separable 7-tap
+   * binomial low-pass filter. Subtraction emphasizes local ridge contrast,
+   * though it also attenuates some ridge frequencies.
    */
   gint32 tmp[GOODIX_581A_FRAME_SIZE];
   for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
@@ -328,6 +337,10 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
         }
     }
 
+  /* Ignore the outer two-pixel border when measuring contrast because the
+   * convolution uses edge replication there. A narrow percentile span means
+   * this frame has no trustworthy ridge signal and must not be stretched.
+   */
   gint32 p5 = 0, p95 = 0;
   gboolean has_usable_contrast = FALSE;
   if (n_active > 50)
@@ -403,6 +416,9 @@ scan_581a_run_state (FpiSsm *ssm, FpDevice *dev)
 {
   FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
 
+  /* Each captured image is followed by a physical lift before another scan,
+   * allowing libfprint to advance one enrollment stage per touch.
+   */
   switch (fpi_ssm_get_cur_state (ssm))
     {
     case SCAN_581A_CALIBRATE:
@@ -480,6 +496,9 @@ dev_581a_deactivate (FpImageDevice *img_dev)
   FpDevice *dev = FP_DEVICE (img_dev);
   GError *error = NULL;
 
+  /* Cancel active async work before releasing the baseline or shutting down
+   * TLS because callbacks may still refer to the device state.
+   */
   if (self->scan_ssm)
     {
       FpiSsm *ssm = self->scan_ssm;

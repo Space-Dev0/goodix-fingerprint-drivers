@@ -1,5 +1,4 @@
 // Goodix 27c6:581a (Xiaomi GM168) driver for libfprint
-// Reverse-engineered by Antigravity pair programming session
 
 #pragma once
 
@@ -16,6 +15,7 @@
 #define GOODIX_581A_SCAN_WIDTH 64
 #define GOODIX_581A_SCAN_HEIGHT 80
 #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
+/* 64x80 packed sensor samples plus the four-byte footer used by this device. */
 #define GOODIX_581A_RAW_FRAME_SIZE 7684
 
 // Xiaomi GM168 256-byte authentic hardware configuration table
@@ -64,6 +64,7 @@ static const guint8 goodix_581a_get_image_mode5[] = {
   0x05, 0x00, 0x87, 0x00, 0x80, 0x00, 0x88, 0x00, 0x85, 0x00
 };
 
+/* Payload used to enter FDT mode during device activation. */
 static const guint8 goodix_581a_payload_36[] = {
   0x0d, 0x01, 0x87, 0x00, 0x80, 0x00, 0x88, 0x00, 0x85, 0x00,
   0x80, 0xba, 0x80, 0xa7, 0x80, 0xb9, 0x80, 0xa9, 0x80, 0xad,

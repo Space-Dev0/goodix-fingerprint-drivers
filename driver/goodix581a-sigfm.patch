@@ -1,7 +1,7 @@
 From a536363ea768269293bdb8b34fe56d2120db6178 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 1/2] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168) driver
+Subject: [PATCH 1/3] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168) driver
  with SIGFM matching
 
 ---
@@ -2382,7 +2382,7 @@ index fa27507..8e5de6b 100644
 From 1a31563394df3cf010fd55dd13f9e137bf145654 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 2/2] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 2/3] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2657,6 +2657,210 @@ index f19b377..6e5b5df 100644
                      count += 1;
                  }
              }
+-- 
+2.56.0
+
+
+From 04912498fa08c200e05b4f83a4d2598286af7c89 Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Thu, 22 Oct 2026 00:26:36 +0530
+Subject: [PATCH 3/3] docs & safety: add driver comments, null safety, and
+ clean docstrings
+
+---
+ libfprint/drivers/goodixtls/goodix581a.c | 29 ++++++++++++++++++++----
+ libfprint/drivers/goodixtls/goodix581a.h |  3 ++-
+ libfprint/sigfm/img-info.hpp             |  3 ++-
+ libfprint/sigfm/sigfm.cpp                |  9 ++++++++
+ libfprint/sigfm/sigfm.hpp                |  4 ++--
+ 5 files changed, 39 insertions(+), 9 deletions(-)
+
+diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
+index a2c5063..9b5c3d9 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.c
++++ b/libfprint/drivers/goodixtls/goodix581a.c
+@@ -1,5 +1,4 @@
+ // Goodix 27c6:581a (Xiaomi GM168) driver for libfprint
+-// Reverse-engineered by Antigravity pair programming session
+ 
+ #include "drivers/goodixtls/goodix5xx.h"
+ #include "fp-device.h"
+@@ -62,6 +61,10 @@ enum scan_581a_states {
+   SCAN_581A_NUM_STATES,
+ };
+ 
++/* One scan action captures a Mode 1 ambient reference, waits for FDT touch,
++ * captures Mode 5, then waits for finger-up. Keep the baseline across touches
++ * in an enrollment action so samples share the same reference.
++ */
+ static void
+ on_tls_init_ready (FpDevice *dev, gpointer user_data, GError *error)
+ {
+@@ -86,6 +89,9 @@ activate_run_state (FpiSsm *ssm, FpDevice *dev)
+   static const guint8 c4_payload[] = {0x01, 0x00};
+   static const guint8 d2_payload[] = {0x00, 0x00};
+ 
++  /* Firmware requires this command order; TLS must be established before
++   * uploading the sensor-specific MCU configuration.
++   */
+   switch (fpi_ssm_get_cur_state (ssm))
+     {
+     case ACTIVATE_READ_AND_NOP:
+@@ -195,6 +201,9 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
+     }
+ 
+   self->calibration_img = g_malloc0 (GOODIX_581A_FRAME_SIZE * sizeof (GoodixTls5xxPix));
++  /* Save the untouched-pad frame as the reference for subsequent Mode 5
++   * captures. The image callback subtracts this baseline before filtering.
++   */
+   goodixtls5xx_decode_frame (self->calibration_img, length, data, 0, 4);
+ 
+   fp_dbg ("581a: Ambient baseline acquired successfully!");
+@@ -255,13 +264,13 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+ 
+   gint32 raw[GOODIX_581A_FRAME_SIZE];
+   for (int i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
+-    raw[i] = self->calibration_img[i] > raw_frame[i]
++    raw[i] = (self->calibration_img && self->calibration_img[i] > raw_frame[i])
+                ? (gint32) (self->calibration_img[i] - raw_frame[i])
+                : 0;
+ 
+-  /* 7-tap separable Gaussian/lowpass filter [1, 6, 15, 20, 15, 6, 1] / 64
+-   * on the baseline-corrected frame. Reduces slow capacitive pad curvature;
+-   * it also attenuates some ridge frequencies.
++  /* Estimate the slowly varying pad background with a separable 7-tap
++   * binomial low-pass filter. Subtraction emphasizes local ridge contrast,
++   * though it also attenuates some ridge frequencies.
+    */
+   gint32 tmp[GOODIX_581A_FRAME_SIZE];
+   for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
+@@ -328,6 +337,10 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+         }
+     }
+ 
++  /* Ignore the outer two-pixel border when measuring contrast because the
++   * convolution uses edge replication there. A narrow percentile span means
++   * this frame has no trustworthy ridge signal and must not be stretched.
++   */
+   gint32 p5 = 0, p95 = 0;
+   gboolean has_usable_contrast = FALSE;
+   if (n_active > 50)
+@@ -403,6 +416,9 @@ scan_581a_run_state (FpiSsm *ssm, FpDevice *dev)
+ {
+   FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
+ 
++  /* Each captured image is followed by a physical lift before another scan,
++   * allowing libfprint to advance one enrollment stage per touch.
++   */
+   switch (fpi_ssm_get_cur_state (ssm))
+     {
+     case SCAN_581A_CALIBRATE:
+@@ -480,6 +496,9 @@ dev_581a_deactivate (FpImageDevice *img_dev)
+   FpDevice *dev = FP_DEVICE (img_dev);
+   GError *error = NULL;
+ 
++  /* Cancel active async work before releasing the baseline or shutting down
++   * TLS because callbacks may still refer to the device state.
++   */
+   if (self->scan_ssm)
+     {
+       FpiSsm *ssm = self->scan_ssm;
+diff --git a/libfprint/drivers/goodixtls/goodix581a.h b/libfprint/drivers/goodixtls/goodix581a.h
+index ce44de9..dd6956a 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.h
++++ b/libfprint/drivers/goodixtls/goodix581a.h
+@@ -1,5 +1,4 @@
+ // Goodix 27c6:581a (Xiaomi GM168) driver for libfprint
+-// Reverse-engineered by Antigravity pair programming session
+ 
+ #pragma once
+ 
+@@ -16,6 +15,7 @@
+ #define GOODIX_581A_SCAN_WIDTH 64
+ #define GOODIX_581A_SCAN_HEIGHT 80
+ #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
++/* 64x80 packed sensor samples plus the four-byte footer used by this device. */
+ #define GOODIX_581A_RAW_FRAME_SIZE 7684
+ 
+ // Xiaomi GM168 256-byte authentic hardware configuration table
+@@ -64,6 +64,7 @@ static const guint8 goodix_581a_get_image_mode5[] = {
+   0x05, 0x00, 0x87, 0x00, 0x80, 0x00, 0x88, 0x00, 0x85, 0x00
+ };
+ 
++/* Payload used to enter FDT mode during device activation. */
+ static const guint8 goodix_581a_payload_36[] = {
+   0x0d, 0x01, 0x87, 0x00, 0x80, 0x00, 0x88, 0x00, 0x85, 0x00,
+   0x80, 0xba, 0x80, 0xa7, 0x80, 0xb9, 0x80, 0xa9, 0x80, 0xad,
+diff --git a/libfprint/sigfm/img-info.hpp b/libfprint/sigfm/img-info.hpp
+index bf270ec..e7188e1 100644
+--- a/libfprint/sigfm/img-info.hpp
++++ b/libfprint/sigfm/img-info.hpp
+@@ -5,6 +5,7 @@
+ #include <vector>
+ 
+ struct SigfmImgInfo {
++    // SIFT keypoints are kept in row order with their corresponding descriptor rows.
+     std::vector<cv::KeyPoint> keypoints;
+     cv::Mat descriptors;
+-};
+\ No newline at end of file
++};
+diff --git a/libfprint/sigfm/sigfm.cpp b/libfprint/sigfm/sigfm.cpp
+index 6e5b5df..d22f003 100644
+--- a/libfprint/sigfm/sigfm.cpp
++++ b/libfprint/sigfm/sigfm.cpp
+@@ -51,6 +51,9 @@ static void sigfm_init_env()
+ 
+ namespace {
+ static std::once_flag sigfm_thread_flag;
++/* Templates use a fixed-size OpenCV keypoint record followed by 128-float
++ * SIFT descriptors. Bound the keypoint count before reserving persisted data.
++ */
+ constexpr std::size_t serialized_keypoint_size = sizeof(int) * 2 + sizeof(float) * 5;
+ constexpr std::size_t max_serialized_keypoints = 2048;
+ constexpr int sift_descriptor_cols = 128;
+@@ -265,6 +268,9 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
+     }
+ 
+     try {
++        /* Lowe's ratio rejects ambiguous descriptors. The reverse one-nearest
++         * pass below keeps only reciprocal pairs before geometric scoring.
++         */
+         std::vector<std::vector<cv::DMatch>> points;
+         auto bfm = cv::BFMatcher::create();
+         bfm->knnMatch(frame->descriptors, enrolled->descriptors, points, 2);
+@@ -318,6 +324,9 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
+         std::vector<match> matches{matches_unique.begin(),
+                                    matches_unique.end()};
+ 
++        /* Compare pairwise displacement vectors instead of absolute points,
++         * so translation is ignored while scale and rotation remain bounded.
++         */
+         std::vector<angle> angles;
+         for (std::size_t j = 0; j < matches.size(); j++) {
+             match match_1 = matches[j];
+diff --git a/libfprint/sigfm/sigfm.hpp b/libfprint/sigfm/sigfm.hpp
+index 671a2b6..7443baa 100644
+--- a/libfprint/sigfm/sigfm.hpp
++++ b/libfprint/sigfm/sigfm.hpp
+@@ -54,7 +54,7 @@ void sigfm_free_info(SigfmImgInfo* info);
+  *
+  * @param frame Print to be checked
+  * @param enrolled Canonical print to verify against
+- * @return int Score of how closely they match, values <0 indicate error, 0 means always reject
++ * @return int Non-negative match score; zero means reject or matching failed.
+  */
+ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled);
+ 
+@@ -63,7 +63,7 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled);
+  *
+  * @param info SigfmImgInfo to store
+  * @param outlen output: Length of the returned byte array
+- * @return unsigned* char byte array for storage, should be free'd by the callee
++ * @return unsigned char* Newly allocated byte array; release it with free().
+  */
+ unsigned char* sigfm_serialize_binary(SigfmImgInfo* info, int* outlen);
+ /**
 -- 
 2.56.0
 

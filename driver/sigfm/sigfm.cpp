@@ -51,6 +51,9 @@ static void sigfm_init_env()
 
 namespace {
 static std::once_flag sigfm_thread_flag;
+/* Templates use a fixed-size OpenCV keypoint record followed by 128-float
+ * SIFT descriptors. Bound the keypoint count before reserving persisted data.
+ */
 constexpr std::size_t serialized_keypoint_size = sizeof(int) * 2 + sizeof(float) * 5;
 constexpr std::size_t max_serialized_keypoints = 2048;
 constexpr int sift_descriptor_cols = 128;
@@ -265,6 +268,9 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
     }
 
     try {
+        /* Lowe's ratio rejects ambiguous descriptors. The reverse one-nearest
+         * pass below keeps only reciprocal pairs before geometric scoring.
+         */
         std::vector<std::vector<cv::DMatch>> points;
         auto bfm = cv::BFMatcher::create();
         bfm->knnMatch(frame->descriptors, enrolled->descriptors, points, 2);
@@ -318,6 +324,9 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
         std::vector<match> matches{matches_unique.begin(),
                                    matches_unique.end()};
 
+        /* Compare pairwise displacement vectors instead of absolute points,
+         * so translation is ignored while scale and rotation remain bounded.
+         */
         std::vector<angle> angles;
         for (std::size_t j = 0; j < matches.size(); j++) {
             match match_1 = matches[j];

@@ -62,7 +62,6 @@ meson setup build \
     --prefix=/usr \
     --sysconfdir=/etc \
     -Ddrivers=goodixtls581a \
-    -Dinstalled-tests=false \
     -Dgtk-examples=false \
     -Ddoc=false
 

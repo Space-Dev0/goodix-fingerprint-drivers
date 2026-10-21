@@ -54,7 +54,7 @@ void sigfm_free_info(SigfmImgInfo* info);
  *
  * @param frame Print to be checked
  * @param enrolled Canonical print to verify against
- * @return int Score of how closely they match, values <0 indicate error, 0 means always reject
+ * @return int Non-negative match score; zero means reject or matching failed.
  */
 int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled);
 
@@ -63,7 +63,7 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled);
  *
  * @param info SigfmImgInfo to store
  * @param outlen output: Length of the returned byte array
- * @return unsigned* char byte array for storage, should be free'd by the callee
+ * @return unsigned char* Newly allocated byte array; release it with free().
  */
 unsigned char* sigfm_serialize_binary(SigfmImgInfo* info, int* outlen);
 /**
