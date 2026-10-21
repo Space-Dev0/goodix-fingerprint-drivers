@@ -5,7 +5,7 @@
 [![Hardware: 27c6:581a](https://img.shields.io/badge/Hardware-27c6%3A581a-orange.svg)](https://linux-hardware.org/?id=usb:27c6-581a)
 [![Matching: SIGFM SIFT](https://img.shields.io/badge/Matching-SIGFM_SIFT-purple.svg)](#biometric-matching-engine)
 
-A fully reverse-engineered, high-accuracy Linux driver for the **Goodix 27c6:581a (Xiaomi GM168)** fingerprint sensor found in modern Xiaomi laptops (e.g. Xiaomi Book Pro 14/16, RedmiBook Pro).
+A reverse-engineered Linux driver for the **Goodix 27c6:581a (Xiaomi GM168)** fingerprint sensor found in some Xiaomi laptops (e.g. Xiaomi Book Pro 14/16, RedmiBook Pro).
 
 This project integrates directly with `libfprint` and `fprintd` to deliver seamless biometric login, lockscreen unlocking, and `sudo` authentication on Linux (GDM, SDDM, GNOME, KDE, PAM).
 
@@ -15,25 +15,13 @@ This project integrates directly with `libfprint` and `fprintd` to deliver seaml
 
 - **Proprietary TLS 1.2 Over USB Bulk**: Implements the proprietary Goodix TLS protocol negotiation over bulk endpoints, enabling encrypted command and biometric frame transmission with stock OEM firmware.
 - **Native 64×80 12-bit ADC Decoding**: Decodes packed 6-byte chunks (7,684-byte encrypted transfer) directly into native 12-bit resolution sensor frames.
-- **7-tap Gaussian High-Pass Filter**: Employs a separable binomial kernel ($[1, 6, 15, 20, 15, 6, 1] / 64$) to eliminate DC drift and finger curvature dome artifacts without distorting the 500 DPI ridge frequencies.
+- **7-tap high-pass filter**: Subtracts a separable binomial low-pass estimate to reduce slowly varying background structure; it can also attenuate ridge detail.
 - **SIGFM (SIFT-based Geometric Matcher)**: Replaces traditional minutiae (NBIS / Bozorth3) with a continuous gradient orientation matcher tailored for compact ($3.25\text{ mm} \times 4.06\text{ mm}$) sensors.
-- **Tuned Preprocessing & Keypoint Selection**: Configured with CLAHE ($2.0$, $8\times 8$ grid), SIFT Gaussian initial blur ($\sigma = 1.2$), and Lowe's ratio test ($0.75$) to completely eliminate false acceptances while tolerating skin elasticity.
-- **Two-Tier Match Criteria & 12-Stage Enrollment**: High-confidence single-frame matching ($\text{score} \ge 70$) and multi-stage agreement ($\text{score} \ge 45$ across $\ge 2$ stages) ensure instantaneous unlock with 0% false acceptance.
+- **Feature matching**: Uses CLAHE, SIFT descriptors, reciprocal ratio-filtered matches, and pairwise geometry. These settings are heuristics; the repository does not include a representative genuine/impostor dataset to validate error rates.
+- **Multi-touch enrollment**: Stores up to 12 enrollment samples and uses configured score thresholds. Those thresholds have not been statistically calibrated for this sensor and user population.
 - **SELinux Hardening**: Fully documented analysis and remediation for Intel TBB sysctl AVC alerts under Fedora / RHEL.
 
 ---
-
-## 📊 Empirical Verification Benchmarks
-
-| Test Scenario | Measured Score | Decision | Result |
-| :--- | :--- | :--- | :--- |
-| **Registered Finger (Center Firm)** | **$14,763$** | Score $\ge 70$ | **MATCH** ✅ |
-| **Registered Finger (2px Shift)** | **$7,974$** | Score $\ge 70$ | **MATCH** ✅ |
-| **Registered Finger (4px Shift)** | **$6,197$** | Score $\ge 70$ | **MATCH** ✅ |
-| **Registered Finger (10° Tilt)** | **$325$** | Score $\ge 70$ | **MATCH** ✅ |
-| **Wrong Finger A (Thumb vs Index)** | **$0$** | Score $\le 15$ | **REJECTED** ❌ |
-| **Wrong Finger B (Middle vs Index)** | **$0$** | Score $\le 15$ | **REJECTED** ❌ |
-| **Random Thermal Sensor Noise** | **$0$** | Score $\le 15$ | **REJECTED** ❌ |
 
 ---
 

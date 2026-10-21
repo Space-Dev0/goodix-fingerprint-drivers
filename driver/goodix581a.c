@@ -185,6 +185,15 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
       return;
     }
 
+  if (!data || length != GOODIX_581A_RAW_FRAME_SIZE)
+    {
+      fpi_ssm_mark_failed (ssm,
+                           g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
+                                        "581a baseline frame has invalid length %u (expected %u)",
+                                        length, GOODIX_581A_RAW_FRAME_SIZE));
+      return;
+    }
+
   self->calibration_img = g_malloc0 (GOODIX_581A_FRAME_SIZE * sizeof (GoodixTls5xxPix));
   goodixtls5xx_decode_frame (self->calibration_img, length, data, 0, 4);
 
@@ -232,16 +241,27 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
       return;
     }
 
+  if (!data || length != GOODIX_581A_RAW_FRAME_SIZE)
+    {
+      fpi_ssm_mark_failed (ssm,
+                           g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
+                                        "581a scan frame has invalid length %u (expected %u)",
+                                        length, GOODIX_581A_RAW_FRAME_SIZE));
+      return;
+    }
+
   GoodixTls5xxPix raw_frame[GOODIX_581A_FRAME_SIZE];
   goodixtls5xx_decode_frame (raw_frame, length, data, 0, 4);
 
   gint32 raw[GOODIX_581A_FRAME_SIZE];
   for (int i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
-    raw[i] = (gint32) raw_frame[i];
+    raw[i] = self->calibration_img[i] > raw_frame[i]
+               ? (gint32) (self->calibration_img[i] - raw_frame[i])
+               : 0;
 
   /* 7-tap separable Gaussian/lowpass filter [1, 6, 15, 20, 15, 6, 1] / 64
-   * directly on raw frame. Removes the slow capacitive pad curvature
-   * while preserving 100% of the true ridge/valley sinusoidal frequency.
+   * on the baseline-corrected frame. Reduces slow capacitive pad curvature;
+   * it also attenuates some ridge frequencies.
    */
   gint32 tmp[GOODIX_581A_FRAME_SIZE];
   for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
@@ -308,20 +328,18 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
         }
     }
 
-  gint32 p5 = -20, p95 = 20;
+  gint32 p5 = 0, p95 = 0;
+  gboolean has_usable_contrast = FALSE;
   if (n_active > 50)
     {
       qsort (active_vals, n_active, sizeof (gint32), compare_ints);
       p5 = active_vals[n_active * 5 / 100];
       p95 = active_vals[n_active * 95 / 100];
-      if (p95 - p5 < 40)
-        {
-          p5 = -20;
-          p95 = 20;
-        }
+      has_usable_contrast = p95 - p5 >= 40;
     }
 
-  fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels", p5, p95, n_active);
+  fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels, usable=%d",
+          p5, p95, n_active, has_usable_contrast);
 
   FpImage *img = fp_image_new (GOODIX_581A_WIDTH, GOODIX_581A_HEIGHT);
   img->flags |= FPI_IMAGE_PARTIAL;
@@ -332,7 +350,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
       for (int x = 0; x < GOODIX_581A_WIDTH; x++)
         {
           int idx = y * GOODIX_581A_WIDTH + x;
-          if (x < 2 || x >= GOODIX_581A_WIDTH - 2 ||
+          if (!has_usable_contrast || x < 2 || x >= GOODIX_581A_WIDTH - 2 ||
               y < 2 || y >= GOODIX_581A_HEIGHT - 2)
             {
               img->data[idx] = 255;
@@ -471,6 +489,7 @@ dev_581a_deactivate (FpImageDevice *img_dev)
 
   goodix_reset_state (dev);
   goodix_shutdown_tls (dev, &error);
+  g_clear_pointer (&self->calibration_img, g_free);
 
   fpi_image_device_deactivate_complete (img_dev, error);
 }

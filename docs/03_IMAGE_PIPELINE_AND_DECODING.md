@@ -56,13 +56,15 @@ The GM168 sensor supports two operational scan modes:
 
 1. **Mode 1 (`goodix_581a_get_image_mode1`)**:
    - **Purpose**: Ambient air baseline calibration.
-   - **Acquisition**: Captured once during device activation when no finger is present.
+   - **Acquisition**: Captured before scanning when no finger is present; refreshed after device deactivation.
    - **Properties**: Captures static fixed-pattern noise (FPN), analog drift, and temperature-dependent capacitive offsets across individual capacitive cells.
 
 2. **Mode 5 (`goodix_581a_get_image_mode5`)**:
    - **Purpose**: Live touch fingerprint scan.
    - **Acquisition**: Executed immediately after hardware FDT touch interrupt triggers.
    - **Properties**: Captures high-contrast ridge/valley patterns modulated onto the baseline capacitive dome.
+
+The driver computes a clipped per-pixel difference (`max(baseline - scan, 0)`) before spatial filtering. This follows the shared Goodix 5xx calibration path; the polarity and usefulness of the baseline subtraction should still be checked against real captures from each sensor revision.
 
 ---
 
@@ -82,7 +84,7 @@ Capacitive Signal Profile across Sensor:
       +------------------------------------------------------------> Pixel Position (X)
 ```
 
-To eliminate the dome while preserving 100% of the fingerprint ridge frequency, we apply a **7-tap separable binomial Gaussian low-pass filter**:
+To reduce slowly varying background structure, the driver subtracts a **7-tap separable binomial low-pass filter** from each captured frame:
 
 $$\text{Kernel: } K = \frac{1}{64} \begin{bmatrix} 1 & 6 & 15 & 20 & 15 & 6 & 1 \end{bmatrix}$$
 
@@ -97,7 +99,7 @@ $$\text{Kernel: } K = \frac{1}{64} \begin{bmatrix} 1 & 6 & 15 & 20 & 15 & 6 & 1 
 3. **High-Pass Residual**:
    $$\text{HP}(x, y) = \text{Raw}(x, y) - \text{BG}(x, y)$$
 
-Because the kernel width ($\pm 3$ pixels) matches the spatial wavelength of fingerprint ridges at 500 DPI (ridges are $2 \text{ to } 3$ pixels wide), the filter completely strips the finger dome and slow spatial gradients, leaving an isolated, zero-centered sinusoidal ridge profile.
+This is not a lossless separation: the filter also attenuates some ridge frequencies. The output depends on sensor placement, pressure, and image contrast, so the kernel should be evaluated against captured frames rather than treated as a sensor-independent optimum.
 
 ---
 

@@ -9,31 +9,63 @@ Subject: [PATCH] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168) driver
  libfprint/drivers/goodixtls/goodix.c       |  98 ++--
  libfprint/drivers/goodixtls/goodix.h       |   4 +
  libfprint/drivers/goodixtls/goodix511.c    |   3 +
- libfprint/drivers/goodixtls/goodix581a.c   | 565 +++++++++++++++++++++
+ libfprint/drivers/goodixtls/goodix581a.c   | 584 ++++++++++++++++++++++++++++
  libfprint/drivers/goodixtls/goodix581a.h   |  77 +++
  libfprint/drivers/goodixtls/goodix5xx.c    |  18 +-
  libfprint/drivers/goodixtls/goodix5xx.h    |  10 +-
  libfprint/drivers/goodixtls/goodix_proto.h |   1 +
  libfprint/fp-image-device-private.h        |   1 +
  libfprint/fp-image-device.c                |  18 +-
- libfprint/fpi-image-device.c               | 247 ++++++++-
+ libfprint/fpi-image-device.c               | 249 ++++++++++++
  libfprint/fpi-image-device.h               |   1 +
  libfprint/fpi-print.c                      |  41 +-
  libfprint/fpi-print.h                      |   3 +
  libfprint/fprint-list-supported-devices.c  |   2 +-
+ data/autosuspend.hwdb                      |   5 +
  libfprint/meson.build                      |  42 +-
  libfprint/sigfm/binary.hpp                 | 257 ++++++++++
  libfprint/sigfm/img-info.hpp               |  10 +
- libfprint/sigfm/sigfm.cpp                  | 349 +++++++++++++
+ libfprint/sigfm/sigfm.cpp                  | 372 ++++++++++++++++++
  libfprint/sigfm/sigfm.hpp                  |  98 ++++
  meson.build                                |   4 +-
- 22 files changed, 1788 insertions(+), 62 deletions(-)
+ 23 files changed, 1832 insertions(+), 63 deletions(-)
  create mode 100644 libfprint/drivers/goodixtls/goodix581a.c
  create mode 100644 libfprint/drivers/goodixtls/goodix581a.h
  create mode 100644 libfprint/sigfm/binary.hpp
  create mode 100644 libfprint/sigfm/img-info.hpp
- create mode 100644 libfprint/sigfm/sigfm.cpp
- create mode 100644 libfprint/sigfm/sigfm.hpp
+diff --git a/libfprint/fprint-list-udev-hwdb.c b/libfprint/fprint-list-udev-hwdb.c
+index 2c9d4e1..2c9d4e2 100644
+--- a/libfprint/fprint-list-udev-hwdb.c
++++ b/libfprint/fprint-list-udev-hwdb.c
+@@ -118,7 +118,6 @@ static const FpIdEntry whitelist_id_table[] = {
+   { .vid = 0x27c6, .pid = 0x55b4 },
+   { .vid = 0x27c6, .pid = 0x5740 },
+   { .vid = 0x27c6, .pid = 0x5e0a },
+-  { .vid = 0x27c6, .pid = 0x581a },
+   { .vid = 0x2808, .pid = 0x9338 },
+   { .vid = 0x2808, .pid = 0x93a9 },
+   { .vid = 0x298d, .pid = 0x2020 },
+diff --git a/data/autosuspend.hwdb b/data/autosuspend.hwdb
+index ec52192..0000000 100644
+--- a/data/autosuspend.hwdb
++++ b/data/autosuspend.hwdb
+@@ -286,5 +286,10 @@
+  ID_AUTOSUSPEND=1
+  ID_PERSIST=0
+
++# Supported by libfprint driver goodixtls581a
++usb:v27C6p581A*
++ ID_AUTOSUSPEND=1
++ ID_PERSIST=0
++
+ # Known unsupported devices
+ usb:v04E8p730B*
+@@ -371,5 +376,4 @@
+ usb:v27C6p55B4*
+ usb:v27C6p5740*
+ usb:v27C6p5E0A*
+-usb:v27C6p581A*
+ usb:v2808p9338*
 
 diff --git a/examples/img-capture.c b/examples/img-capture.c
 index f032d8e..b6b8ccf 100644
@@ -303,11 +335,11 @@ new file mode 100644
 index 0000000..6597a87
 --- /dev/null
 +++ b/libfprint/drivers/goodixtls/goodix581a.c
-@@ -0,0 +1,565 @@
+@@ -0,0 +1,584 @@
 +// Goodix 27c6:581a (Xiaomi GM168) driver for libfprint
 +// Reverse-engineered by Antigravity pair programming session
 +
-+#include "drivers/goodixtls/goodix5xx.h"
++#include "goodix5xx.h"
 +#include "fp-device.h"
 +#include "fp-image-device.h"
 +#include "fp-image.h"
@@ -491,6 +523,15 @@ index 0000000..6597a87
 +      return;
 +    }
 +
++  if (!data || length != GOODIX_581A_RAW_FRAME_SIZE)
++    {
++      fpi_ssm_mark_failed (ssm,
++                           g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
++                                        "581a baseline frame has invalid length %u (expected %u)",
++                                        length, GOODIX_581A_RAW_FRAME_SIZE));
++      return;
++    }
++
 +  self->calibration_img = g_malloc0 (GOODIX_581A_FRAME_SIZE * sizeof (GoodixTls5xxPix));
 +  goodixtls5xx_decode_frame (self->calibration_img, length, data, 0, 4);
 +
@@ -538,16 +579,27 @@ index 0000000..6597a87
 +      return;
 +    }
 +
++  if (!data || length != GOODIX_581A_RAW_FRAME_SIZE)
++    {
++      fpi_ssm_mark_failed (ssm,
++                           g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
++                                        "581a scan frame has invalid length %u (expected %u)",
++                                        length, GOODIX_581A_RAW_FRAME_SIZE));
++      return;
++    }
++
 +  GoodixTls5xxPix raw_frame[GOODIX_581A_FRAME_SIZE];
 +  goodixtls5xx_decode_frame (raw_frame, length, data, 0, 4);
 +
 +  gint32 raw[GOODIX_581A_FRAME_SIZE];
 +  for (int i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
-+    raw[i] = (gint32) raw_frame[i];
++    raw[i] = self->calibration_img[i] > raw_frame[i]
++               ? (gint32) (self->calibration_img[i] - raw_frame[i])
++               : 0;
 +
 +  /* 7-tap separable Gaussian/lowpass filter [1, 6, 15, 20, 15, 6, 1] / 64
-+   * directly on raw frame. Removes the slow capacitive pad curvature
-+   * while preserving 100% of the true ridge/valley sinusoidal frequency.
++   * on the baseline-corrected frame. Reduces slow capacitive pad curvature;
++   * it also attenuates some ridge frequencies.
 +   */
 +  gint32 tmp[GOODIX_581A_FRAME_SIZE];
 +  for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
@@ -614,20 +666,18 @@ index 0000000..6597a87
 +        }
 +    }
 +
-+  gint32 p5 = -20, p95 = 20;
++  gint32 p5 = 0, p95 = 0;
++  gboolean has_usable_contrast = FALSE;
 +  if (n_active > 50)
 +    {
 +      qsort (active_vals, n_active, sizeof (gint32), compare_ints);
 +      p5 = active_vals[n_active * 5 / 100];
 +      p95 = active_vals[n_active * 95 / 100];
-+      if (p95 - p5 < 40)
-+        {
-+          p5 = -20;
-+          p95 = 20;
-+        }
++      has_usable_contrast = p95 - p5 >= 40;
 +    }
 +
-+  fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels", p5, p95, n_active);
++  fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels, usable=%d",
++          p5, p95, n_active, has_usable_contrast);
 +
 +  FpImage *img = fp_image_new (GOODIX_581A_WIDTH, GOODIX_581A_HEIGHT);
 +  img->flags |= FPI_IMAGE_PARTIAL;
@@ -638,7 +688,7 @@ index 0000000..6597a87
 +      for (int x = 0; x < GOODIX_581A_WIDTH; x++)
 +        {
 +          int idx = y * GOODIX_581A_WIDTH + x;
-+          if (x < 2 || x >= GOODIX_581A_WIDTH - 2 ||
++          if (!has_usable_contrast || x < 2 || x >= GOODIX_581A_WIDTH - 2 ||
 +              y < 2 || y >= GOODIX_581A_HEIGHT - 2)
 +            {
 +              img->data[idx] = 255;
@@ -777,6 +827,7 @@ index 0000000..6597a87
 +
 +  goodix_reset_state (dev);
 +  goodix_shutdown_tls (dev, &error);
++  g_clear_pointer (&self->calibration_img, g_free);
 +
 +  fpi_image_device_deactivate_complete (img_dev, error);
 +}
@@ -1166,7 +1217,7 @@ index 64ea340..04919b7 100644
          fpi_image_device_deactivate (self, FALSE);
        else
          fp_image_device_enroll_maybe_await_finger_on (self);
-@@ -475,6 +485,234 @@ fpi_image_device_report_finger_status (FpImageDevice *self,
+@@ -475,6 +485,236 @@ fpi_image_device_report_finger_status (FpImageDevice *self,
   * including e.g. an enroll operation which captures multiple images during
   * one session.
   */
@@ -1342,6 +1393,7 @@ index 64ea340..04919b7 100644
 +
 +      if (!error && info && templates)
 +        {
++          int best_score = 0;
 +          for (guint t = 0; t < templates->len; t++)
 +            {
 +              FpPrint *tmpl = g_ptr_array_index (templates, t);
@@ -1375,10 +1427,11 @@ index 64ea340..04919b7 100644
 +                  g_variant_unref (stage_bytes);
 +                }
 +
-+              if (max_score >= 70 || (max_score >= 45 && matched_stages >= 2))
++              if ((max_score >= 70 || (max_score >= 45 && matched_stages >= 2)) &&
++                  max_score > best_score)
 +                {
++                  best_score = max_score;
 +                  matched_template = tmpl;
-+                  break;
 +                }
 +            }
 +        }
@@ -1892,7 +1945,7 @@ new file mode 100644
 index 0000000..f19b377
 --- /dev/null
 +++ b/libfprint/sigfm/sigfm.cpp
-@@ -0,0 +1,349 @@
+@@ -0,0 +1,372 @@
 +// SIGFM algorithm for libfprint
 +
 +// Copyright (C) 2022 Matthieu CHARETTE <matthieu.charette@gmail.com>
@@ -1922,11 +1975,13 @@ index 0000000..f19b377
 +#include <opencv2/imgproc.hpp>
 +#include <opencv2/features2d.hpp>
 +#include <algorithm>
++#include <cmath>
 +#include <cstdio>
 +#include <cstdlib>
 +#include <filesystem>
 +#include <fstream>
 +#include <iterator>
++#include <limits>
 +#include <mutex>
 +#include <set>
 +#include <sstream>
@@ -2010,10 +2065,10 @@ index 0000000..f19b377
 +constexpr auto sift_edge_threshold = 18.0;
 +constexpr auto sift_sigma = 1.2;
 +struct match {
-+    cv::Point2i p1;
-+    cv::Point2i p2;
-+    match(cv::Point2i ip1, cv::Point2i ip2) : p1{ip1}, p2{ip2} {}
-+    match() : p1{cv::Point2i(0, 0)}, p2{cv::Point2i(0, 0)} {}
++    cv::Point2f p1;
++    cv::Point2f p2;
++    match(cv::Point2f ip1, cv::Point2f ip2) : p1{ip1}, p2{ip2} {}
++    match() : p1{cv::Point2f(0, 0)}, p2{cv::Point2f(0, 0)} {}
 +    bool operator==(const match& right) const
 +    {
 +        return std::tie(this->p1, this->p2) == std::tie(right.p1, right.p2);
@@ -2025,17 +2080,23 @@ index 0000000..f19b377
 +    }
 +};
 +struct angle {
-+    double cos;
-+    double sin;
-+    match corr_matches[2];
-+    angle(double cos_, double sin_, match m1, match m2)
-+        : cos{cos_}, sin{sin_}, corr_matches{m1, m2}
-+    {
-+    }
++    double radians;
++    angle(double radians_) : radians{radians_} {}
 +};
 +} // namespace
 +
-+SigfmImgInfo* sigfm_copy_info(SigfmImgInfo* info) { return new SigfmImgInfo{*info}; }
++SigfmImgInfo* sigfm_copy_info(SigfmImgInfo* info)
++{
++    if (info == nullptr) {
++        return nullptr;
++    }
++    try {
++        return new SigfmImgInfo{*info};
++    }
++    catch (...) {
++        return nullptr;
++    }
++}
 +
 +int sigfm_keypoints_count(SigfmImgInfo* info)
 +{
@@ -2050,10 +2111,28 @@ index 0000000..f19b377
 +
 +unsigned char* sigfm_serialize_binary(SigfmImgInfo* info, int* outlen)
 +{
-+    bin::stream s;
-+    s << *info;
-+    *outlen = s.size();
-+    return s.copy_buffer();
++    if (outlen != nullptr) {
++        *outlen = 0;
++    }
++    if (info == nullptr || outlen == nullptr) {
++        return nullptr;
++    }
++
++    try {
++        bin::stream s;
++        s << *info;
++        if (s.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())) {
++            return nullptr;
++        }
++        auto* buffer = s.copy_buffer();
++        if (buffer != nullptr) {
++            *outlen = static_cast<int>(s.size());
++        }
++        return buffer;
++    }
++    catch (...) {
++        return nullptr;
++    }
 +}
 +
 +SigfmImgInfo* sigfm_deserialize_binary(const unsigned char* bytes, int len)
@@ -2126,6 +2205,13 @@ index 0000000..f19b377
 +
 +int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
 +{
++    if (frame == nullptr || enrolled == nullptr || frame->descriptors.empty() ||
++        enrolled->descriptors.empty() ||
++        frame->keypoints.size() != static_cast<std::size_t>(frame->descriptors.rows) ||
++        enrolled->keypoints.size() != static_cast<std::size_t>(enrolled->descriptors.rows)) {
++        return 0;
++    }
++
 +    try {
 +        std::vector<std::vector<cv::DMatch>> points;
 +        auto bfm = cv::BFMatcher::create();
@@ -2186,13 +2272,13 @@ index 0000000..f19b377
 +            for (std::size_t k = j + 1; k < matches.size(); k++) {
 +                match match_2 = matches[k];
 +
-+                int vec_1[2] = {match_1.p1.x - match_2.p1.x,
-+                                match_1.p1.y - match_2.p1.y};
-+                int vec_2[2] = {match_1.p2.x - match_2.p2.x,
-+                                match_1.p2.y - match_2.p2.y};
++                const double x1 = match_1.p1.x - match_2.p1.x;
++                const double y1 = match_1.p1.y - match_2.p1.y;
++                const double x2 = match_1.p2.x - match_2.p2.x;
++                const double y2 = match_1.p2.y - match_2.p2.y;
 +
-+                double length_1 = sqrt(pow(vec_1[0], 2) + pow(vec_1[1], 2));
-+                double length_2 = sqrt(pow(vec_2[0], 2) + pow(vec_2[1], 2));
++                const double length_1 = std::hypot(x1, y1);
++                const double length_2 = std::hypot(x2, y2);
 +
 +                if (length_1 < 3.0 || length_2 < 3.0)
 +                    continue;
@@ -2201,14 +2287,9 @@ index 0000000..f19b377
 +                            std::max(length_1, length_2) <=
 +                    length_match) {
 +
-+                    double product = length_1 * length_2;
-+                    angles.emplace_back(angle(
-+                        M_PI / 2 +
-+                            asin((vec_1[0] * vec_2[0] + vec_1[1] * vec_2[1]) /
-+                                 product),
-+                        acos((vec_1[0] * vec_2[1] - vec_1[1] * vec_2[0]) /
-+                             product),
-+                        match_1, match_2));
++                    const double dot = x1 * x2 + y1 * y2;
++                    const double cross = x1 * y2 - y1 * x2;
++                    angles.emplace_back(std::atan2(cross, dot));
 +                }
 +            }
 +        }
@@ -2219,17 +2300,12 @@ index 0000000..f19b377
 +
 +        int count = 0;
 +        for (std::size_t j = 0; j < angles.size(); j++) {
-+            angle angle_1 = angles[j];
++            const angle& angle_1 = angles[j];
 +            for (std::size_t k = j + 1; k < angles.size(); k++) {
-+                angle angle_2 = angles[k];
-+
-+                if (1 - std::min(angle_1.sin, angle_2.sin) /
-+                                std::max(angle_1.sin, angle_2.sin) <=
-+                        angle_match &&
-+                    1 - std::min(angle_1.cos, angle_2.cos) /
-+                                std::max(angle_1.cos, angle_2.cos) <=
-+                        angle_match) {
-+
++                const angle& angle_2 = angles[k];
++                const double delta = std::remainder(angle_1.radians - angle_2.radians,
++                                                    2.0 * M_PI);
++                if (std::abs(delta) <= angle_match) {
 +                    count += 1;
 +                }
 +            }

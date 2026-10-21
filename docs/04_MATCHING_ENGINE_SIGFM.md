@@ -75,13 +75,8 @@ In OpenCV SIFT, `sigma` governs the initial Gaussian blur applied before computi
 
 $$\text{Gaussian Blur: } G(x, y, \sigma) = \frac{1}{2\pi\sigma^2} e^{-\frac{x^2+y^2}{2\sigma^2}}$$
 
-- At 500 DPI, fingerprint ridges are only **$2 \text{ to } 3$ pixels wide**.
-- With OpenCV's default `sigma = 1.4` or `1.6`, the initial blur merges adjacent ridges together. When a finger was shifted by just 2 pixels, genuine scores collapsed from thousands to **12–38**.
-- Tuning **`sigma = 1.2`** preserves the fine spatial frequency of the 2-pixel ridges. In robustness benchmarks:
-  - Genuine score with 0px shift: **14,763**
-  - Genuine score with 2px shift: **7,974**
-  - Genuine score with 4px shift: **6,197**
-  - Cross-finger imposter score: **0**
+- At the documented 500 DPI, one pixel is about 51 micrometres; ridge width and local contrast vary across fingers and sensor captures.
+- The configured **`sigma = 1.2`** is a heuristic intended to retain local ridge texture. This repository does not include raw images or a repeatable benchmark supporting prior numeric shift or impostor-score claims, so those values should not be used to characterize performance.
 
 ### 3.3 Rejecting Cross-Finger Collisions: Lowe's Ratio Test
 
@@ -89,8 +84,7 @@ When matching probe descriptors against gallery descriptors using k-Nearest Neig
 
 $$\text{Lowe's Condition: } \frac{\|\mathbf{D}_{\text{probe}} - \mathbf{D}_{\text{best}}\|_2}{\|\mathbf{D}_{\text{probe}} - \mathbf{D}_{\text{second}}\|_2} < \text{distance\_match}$$
 
-- **At `0.85`**: Ambiguous descriptors in repetitive parallel ridges pass the test, producing dozens of accidental vector matches between different fingers.
-- **At `0.75`**: David Lowe's foundational research proves that 0.75 eliminates over **95% of false matches** while preserving 92% of true matches. Accidental matches between different fingers drop to zero.
+- The configured **`0.75`** ratio removes some ambiguous nearest-neighbor matches. Its effect depends on the captured images and is not a guarantee of a particular false-match or false-accept rate.
 
 ### 3.4 Skin Elasticity Compensation: Pairwise Vector Invariance
 
@@ -104,8 +98,7 @@ $$\begin{aligned}
 Relative distance must satisfy skin deformation tolerance:
 $$1 - \frac{\min(L_1, L_2)}{\max(L_1, L_2)} \le \text{length\_match} \quad (0.12)$$
 
-Relative orientation angle must satisfy angular consistency:
-$$\Delta \theta = \arccos\left(\frac{\mathbf{v}_1 \cdot \mathbf{v}_2}{L_1 L_2}\right) \le \text{angle\_match} \quad (0.12)$$
+For each pair of correspondences, the matcher estimates the rotation from the probe vector to the enrolled vector using `atan2(cross, dot)`. Pair hypotheses agree when their wrapped angular difference is at most `angle_match` (0.12 radians).
 
 Every pair of consistent vectors increments the geometric histogram. Because genuine matches have $20\text{ to }30$ mutually consistent keypoints, their score scales quadratically ($\binom{25}{2} = 300$ to $\binom{40}{2} = 780$). Accidental single-point collisions have no mutually consistent neighbors and score 0.
 
@@ -128,4 +121,8 @@ With a tiny $3.25\text{ mm} \times 4.06\text{ mm}$ sensor, 8 touches left unmapp
 - 4 touches: Lateral edges (left 45°, right 45°)
 - 4 touches: Distal tip, knuckle, and rotational tilts
 
-This guarantees that any subsequent touch will overlap with at least one enrolled stage, achieving **instant 1-touch verification with zero false acceptances**.
+Additional stages can cover more of the finger pad, but do not guarantee overlap or a particular false-accept rate. Enrollment prompts should encourage different placements while retaining enough repeated center touches to capture the same region consistently.
+
+## 5. Threshold validation
+
+The configured score thresholds (`70` for a single stage, or `45` with at least two stages scoring `40`) are implementation defaults, not calibrated security thresholds. Before changing them for a deployment, collect repeated genuine comparisons across separate sessions and impostor comparisons across distinct fingers. Report false match and false non-match rates at the selected threshold; include the sensor, enrollment procedure, image preprocessing, and number of comparisons. A tiny sample cannot establish a low false-accept probability.
