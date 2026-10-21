@@ -25,6 +25,9 @@ sudo mkdir -p /etc/systemd/system/fprintd.service.d
 sudo tee /etc/systemd/system/fprintd.service.d/sigfm.conf > /dev/null << 'EOF'
 [Service]
 Environment="OPENCV_NUM_THREADS=1" "TBB_MALLOC_USE_HUGE_PAGES=0"
+# TBB probes this sysctl even when huge-page allocation is disabled. Hide only
+# that procfs node from fprintd instead of granting SELinux broader sysctl access.
+InaccessiblePaths=-/proc/sys/vm/nr_hugepages
 EOF
 sudo systemctl daemon-reload
 
@@ -48,7 +51,6 @@ meson setup build \
     --prefix=/usr \
     --sysconfdir=/etc \
     -Ddrivers=goodixtls581a \
-    -Dinstalled-tests=false \
     -Dgtk-examples=false \
     -Ddoc=false
 
@@ -65,8 +67,8 @@ sudo systemctl restart fprintd
 # SELinux check on Fedora / RHEL
 if command -v getenforce >/dev/null 2>&1 && [ "$(getenforce)" = "Enforcing" ]; then
     echo "[*] SELinux is active in Enforcing mode."
-    echo "    To prevent any SELinux alerts regarding nr_hugepages, run:"
-    echo "    sudo ausearch -c 'fprintd' --raw | sudo audit2allow -M fprintd_hugepages && sudo semodule -i fprintd_hugepages.pp"
+    echo "    fprintd's systemd service now hides /proc/sys/vm/nr_hugepages."
+    echo "    Check the service sandbox with: systemctl show fprintd -p InaccessiblePaths"
 fi
 
 echo "=================================================================="
