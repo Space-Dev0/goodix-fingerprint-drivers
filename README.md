@@ -63,9 +63,9 @@ For developers, security researchers, and package maintainers, the architecture 
 4. **[Biometric Matching Engine: SIGFM & SIFT Tuning](docs/04_MATCHING_ENGINE_SIGFM.md)**
    - Why NIST Bozorth3 failed on 64×80 sensors, CLAHE parameter tuning, SIFT initial blur $\sigma = 1.2$, Lowe's ratio test $0.75$, geometric angle histograms, and two-tier decision logic.
 5. **[System Integration, Concurrency & SELinux Hardening](docs/05_SYSTEM_INTEGRATION_AND_SELINUX.md)**
-   - Concurrency SSM state flow, Touch 8 crash root-cause analysis, deferred deactivation, Intel TBB sysctl AVC denial analysis, and policy module generation.
+   - Concurrency SSM state flow, Intel TBB sysctl AVC analysis, and the scope of the Fedora/RHEL policy workaround.
 6. **[Build & Installation Guide](docs/06_BUILD_AND_INSTALLATION_GUIDE.md)**
-   - Detailed build instructions for Fedora, Ubuntu/Debian, and Arch Linux, PAM authentication setup, and diagnostic commands.
+   - Build instructions for Fedora, Ubuntu/Debian, and Arch Linux, PAM setup, SELinux policy installation, and diagnostics.
 
 ---
 
@@ -85,7 +85,7 @@ For developers, security researchers, and package maintainers, the architecture 
 ├── driver/                                # Goodix 581a driver source & standalone patch
 │   ├── goodix581a.c                       # C driver implementation (SSM, FDT, Mode 1/5)
 │   ├── goodix581a.h                       # Device registers, 256B AFE config, FDT tables
-│   ├── goodix581a-sigfm.patch             # Unified git patch against libfprint upstream
+│   ├── goodix581a-sigfm.patch             # Seven-commit git-am series for the GoodixTLS community base
 │   └── sigfm/                             # SIGFM SIFT matcher module (C++)
 │       ├── sigfm.cpp
 │       ├── sigfm.hpp

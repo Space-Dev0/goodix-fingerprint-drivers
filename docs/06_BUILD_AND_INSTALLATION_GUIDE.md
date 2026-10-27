@@ -100,15 +100,20 @@ sudo systemctl daemon-reload
 sudo systemctl restart fprintd
 ```
 
-### 3.3 Permanent SELinux AVC Policy (Fedora / RHEL)
+### 3.3 SELinux policy module (Fedora / RHEL)
 
-If running Fedora with SELinux Enforcing, grant `fprintd` access to query `nr_hugepages`:
+The installer loads the repository's `fprintd_hugepages` policy module when
+SELinux is Enforcing. To install it manually:
 
 ```bash
-sudo ausearch -c 'fprintd' --raw | sudo audit2allow -M fprintd_hugepages
-sudo semodule -X 300 -i fprintd_hugepages.pp
-rm -f fprintd_hugepages.*
+sudo semodule -i selinux/fprintd_hugepages.pp
 ```
+
+The module allows `fprintd_t` to read files labeled `sysctl_vm_t`, which
+includes the TBB `nr_hugepages` probe and other VM sysctl files. Review
+`selinux/fprintd_hugepages.te` before installing if that access is too broad
+for your system's policy requirements. Avoid generating a module from every
+recent `fprintd` AVC, since that may authorize unrelated denials.
 
 ---
 

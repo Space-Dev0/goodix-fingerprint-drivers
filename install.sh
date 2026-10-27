@@ -61,7 +61,7 @@ sudo ldconfig
 # SELinux check on Fedora / RHEL
 if command -v getenforce >/dev/null 2>&1 && [ "$(getenforce)" = "Enforcing" ]; then
     echo "[*] SELinux is active in Enforcing mode."
-    echo "    Installing fprintd_hugepages policy module to permit harmless TBB sysctl probe..."
+    echo "    Installing fprintd_hugepages policy module (read access to sysctl_vm_t files)..."
     sudo semodule -i "${SCRIPT_DIR}/selinux/fprintd_hugepages.pp"
 fi
 

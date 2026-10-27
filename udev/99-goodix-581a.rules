@@ -1,4 +1,4 @@
 # Udev rule for Goodix 27c6:581a Fingerprint sensor
 # Place in /etc/udev/rules.d/99-goodix-581a.rules and reload with:
 # sudo udevadm control --reload-rules && sudo udevadm trigger
-SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="581a", MODE="0666", TAG+="uaccess"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="581a", MODE="0660", TAG+="uaccess"

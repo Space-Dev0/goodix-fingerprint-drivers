@@ -86,7 +86,10 @@ Binary analysis using `gdb` and `objdump` revealed:
 > [!NOTE]
 > Attempting to hide the path with `InaccessiblePaths=-/proc/sys/vm/nr_hugepages` in systemd fails on Fedora/RHEL with `code=exited, status=226/NAMESPACE` because systemd is denied mount permissions over `/proc/sys/vm/*` under the targeted SELinux policy.
 
-The robust and clean solution is installing a minimal SELinux policy module that grants `fprintd_t` read access to `sysctl_vm_t:file`:
+The tested workaround in this repository is a local SELinux module. Its rule
+grants `fprintd_t` read access to files labeled `sysctl_vm_t`, a type that
+covers multiple VM sysctl files; SELinux policy does not narrow this rule to
+the single `nr_hugepages` pathname:
 
 `selinux/fprintd_hugepages.te`:
 ```te
@@ -98,7 +101,7 @@ require {
 	class file { getattr open read };
 }
 
-# Allow fprintd to check hugepage settings without AVC denials
+# Allow fprintd read access to files labeled sysctl_vm_t
 allow fprintd_t sysctl_vm_t:file { getattr open read };
 ```
 
@@ -120,7 +123,8 @@ sudo systemctl daemon-reload
 sudo systemctl restart fprintd
 ```
 
-Verify that no denials occur:
+Exercise enrollment or verification, then check recent denials. This module
+only addresses the AVC above; unrelated denials still need separate review.
 ```bash
 sudo ausearch -m AVC -c fprintd -ts recent -i
 ```
