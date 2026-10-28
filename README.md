@@ -85,7 +85,7 @@ For developers, security researchers, and package maintainers, the architecture 
 ├── driver/                                # Goodix 581a driver source & standalone patch
 │   ├── goodix581a.c                       # C driver implementation (SSM, FDT, Mode 1/5)
 │   ├── goodix581a.h                       # Device registers, 256B AFE config, FDT tables
-│   ├── goodix581a-sigfm.patch             # Seven-commit git-am series for the GoodixTLS community base
+│   ├── goodix581a-sigfm.patch             # Eight-commit git-am series for the GoodixTLS community base
 │   └── sigfm/                             # SIGFM SIFT matcher module (C++)
 │       ├── sigfm.cpp
 │       ├── sigfm.hpp

@@ -17,11 +17,11 @@ The decrypted buffer returned by the sensor die measures exactly **7,684 bytes**
 The active pixel area contains:
 $$\frac{7680\text{ bytes}}{6\text{ bytes/chunk}} = 1280\text{ chunks}$$
 Each 6-byte chunk encodes **4 pixels** with 12-bit resolution ($4 \times 12\text{ bits} = 48\text{ bits} = 6\text{ bytes}$):
-$$1280 \times 4\text{ pixels} = 5120\text{ pixels} = 64\text{ width} \times 80\text{ height}$$
+$$1280 \times 4\text{ pixels} = 5120\text{ pixels} = 80\text{ columns} \times 64\text{ rows} = 80\text{ width} \times 64\text{ height}$$
 
-### 1.2 Nibble Packing Bit-Layout
+### 1.2 Stream Packing & Physical Layout Transposition
 
-Given a 6-byte chunk $[C_0, C_1, C_2, C_3, C_4, C_5]$, the 12-bit pixel values $P_0, P_1, P_2, P_3$ are reconstructed as:
+Given a 6-byte chunk $[C_0, C_1, C_2, C_3, C_4, C_5]$, the 12-bit pixel values $P_0, P_1, P_2, P_3$ are unpacked sequentially:
 
 $$\begin{aligned}
 P_0 &= ((C_0 \ \& \ 0\text{x}0f) \ll 8) \ | \ C_1 \\
@@ -30,21 +30,21 @@ P_2 &= ((C_5 \ \& \ 0\text{x}0f) \ll 8) \ | \ C_2 \\
 P_3 &= (C_4 \ll 4) \ | \ (C_5 \gg 4)
 \end{aligned}$$
 
-#### C Implementation (`goodixtls5xx_decode_frame`):
-```c
-void goodixtls5xx_decode_frame (GoodixTls5xxPix *frame, guint32 frame_size,
-                                const guint8 *raw_frame, guint16 header_len, guint16 footer_len)
-{
-  GoodixTls5xxPix *pix = frame;
+The 581a hardware transmits samples in **column-major order** (64 rows per column, 80 columns). Mapping this stream row-major results in a transposed image. The driver transposes stream indices to true physical $(x, y)$ coordinates:
 
-  for (int i = header_len; i <= (int) frame_size - footer_len - 6; i += 6)
-    {
-      const guint8 *chunk = raw_frame + i;
-      *pix++ = ((chunk[0] & 0x0f) << 8) | chunk[1];
-      *pix++ = (chunk[3] << 4) | (chunk[0] >> 4);
-      *pix++ = ((chunk[5] & 0x0f) << 8) | chunk[2];
-      *pix++ = (chunk[4] << 4) | (chunk[5] >> 4);
-    }
+$$x = \lfloor i / 64 \rfloor, \quad y = i \pmod{64}, \quad \text{idx} = y \times 80 + x$$
+
+#### C Implementation (`goodix_581a_decode_frame`):
+```c
+void goodix_581a_decode_frame (GoodixTls5xxPix *frame, guint32 frame_size,
+                               const guint8 *raw_frame, guint16 header_len, guint16 footer_len)
+{
+  GoodixTls5xxPix stream[GOODIX_581A_FRAME_SIZE];
+
+  goodixtls5xx_decode_frame (stream, frame_size, raw_frame, header_len, footer_len);
+
+  for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
+    frame[goodix_581a_stream_to_image_index (i)] = stream[i];
 }
 ```
 
@@ -64,66 +64,38 @@ The GM168 sensor supports two operational scan modes:
    - **Acquisition**: Executed immediately after hardware FDT touch interrupt triggers.
    - **Properties**: Captures high-contrast ridge/valley patterns modulated onto the baseline capacitive dome.
 
-The driver computes a clipped per-pixel difference (`max(baseline - scan, 0)`) before spatial filtering. This follows the shared Goodix 5xx calibration path; the polarity and usefulness of the baseline subtraction should still be checked against real captures from each sensor revision.
-
 ---
 
-## 3. High-Pass Spatial Filtering & Background Removal
+## 3. Least-Squares Linear Flat-Fielding
 
-Raw capacitive sensor readings cannot simply undergo direct thresholding because the natural spherical curvature of the human fingertip introduces a massive low-frequency DC dome (center pixels saturate while edge pixels have weak capacitive coupling):
+Raw capacitive readings have low-frequency DC variations and thermal gain drift. Rather than using an arbitrary one-sided subtraction (`max(baseline - scan, 0)`) that clips valleys to zero, or a heavy 7-tap blur that attenuates ~69% of the 9–10px ridge signal, the driver performs **least-squares linear flat-fielding**:
 
-```
-Capacitive Signal Profile across Sensor:
-  ADC Value
-      ^
-      |                 ***** Finger Ridge Signal *****
-      |              **                               **
-      |           **                                     **   <-- Low-Frequency
-      |        **                                           **    Fingertip Dome
-      |      *                                                 *
-      +------------------------------------------------------------> Pixel Position (X)
-```
+$$S(x, y) \approx g \cdot B(x, y) + o$$
 
-To reduce slowly varying background structure, the driver subtracts a **7-tap separable binomial low-pass filter** from each captured frame:
+where $B$ is the untouched ambient baseline, $S$ is the active touch scan, $g$ is the fitted gain, and $o$ is the DC offset:
 
-$$\text{Kernel: } K = \frac{1}{64} \begin{bmatrix} 1 & 6 & 15 & 20 & 15 & 6 & 1 \end{bmatrix}$$
+$$g = \frac{N \sum (B \cdot S) - \sum B \sum S}{N \sum B^2 - (\sum B)^2}, \quad o = \frac{\sum S - g \sum B}{N}$$
 
-### 3.1 Two-Dimensional Separable Convolution
+The flat-fielded residual is:
+$$\text{Residual}(x, y) = S(x, y) - \left(g \cdot B(x, y) + o\right)$$
 
-1. **Horizontal Pass**:
-   $$T(x, y) = \frac{1}{64} \sum_{k=-3}^{3} K(k) \cdot \text{Raw}(\text{clamp}(x+k), y)$$
-
-2. **Vertical Pass**:
-   $$\text{BG}(x, y) = \frac{1}{64} \sum_{k=-3}^{3} K(k) \cdot T(x, \text{clamp}(y+k))$$
-
-3. **High-Pass Residual**:
-   $$\text{HP}(x, y) = \text{Raw}(x, y) - \text{BG}(x, y)$$
-
-This is not a lossless separation: the filter also attenuates some ridge frequencies. The output depends on sensor placement, pressure, and image contrast, so the kernel should be evaluated against captured frames rather than treated as a sensor-independent optimum.
+This keeps the residual **signed** (preserving both ridge crests and valleys), absorbs baseline DC shifts, and eliminates fixed-pattern cell noise without blurring ridge details.
 
 ---
 
 ## 4. Dynamic Percentile Contrast Stretching
 
-Different users have vastly different skin moisture levels:
-- Dry skin: weak signal ($\Delta \approx \pm 20$ ADC counts).
-- Moist skin: strong signal ($\Delta \approx \pm 150$ ADC counts).
-
-To ensure invariant dynamic range across all skin types, we compute the **5th percentile ($p_5$)** and **95th percentile ($p_{95}$)** of the high-pass residual:
+To ensure invariant dynamic range across skin types (dry vs moist), the driver computes the **5th percentile ($p_5$)** and **95th percentile ($p_{95}$)** of active non-boundary pixels:
 
 ```c
 qsort (active_vals, n_active, sizeof (gint32), compare_ints);
 p5 = active_vals[n_active * 5 / 100];
 p95 = active_vals[n_active * 95 / 100];
-if (p95 - p5 < 40)
-  {
-    p5 = -20;
-    p95 = 20;
-  }
+has_usable_contrast = (p95 - p5 >= 20);
 ```
 
-Each pixel is then dynamically mapped to 8-bit grayscale:
+When $p_{95} - p_5 \ge 20$, the residual is stretched onto 8-bit grayscale:
 
-$$\text{Pixel}_{\text{out}}(x, y) = 255 - \text{clamp}\left( \frac{\text{HP}(x, y) - p_5}{p_{95} - p_5} \times 255,\ 0,\ 255 \right)$$
+$$\text{Pixel}_{\text{out}}(x, y) = 255 - \text{clamp}\left( \frac{\text{Residual}(x, y) - p_5}{p_{95} - p_5} \times 255,\ 0,\ 255 \right)$$
 
-Edges within 2 pixels of the physical sensor perimeter are masked to 255 (white) to eliminate boundary reflections.
+Edges within 2 pixels of the perimeter are masked to 255 (white) to eliminate boundary edge artifacts.

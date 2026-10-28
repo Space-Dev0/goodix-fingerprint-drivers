@@ -1,7 +1,7 @@
 From a536363ea768269293bdb8b34fe56d2120db6178 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 1/7] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168) driver
+Subject: [PATCH 1/8] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168) driver
  with SIGFM matching
 
 ---
@@ -2382,7 +2382,7 @@ index fa27507..8e5de6b 100644
 From 1a31563394df3cf010fd55dd13f9e137bf145654 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 2/7] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 2/8] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2664,7 +2664,7 @@ index f19b377..6e5b5df 100644
 From 04912498fa08c200e05b4f83a4d2598286af7c89 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 3/7] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 3/8] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2868,7 +2868,7 @@ index 671a2b6..7443baa 100644
 From 807462f4dc6087836d59735041561119a8dab3ee Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 4/7] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 4/8] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2951,7 +2951,7 @@ index 9b5c3d9..73f889d 100644
 From c5e8503da7475e885712ac7523df673e93de95cd Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 5/7] fix: register Goodix 581a device metadata
+Subject: [PATCH 5/8] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3019,7 +3019,7 @@ index b726b67..d010035 100644
 From cec2a9a5d981b075c54b00bf9debb33af9083db6 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 6/7] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 6/8] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3074,7 +3074,7 @@ index f2bf17d..f2332df 100644
 From 12e8d48887290b96fd786e0e3b1f5b2a72539347 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 7/7] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 7/8] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3305,6 +3305,320 @@ index 215ef53..9c7ccc7 100644
    return TRUE;
  }
  
+-- 
+2.56.0
+
+
+From 396cb81c0ef175bca6f8cb48031e0e20319190cb Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Wed, 28 Oct 2026 11:39:52 +0530
+Subject: [PATCH 8/8] goodix581a: correct physical 80x64 frame layout and use
+ flat-fielded residual
+
+---
+ libfprint/drivers/goodixtls/goodix581a.c | 123 +++++++++++------------
+ libfprint/drivers/goodixtls/goodix581a.h |  19 +++-
+ tests/meson.build                        |  13 +++
+ tests/test-goodix581a-frame-layout.c     |  34 +++++++
+ 4 files changed, 122 insertions(+), 67 deletions(-)
+ create mode 100644 tests/test-goodix581a-frame-layout.c
+
+diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
+index 73f889d..88e387a 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.c
++++ b/libfprint/drivers/goodixtls/goodix581a.c
+@@ -61,6 +61,24 @@ enum scan_581a_states {
+   SCAN_581A_NUM_STATES,
+ };
+ 
++/* The 5xx decoder unpacks samples in stream order. The 581a sends 64 samples
++ * for each of 80 columns, so transpose that stream into physical row-major
++ * image order before baseline subtraction or image processing.
++ */
++static void
++goodix_581a_decode_frame (GoodixTls5xxPix *frame, guint32 frame_size,
++                          const guint8 *raw_frame, guint16 header_len,
++                          guint16 footer_len)
++{
++  GoodixTls5xxPix stream[GOODIX_581A_FRAME_SIZE];
++
++  goodixtls5xx_decode_frame (stream, frame_size, raw_frame, header_len,
++                             footer_len);
++
++  for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
++    frame[goodix_581a_stream_to_image_index (i)] = stream[i];
++}
++
+ /* One scan action captures a Mode 1 ambient reference, waits for FDT touch,
+  * captures Mode 5, then waits for finger-up. Keep the baseline across touches
+  * in an enrollment action so samples share the same reference.
+@@ -212,7 +230,7 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
+   /* Save the untouched-pad frame as the reference for subsequent Mode 5
+    * captures. The image callback subtracts this baseline before filtering.
+    */
+-  goodixtls5xx_decode_frame (self->calibration_img, length, data, 0, 4);
++  goodix_581a_decode_frame (self->calibration_img, length, data, 0, 4);
+ 
+   fp_dbg ("581a: Ambient baseline acquired successfully!");
+   fpi_ssm_next_state (ssm);
+@@ -283,65 +301,44 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+     }
+ 
+   GoodixTls5xxPix raw_frame[GOODIX_581A_FRAME_SIZE];
+-  goodixtls5xx_decode_frame (raw_frame, length, data, 0, 4);
+-
+-  gint32 raw[GOODIX_581A_FRAME_SIZE];
+-  for (int i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
+-    raw[i] = (self->calibration_img && self->calibration_img[i] > raw_frame[i])
+-               ? (gint32) (self->calibration_img[i] - raw_frame[i])
+-               : 0;
++  goodix_581a_decode_frame (raw_frame, length, data, 0, 4);
+ 
+-  /* Estimate the slowly varying pad background with a separable 7-tap
+-   * binomial low-pass filter. Subtraction emphasizes local ridge contrast,
+-   * though it also attenuates some ridge frequencies.
++  /* Fit a gain and offset from the untouched baseline to this scan. Keeping
++   * the residual signed preserves both ridge polarities and accommodates
++   * sensor gain drift. Ignore pixels which are zero in both frames (inactive
++   * columns at some sensor tcodes) when fitting the flat field.
+    */
+-  gint32 tmp[GOODIX_581A_FRAME_SIZE];
+-  for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
++  double sum_baseline = 0.0;
++  double sum_scan = 0.0;
++  double sum_baseline_sq = 0.0;
++  double sum_baseline_scan = 0.0;
++  guint n_fit = 0;
++  for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
+     {
+-      for (int x = 0; x < GOODIX_581A_WIDTH; x++)
+-        {
+-          int x0 = CLAMP (x - 3, 0, GOODIX_581A_WIDTH - 1);
+-          int x1 = CLAMP (x - 2, 0, GOODIX_581A_WIDTH - 1);
+-          int x2 = CLAMP (x - 1, 0, GOODIX_581A_WIDTH - 1);
+-          int x3 = x;
+-          int x4 = CLAMP (x + 1, 0, GOODIX_581A_WIDTH - 1);
+-          int x5 = CLAMP (x + 2, 0, GOODIX_581A_WIDTH - 1);
+-          int x6 = CLAMP (x + 3, 0, GOODIX_581A_WIDTH - 1);
+-
+-          tmp[y * GOODIX_581A_WIDTH + x] = (raw[y * GOODIX_581A_WIDTH + x0] * 1 +
+-                                            raw[y * GOODIX_581A_WIDTH + x1] * 6 +
+-                                            raw[y * GOODIX_581A_WIDTH + x2] * 15 +
+-                                            raw[y * GOODIX_581A_WIDTH + x3] * 20 +
+-                                            raw[y * GOODIX_581A_WIDTH + x4] * 15 +
+-                                            raw[y * GOODIX_581A_WIDTH + x5] * 6 +
+-                                            raw[y * GOODIX_581A_WIDTH + x6] * 1) >> 6;
+-        }
++      const double baseline = self->calibration_img ? self->calibration_img[i] : 0;
++      const double scan = raw_frame[i];
++
++      if (baseline == 0.0 && scan == 0.0)
++        continue;
++
++      sum_baseline += baseline;
++      sum_scan += scan;
++      sum_baseline_sq += baseline * baseline;
++      sum_baseline_scan += baseline * scan;
++      n_fit++;
+     }
+ 
+-  gint32 bg[GOODIX_581A_FRAME_SIZE];
+-  for (int x = 0; x < GOODIX_581A_WIDTH; x++)
++  double gain = 1.0;
++  double offset = 0.0;
++  if (n_fit > 0)
+     {
+-      for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
+-        {
+-          int y0 = CLAMP (y - 3, 0, GOODIX_581A_HEIGHT - 1);
+-          int y1 = CLAMP (y - 2, 0, GOODIX_581A_HEIGHT - 1);
+-          int y2 = CLAMP (y - 1, 0, GOODIX_581A_HEIGHT - 1);
+-          int y3 = y;
+-          int y4 = CLAMP (y + 1, 0, GOODIX_581A_HEIGHT - 1);
+-          int y5 = CLAMP (y + 2, 0, GOODIX_581A_HEIGHT - 1);
+-          int y6 = CLAMP (y + 3, 0, GOODIX_581A_HEIGHT - 1);
+-
+-          bg[y * GOODIX_581A_WIDTH + x] = (tmp[y0 * GOODIX_581A_WIDTH + x] * 1 +
+-                                           tmp[y1 * GOODIX_581A_WIDTH + x] * 6 +
+-                                           tmp[y2 * GOODIX_581A_WIDTH + x] * 15 +
+-                                           tmp[y3 * GOODIX_581A_WIDTH + x] * 20 +
+-                                           tmp[y4 * GOODIX_581A_WIDTH + x] * 15 +
+-                                           tmp[y5 * GOODIX_581A_WIDTH + x] * 6 +
+-                                           tmp[y6 * GOODIX_581A_WIDTH + x] * 1) >> 6;
+-        }
++      const double denominator = n_fit * sum_baseline_sq - sum_baseline * sum_baseline;
++      if (denominator > 0.0)
++        gain = (n_fit * sum_baseline_scan - sum_baseline * sum_scan) / denominator;
++      offset = (sum_scan - gain * sum_baseline) / n_fit;
+     }
+ 
+-  gint32 hp[GOODIX_581A_FRAME_SIZE];
++  gint32 residual[GOODIX_581A_FRAME_SIZE];
+   gint32 active_vals[GOODIX_581A_FRAME_SIZE];
+   int n_active = 0;
+ 
+@@ -350,19 +347,20 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+       for (int x = 0; x < GOODIX_581A_WIDTH; x++)
+         {
+           int idx = y * GOODIX_581A_WIDTH + x;
+-          hp[idx] = raw[idx] - bg[idx];
++          const double baseline = self->calibration_img ? self->calibration_img[idx] : 0;
++          residual[idx] = raw_frame[idx] - (gint32) (gain * baseline + offset);
+ 
+           if (x >= 2 && x < GOODIX_581A_WIDTH - 2 &&
+               y >= 2 && y < GOODIX_581A_HEIGHT - 2)
+             {
+-              active_vals[n_active++] = hp[idx];
++              active_vals[n_active++] = residual[idx];
+             }
+         }
+     }
+ 
+-  /* Ignore the outer two-pixel border when measuring contrast because the
+-   * convolution uses edge replication there. A narrow percentile span means
+-   * this frame has no trustworthy ridge signal and must not be stretched.
++  /* Use the signed, flat-fielded difference before any high-pass operation.
++   * 20 counts is a provisional separation point from early 581a captures;
++   * validate it across more devices and repeated air/finger frames.
+    */
+   gint32 p5 = 0, p95 = 0;
+   gboolean has_usable_contrast = FALSE;
+@@ -371,7 +369,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+       qsort (active_vals, n_active, sizeof (gint32), compare_ints);
+       p5 = active_vals[n_active * 5 / 100];
+       p95 = active_vals[n_active * 95 / 100];
+-      has_usable_contrast = p95 - p5 >= 40;
++      has_usable_contrast = p95 - p5 >= 20;
+     }
+ 
+   fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels, usable=%d",
+@@ -393,7 +391,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+             }
+           else
+             {
+-              gint32 val = (hp[idx] - p5) * 255 / (p95 - p5);
++              gint32 val = (residual[idx] - p5) * 255 / (p95 - p5);
+               if (val < 0) val = 0;
+               if (val > 255) val = 255;
+               img->data[idx] = (guint8) (255 - val);
+@@ -401,7 +399,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+         }
+     }
+ 
+-  fp_dbg ("581a: Frame processed, reporting native 64x80 image captured for SIGFM!");
++  fp_dbg ("581a: Frame processed, reporting native 80x64 image captured for SIGFM!");
+   img->ppmm = 500.0 / 25.4;
+   fpi_image_device_image_captured (FP_IMAGE_DEVICE (dev), img);
+ 
+@@ -581,8 +579,9 @@ process_frame (guint8 * frame)
+     {
+       for (int x = 0; x != GOODIX_581A_WIDTH; ++x)
+         {
+-          const int idx = x + y * GOODIX_581A_WIDTH;
+-          img->data[idx] = 255 - frame[idx];
++          const int stream_idx = y + x * GOODIX_581A_STREAM_ROWS;
++          const int image_idx = x + y * GOODIX_581A_WIDTH;
++          img->data[image_idx] = 255 - frame[stream_idx];
+         }
+     }
+   return img;
+diff --git a/libfprint/drivers/goodixtls/goodix581a.h b/libfprint/drivers/goodixtls/goodix581a.h
+index dd6956a..2b1c01b 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.h
++++ b/libfprint/drivers/goodixtls/goodix581a.h
+@@ -10,14 +10,23 @@
+ #define GOODIX_581A_EP_IN (0x3 | FPI_USB_ENDPOINT_IN)
+ #define GOODIX_581A_EP_OUT (0x1 | FPI_USB_ENDPOINT_OUT)
+ 
+-#define GOODIX_581A_WIDTH 64
+-#define GOODIX_581A_HEIGHT 80
+-#define GOODIX_581A_SCAN_WIDTH 64
+-#define GOODIX_581A_SCAN_HEIGHT 80
++#define GOODIX_581A_WIDTH 80
++#define GOODIX_581A_HEIGHT 64
++#define GOODIX_581A_STREAM_ROWS 64
++#define GOODIX_581A_STREAM_COLUMNS 80
+ #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
+-/* 64x80 packed sensor samples plus the four-byte footer used by this device. */
++/* 80x64 packed sensor samples plus the four-byte footer used by this device. */
+ #define GOODIX_581A_RAW_FRAME_SIZE 7684
+ 
++static inline guint
++goodix_581a_stream_to_image_index (guint stream_index)
++{
++  const guint x = stream_index / GOODIX_581A_STREAM_ROWS;
++  const guint y = stream_index % GOODIX_581A_STREAM_ROWS;
++
++  return y * GOODIX_581A_WIDTH + x;
++}
++
+ // Xiaomi GM168 256-byte authentic hardware configuration table
+ static const guint8 goodix_581a_config[256] = {
+   0x58, 0x11, 0x60, 0x71, 0x2c, 0x9d, 0x2c, 0xc9, 0x1c, 0xe5, 0x18, 0xfd, 0x00, 0xfd, 0x00, 0xfd,
+diff --git a/tests/meson.build b/tests/meson.build
+index 97a5bfa..bf4dc0d 100644
+--- a/tests/meson.build
++++ b/tests/meson.build
+@@ -206,6 +206,19 @@ foreach test_name: unit_tests
+     )
+ endforeach
+ 
++if 'goodixtls581a' in drivers
++    test_goodix581a_layout = executable('test-goodix581a-frame-layout',
++        'test-goodix581a-frame-layout.c',
++        dependencies: libfprint_private_dep,
++        c_args: common_cflags,
++    )
++    test('goodix581a-frame-layout',
++        test_goodix581a_layout,
++        suite: ['unit-tests'],
++        env: envs,
++    )
++endif
++
+ # Run udev rule generator with fatal warnings
+ envs.set('UDEV_HWDB', udev_hwdb.full_path())
+ envs.set('UDEV_HWDB_CHECK_CONTENTS', default_drivers_are_enabled ? '1' : '0')
+diff --git a/tests/test-goodix581a-frame-layout.c b/tests/test-goodix581a-frame-layout.c
+new file mode 100644
+index 0000000..bfb0677
+--- /dev/null
++++ b/tests/test-goodix581a-frame-layout.c
+@@ -0,0 +1,34 @@
++/* Goodix 27c6:581a frame layout unit test */
++
++#include <glib.h>
++
++#include "drivers/goodixtls/goodix581a.h"
++
++static void
++test_stream_to_image_index (void)
++{
++  g_assert_cmpuint (GOODIX_581A_WIDTH, ==, GOODIX_581A_STREAM_COLUMNS);
++  g_assert_cmpuint (GOODIX_581A_HEIGHT, ==, GOODIX_581A_STREAM_ROWS);
++  g_assert_cmpuint (GOODIX_581A_FRAME_SIZE, ==,
++                    GOODIX_581A_STREAM_ROWS * GOODIX_581A_STREAM_COLUMNS);
++
++  /* Stream samples advance down each 64-pixel column before the next column. */
++  g_assert_cmpuint (goodix_581a_stream_to_image_index (0), ==, 0);
++  g_assert_cmpuint (goodix_581a_stream_to_image_index (1), ==,
++                    GOODIX_581A_WIDTH);
++  g_assert_cmpuint (goodix_581a_stream_to_image_index (63), ==,
++                    63 * GOODIX_581A_WIDTH);
++  g_assert_cmpuint (goodix_581a_stream_to_image_index (64), ==, 1);
++  g_assert_cmpuint (goodix_581a_stream_to_image_index (5119), ==,
++                    GOODIX_581A_FRAME_SIZE - 1);
++}
++
++int
++main (int argc, char **argv)
++{
++  g_test_init (&argc, &argv, NULL);
++  g_test_add_func ("/goodix581a/stream-to-image-index",
++                   test_stream_to_image_index);
++
++  return g_test_run ();
++}
 -- 
 2.56.0
 

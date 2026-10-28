@@ -31,7 +31,7 @@ Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ri
 +-------------------------------------------------------------------------+
 |                        SIGFM Processing Pipeline                        |
 |                                                                         |
-|  [64x80 Native Image]                                                   |
+|  [80x64 Native Image]                                                   |
 |          |                                                              |
 |          v                                                              |
 |  [CLAHE Local Contrast]  (clipLimit=2.0, tileGridSize=8x8)              |

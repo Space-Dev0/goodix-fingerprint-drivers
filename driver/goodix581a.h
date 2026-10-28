@@ -10,13 +10,22 @@
 #define GOODIX_581A_EP_IN (0x3 | FPI_USB_ENDPOINT_IN)
 #define GOODIX_581A_EP_OUT (0x1 | FPI_USB_ENDPOINT_OUT)
 
-#define GOODIX_581A_WIDTH 64
-#define GOODIX_581A_HEIGHT 80
-#define GOODIX_581A_SCAN_WIDTH 64
-#define GOODIX_581A_SCAN_HEIGHT 80
+#define GOODIX_581A_WIDTH 80
+#define GOODIX_581A_HEIGHT 64
+#define GOODIX_581A_STREAM_ROWS 64
+#define GOODIX_581A_STREAM_COLUMNS 80
 #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
-/* 64x80 packed sensor samples plus the four-byte footer used by this device. */
+/* 80x64 packed sensor samples plus the four-byte footer used by this device. */
 #define GOODIX_581A_RAW_FRAME_SIZE 7684
+
+static inline guint
+goodix_581a_stream_to_image_index (guint stream_index)
+{
+  const guint x = stream_index / GOODIX_581A_STREAM_ROWS;
+  const guint y = stream_index % GOODIX_581A_STREAM_ROWS;
+
+  return y * GOODIX_581A_WIDTH + x;
+}
 
 // Xiaomi GM168 256-byte authentic hardware configuration table
 static const guint8 goodix_581a_config[256] = {

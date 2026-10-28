@@ -61,6 +61,24 @@ enum scan_581a_states {
   SCAN_581A_NUM_STATES,
 };
 
+/* The 5xx decoder unpacks samples in stream order. The 581a sends 64 samples
+ * for each of 80 columns, so transpose that stream into physical row-major
+ * image order before baseline subtraction or image processing.
+ */
+static void
+goodix_581a_decode_frame (GoodixTls5xxPix *frame, guint32 frame_size,
+                          const guint8 *raw_frame, guint16 header_len,
+                          guint16 footer_len)
+{
+  GoodixTls5xxPix stream[GOODIX_581A_FRAME_SIZE];
+
+  goodixtls5xx_decode_frame (stream, frame_size, raw_frame, header_len,
+                             footer_len);
+
+  for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
+    frame[goodix_581a_stream_to_image_index (i)] = stream[i];
+}
+
 /* One scan action captures a Mode 1 ambient reference, waits for FDT touch,
  * captures Mode 5, then waits for finger-up. Keep the baseline across touches
  * in an enrollment action so samples share the same reference.
@@ -212,7 +230,7 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
   /* Save the untouched-pad frame as the reference for subsequent Mode 5
    * captures. The image callback subtracts this baseline before filtering.
    */
-  goodixtls5xx_decode_frame (self->calibration_img, length, data, 0, 4);
+  goodix_581a_decode_frame (self->calibration_img, length, data, 0, 4);
 
   fp_dbg ("581a: Ambient baseline acquired successfully!");
   fpi_ssm_next_state (ssm);
@@ -283,65 +301,44 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
     }
 
   GoodixTls5xxPix raw_frame[GOODIX_581A_FRAME_SIZE];
-  goodixtls5xx_decode_frame (raw_frame, length, data, 0, 4);
+  goodix_581a_decode_frame (raw_frame, length, data, 0, 4);
 
-  gint32 raw[GOODIX_581A_FRAME_SIZE];
-  for (int i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
-    raw[i] = (self->calibration_img && self->calibration_img[i] > raw_frame[i])
-               ? (gint32) (self->calibration_img[i] - raw_frame[i])
-               : 0;
-
-  /* Estimate the slowly varying pad background with a separable 7-tap
-   * binomial low-pass filter. Subtraction emphasizes local ridge contrast,
-   * though it also attenuates some ridge frequencies.
+  /* Fit a gain and offset from the untouched baseline to this scan. Keeping
+   * the residual signed preserves both ridge polarities and accommodates
+   * sensor gain drift. Ignore pixels which are zero in both frames (inactive
+   * columns at some sensor tcodes) when fitting the flat field.
    */
-  gint32 tmp[GOODIX_581A_FRAME_SIZE];
-  for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
+  double sum_baseline = 0.0;
+  double sum_scan = 0.0;
+  double sum_baseline_sq = 0.0;
+  double sum_baseline_scan = 0.0;
+  guint n_fit = 0;
+  for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
     {
-      for (int x = 0; x < GOODIX_581A_WIDTH; x++)
-        {
-          int x0 = CLAMP (x - 3, 0, GOODIX_581A_WIDTH - 1);
-          int x1 = CLAMP (x - 2, 0, GOODIX_581A_WIDTH - 1);
-          int x2 = CLAMP (x - 1, 0, GOODIX_581A_WIDTH - 1);
-          int x3 = x;
-          int x4 = CLAMP (x + 1, 0, GOODIX_581A_WIDTH - 1);
-          int x5 = CLAMP (x + 2, 0, GOODIX_581A_WIDTH - 1);
-          int x6 = CLAMP (x + 3, 0, GOODIX_581A_WIDTH - 1);
+      const double baseline = self->calibration_img ? self->calibration_img[i] : 0;
+      const double scan = raw_frame[i];
 
-          tmp[y * GOODIX_581A_WIDTH + x] = (raw[y * GOODIX_581A_WIDTH + x0] * 1 +
-                                            raw[y * GOODIX_581A_WIDTH + x1] * 6 +
-                                            raw[y * GOODIX_581A_WIDTH + x2] * 15 +
-                                            raw[y * GOODIX_581A_WIDTH + x3] * 20 +
-                                            raw[y * GOODIX_581A_WIDTH + x4] * 15 +
-                                            raw[y * GOODIX_581A_WIDTH + x5] * 6 +
-                                            raw[y * GOODIX_581A_WIDTH + x6] * 1) >> 6;
-        }
+      if (baseline == 0.0 && scan == 0.0)
+        continue;
+
+      sum_baseline += baseline;
+      sum_scan += scan;
+      sum_baseline_sq += baseline * baseline;
+      sum_baseline_scan += baseline * scan;
+      n_fit++;
     }
 
-  gint32 bg[GOODIX_581A_FRAME_SIZE];
-  for (int x = 0; x < GOODIX_581A_WIDTH; x++)
+  double gain = 1.0;
+  double offset = 0.0;
+  if (n_fit > 0)
     {
-      for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
-        {
-          int y0 = CLAMP (y - 3, 0, GOODIX_581A_HEIGHT - 1);
-          int y1 = CLAMP (y - 2, 0, GOODIX_581A_HEIGHT - 1);
-          int y2 = CLAMP (y - 1, 0, GOODIX_581A_HEIGHT - 1);
-          int y3 = y;
-          int y4 = CLAMP (y + 1, 0, GOODIX_581A_HEIGHT - 1);
-          int y5 = CLAMP (y + 2, 0, GOODIX_581A_HEIGHT - 1);
-          int y6 = CLAMP (y + 3, 0, GOODIX_581A_HEIGHT - 1);
-
-          bg[y * GOODIX_581A_WIDTH + x] = (tmp[y0 * GOODIX_581A_WIDTH + x] * 1 +
-                                           tmp[y1 * GOODIX_581A_WIDTH + x] * 6 +
-                                           tmp[y2 * GOODIX_581A_WIDTH + x] * 15 +
-                                           tmp[y3 * GOODIX_581A_WIDTH + x] * 20 +
-                                           tmp[y4 * GOODIX_581A_WIDTH + x] * 15 +
-                                           tmp[y5 * GOODIX_581A_WIDTH + x] * 6 +
-                                           tmp[y6 * GOODIX_581A_WIDTH + x] * 1) >> 6;
-        }
+      const double denominator = n_fit * sum_baseline_sq - sum_baseline * sum_baseline;
+      if (denominator > 0.0)
+        gain = (n_fit * sum_baseline_scan - sum_baseline * sum_scan) / denominator;
+      offset = (sum_scan - gain * sum_baseline) / n_fit;
     }
 
-  gint32 hp[GOODIX_581A_FRAME_SIZE];
+  gint32 residual[GOODIX_581A_FRAME_SIZE];
   gint32 active_vals[GOODIX_581A_FRAME_SIZE];
   int n_active = 0;
 
@@ -350,19 +347,20 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
       for (int x = 0; x < GOODIX_581A_WIDTH; x++)
         {
           int idx = y * GOODIX_581A_WIDTH + x;
-          hp[idx] = raw[idx] - bg[idx];
+          const double baseline = self->calibration_img ? self->calibration_img[idx] : 0;
+          residual[idx] = raw_frame[idx] - (gint32) (gain * baseline + offset);
 
           if (x >= 2 && x < GOODIX_581A_WIDTH - 2 &&
               y >= 2 && y < GOODIX_581A_HEIGHT - 2)
             {
-              active_vals[n_active++] = hp[idx];
+              active_vals[n_active++] = residual[idx];
             }
         }
     }
 
-  /* Ignore the outer two-pixel border when measuring contrast because the
-   * convolution uses edge replication there. A narrow percentile span means
-   * this frame has no trustworthy ridge signal and must not be stretched.
+  /* Use the signed, flat-fielded difference before any high-pass operation.
+   * 20 counts is a provisional separation point from early 581a captures;
+   * validate it across more devices and repeated air/finger frames.
    */
   gint32 p5 = 0, p95 = 0;
   gboolean has_usable_contrast = FALSE;
@@ -371,7 +369,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
       qsort (active_vals, n_active, sizeof (gint32), compare_ints);
       p5 = active_vals[n_active * 5 / 100];
       p95 = active_vals[n_active * 95 / 100];
-      has_usable_contrast = p95 - p5 >= 40;
+      has_usable_contrast = p95 - p5 >= 20;
     }
 
   fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels, usable=%d",
@@ -393,7 +391,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
             }
           else
             {
-              gint32 val = (hp[idx] - p5) * 255 / (p95 - p5);
+              gint32 val = (residual[idx] - p5) * 255 / (p95 - p5);
               if (val < 0) val = 0;
               if (val > 255) val = 255;
               img->data[idx] = (guint8) (255 - val);
@@ -401,7 +399,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
         }
     }
 
-  fp_dbg ("581a: Frame processed, reporting native 64x80 image captured for SIGFM!");
+  fp_dbg ("581a: Frame processed, reporting native 80x64 image captured for SIGFM!");
   img->ppmm = 500.0 / 25.4;
   fpi_image_device_image_captured (FP_IMAGE_DEVICE (dev), img);
 
@@ -581,8 +579,9 @@ process_frame (guint8 * frame)
     {
       for (int x = 0; x != GOODIX_581A_WIDTH; ++x)
         {
-          const int idx = x + y * GOODIX_581A_WIDTH;
-          img->data[idx] = 255 - frame[idx];
+          const int stream_idx = y + x * GOODIX_581A_STREAM_ROWS;
+          const int image_idx = x + y * GOODIX_581A_WIDTH;
+          img->data[image_idx] = 255 - frame[stream_idx];
         }
     }
   return img;
