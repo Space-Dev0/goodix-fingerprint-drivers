@@ -53,9 +53,9 @@ chmod +x install.sh
 ### Option B: Building from Source Manually
 
 ```bash
-# 1. Clone the repository with the goodix581a branch
-git clone -b goodix581a https://github.com/Space-Dev0/libfprint.git
-cd libfprint
+# 1. Clone the repository containing the GoodixTLS 581a pull-request branch
+git clone -b goodix581a https://github.com/Space-Dev0/libfprint-goodix581a.git
+cd libfprint-goodix581a
 
 # 2. Configure the Meson build
 meson setup build \
@@ -121,10 +121,11 @@ recent `fprintd` AVC, since that may authorize unrelated denials.
 
 ### 4.1 Delete Existing Fingerprints
 
-If you have previously enrolled prints with the stock driver or an older threshold:
+After updating from an earlier Goodix 581a build, delete and re-enroll prints:
+the corrected 80x64 image geometry changes the stored feature coordinates.
 
 ```bash
-fprintd-delete $USER
+fprintd-delete "$USER"
 ```
 
 ### 4.2 Enroll Your Finger (12 Touches)

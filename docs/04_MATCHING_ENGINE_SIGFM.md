@@ -84,7 +84,7 @@ When matching probe descriptors against gallery descriptors using k-Nearest Neig
 
 $$\text{Lowe's Condition: } \frac{\|\mathbf{D}_{\text{probe}} - \mathbf{D}_{\text{best}}\|_2}{\|\mathbf{D}_{\text{probe}} - \mathbf{D}_{\text{second}}\|_2} < \text{distance\_match}$$
 
-- The configured **`0.75`** ratio removes some ambiguous nearest-neighbor matches. Its effect depends on the captured images and is not a guarantee of a particular false-match or false-accept rate.
+- The configured **`0.90`** ratio retains more candidates for this 80×64 sensor. A test on one device showed the previous `0.75` threshold yielded fewer than four candidates for each enrolled stage, preventing geometric verification from running. Reciprocal matching and geometric consistency still filter candidates. This threshold is provisional and has not been validated against a multi-finger capture set, so it does not establish a false-accept rate.
 
 ### 3.4 Skin Elasticity Compensation: Pairwise Vector Invariance
 
@@ -95,12 +95,19 @@ $$\begin{aligned}
 \mathbf{v}_2 &= q_1 - q_2, \quad &L_2 &= \|\mathbf{v}_2\|
 \end{aligned}$$
 
-Relative distance must satisfy skin deformation tolerance:
-$$1 - \frac{\min(L_1, L_2)}{\max(L_1, L_2)} \le \text{length\_match} \quad (0.12)$$
+The matcher now estimates a common scale as the median of valid pair ratios
+`L2 / L1`, bounded to `0.70..1.43`. Each pair must be within 20% of that
+median. This allows a consistent global size change from a different press
+while rejecting pairwise scales that disagree with the common transform.
 
-For each pair of correspondences, the matcher estimates the rotation from the probe vector to the enrolled vector using `atan2(cross, dot)`. Pair hypotheses agree when their wrapped angular difference is at most `angle_match` (0.12 radians).
+For each pair of correspondences, the matcher estimates rotation from the
+probe vector to the enrolled vector using `atan2(cross, dot)`. Pair hypotheses
+agree when their wrapped angular difference is at most `angle_match`
+(`0.12` radians).
 
-Every pair of consistent vectors increments the geometric histogram. Because genuine matches have $20\text{ to }30$ mutually consistent keypoints, their score scales quadratically ($\binom{25}{2} = 300$ to $\binom{40}{2} = 780$). Accidental single-point collisions have no mutually consistent neighbors and score 0.
+Every pair of consistent angles increments the geometric score. Scores depend
+on capture quality and have not been calibrated across genuine and impostor
+captures; the thresholds below are provisional.
 
 ---
 

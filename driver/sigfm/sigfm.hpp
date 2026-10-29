@@ -54,9 +54,11 @@ void sigfm_free_info(SigfmImgInfo* info);
  *
  * @param frame Print to be checked
  * @param enrolled Canonical print to verify against
+ * @param context Short label included in diagnostic messages
  * @return int Non-negative match score; zero means reject or matching failed.
  */
-int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled);
+int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled,
+                      const char* context);
 
 /**
  * @brief Serialize an image info for storage

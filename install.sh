@@ -14,6 +14,7 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORK_DIR="${SCRIPT_DIR}/.build_cache"
+LIBFPRINT_DIR="${WORK_DIR}/libfprint-goodix581a"
 
 echo "[*] Installing udev rules..."
 sudo cp "${SCRIPT_DIR}/udev/99-goodix-581a.rules" /etc/udev/rules.d/
@@ -30,17 +31,16 @@ sudo systemctl daemon-reload
 
 echo "[*] Preparing build directory..."
 mkdir -p "${WORK_DIR}"
-cd "${WORK_DIR}"
 
-if [ ! -d "libfprint" ]; then
-    echo "[*] Cloning Space-Dev0/libfprint (branch: goodix581a)..."
-    git clone --depth 1 -b goodix581a https://github.com/Space-Dev0/libfprint.git
+if [ ! -d "${LIBFPRINT_DIR}" ]; then
+    echo "[*] Cloning Space-Dev0/libfprint-goodix581a (branch: goodix581a)..."
+    git clone --depth 1 -b goodix581a https://github.com/Space-Dev0/libfprint-goodix581a.git "${LIBFPRINT_DIR}"
 else
-    echo "[*] Updating existing libfprint clone..."
-    cd libfprint && git pull && cd ..
+    echo "[*] Updating existing libfprint-goodix581a clone..."
+    git -C "${LIBFPRINT_DIR}" pull --ff-only
 fi
 
-cd libfprint
+cd "${LIBFPRINT_DIR}"
 
 echo "[*] Configuring Meson build..."
 rm -rf build
@@ -71,6 +71,8 @@ sudo systemctl restart fprintd
 echo "=================================================================="
 echo " Installation Complete!"
 echo " Next steps:"
+echo "   Existing prints from older 581a builds must be deleted and re-enrolled:"
+echo "   fprintd-delete \$USER"
 echo "   1. Enroll your finger:  fprintd-enroll"
 echo "   2. Verify matching:     fprintd-verify"
 echo "   3. View live logs:      journalctl -u fprintd -f"
