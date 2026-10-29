@@ -15,7 +15,8 @@
 #define GOODIX_581A_STREAM_ROWS 64
 #define GOODIX_581A_STREAM_COLUMNS 80
 #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
-#define GOODIX_581A_AVERAGE_FRAMES 4
+/* Initial capture data at tcode 0x0010 needed about eight frames to settle. */
+#define GOODIX_581A_AVERAGE_FRAMES 8
 /* 80x64 packed sensor samples plus the four-byte footer used by this device. */
 #define GOODIX_581A_RAW_FRAME_SIZE 7684
 
