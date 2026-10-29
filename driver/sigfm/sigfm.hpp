@@ -25,6 +25,12 @@
 extern "C" {
 #endif
 typedef unsigned char SigfmPix;
+
+/* SIGFM returns the count of mutually consistent geometric hypotheses.
+ * The reference matcher accepts a comparison once five hypotheses agree.
+ */
+#define SIGFM_MATCH_SCORE_THRESHOLD 5
+
 /**
  * @brief Contains information used by the sigfm algorithm for matching
  * @details Get one from sigfm_extract() and make sure to clean it up with sigfm_free_info()

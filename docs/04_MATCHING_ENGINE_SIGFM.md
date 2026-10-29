@@ -43,13 +43,13 @@ Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ri
 |  [128-D Descriptors]    (25 to 45 high-quality ridge keypoints)        |
 |          |                                                              |
 |          v                                                              |
-|  [k-NN Descriptor Match] (Lowe's ratio test threshold = 0.75)           |
+|  [k-NN Descriptor Match] (Lowe's ratio test threshold = 0.90)           |
 |          |                                                              |
 |          v                                                              |
 |  [Geometric Verification](Pairwise relative vectors: len=12%, ang=12%)  |
 |          |                                                              |
 |          v                                                              |
-|  [Match Decision]        (max_score >= 70 || score>=45 & stages>=2)     |
+|  [Match Decision]        (max geometric score >= 5)                     |
 +-------------------------------------------------------------------------+
 ```
 
@@ -105,17 +105,21 @@ probe vector to the enrolled vector using `atan2(cross, dot)`. Pair hypotheses
 agree when their wrapped angular difference is at most `angle_match`
 (`0.12` radians).
 
-Every pair of consistent angles increments the geometric score. Scores depend
-on capture quality and have not been calibrated across genuine and impostor
-captures; the thresholds below are provisional.
+Every pair of consistent angles increments the geometric score. The score is
+therefore a small count of agreeing vector pairs, not a percentage. The
+[reference SIGFM matcher](https://github.com/goodix-fp-linux-dev/sigfm/blob/master/cpp/match.cpp)
+accepts at five agreeing pairs; the earlier 45/70
+gates used in this integration were on the wrong scale and rejected the
+observed genuine comparison with score 5. The cutoff is now 5, but it has not
+been calibrated against a set of genuine and impostor captures for the 581a.
 
 ---
 
 ## 4. Final Match Criteria & 12-Stage Enrollment
 
 ```c
-/* Two-Tier Evaluation in fpi-image-device.c */
-if (max_score >= 70 || (max_score >= 45 && matched_stages >= 2))
+/* Each SIGFM score is a count of agreeing geometric hypotheses. */
+if (max_score >= SIGFM_MATCH_SCORE_THRESHOLD) /* 5 */
     result = FPI_MATCH_SUCCESS;
 else
     result = FPI_MATCH_FAIL;
@@ -132,4 +136,4 @@ Additional stages can cover more of the finger pad, but do not guarantee overlap
 
 ## 5. Threshold validation
 
-The configured score thresholds (`70` for a single stage, or `45` with at least two stages scoring `40`) are implementation defaults, not calibrated security thresholds. Before changing them for a deployment, collect repeated genuine comparisons across separate sessions and impostor comparisons across distinct fingers. Report false match and false non-match rates at the selected threshold; include the sensor, enrollment procedure, image preprocessing, and number of comparisons. A tiny sample cannot establish a low false-accept probability.
+The score cutoff of `5` matches the reference SIGFM algorithm's minimum count of agreeing geometric hypotheses. It is not a statistically calibrated security threshold for the Goodix 581a. Before relying on it, collect repeated genuine comparisons across separate sessions and impostor comparisons across distinct fingers. Report false match and false non-match rates; include the sensor, enrollment procedure, image preprocessing, and number of comparisons. A tiny sample cannot establish a low false-accept probability.
