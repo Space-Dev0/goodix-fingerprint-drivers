@@ -1,7 +1,7 @@
 From a536363ea768269293bdb8b34fe56d2120db6178 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/14] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/15] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2382,7 +2382,7 @@ index fa27507..8e5de6b 100644
 From 1a31563394df3cf010fd55dd13f9e137bf145654 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/14] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/15] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2664,7 +2664,7 @@ index f19b377..6e5b5df 100644
 From 04912498fa08c200e05b4f83a4d2598286af7c89 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/14] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/15] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2868,7 +2868,7 @@ index 671a2b6..7443baa 100644
 From 807462f4dc6087836d59735041561119a8dab3ee Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/14] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/15] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2951,7 +2951,7 @@ index 9b5c3d9..73f889d 100644
 From c5e8503da7475e885712ac7523df673e93de95cd Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/14] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/15] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3019,7 +3019,7 @@ index b726b67..d010035 100644
 From cec2a9a5d981b075c54b00bf9debb33af9083db6 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/14] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/15] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3074,7 +3074,7 @@ index f2bf17d..f2332df 100644
 From 12e8d48887290b96fd786e0e3b1f5b2a72539347 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/14] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/15] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3312,7 +3312,7 @@ index 215ef53..9c7ccc7 100644
 From 396cb81c0ef175bca6f8cb48031e0e20319190cb Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/14] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/15] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3626,7 +3626,7 @@ index 0000000..bfb0677
 From c10252e23b346f22e26f3eba11e974ce69e8de1f Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 15:56:39 +0530
-Subject: [PATCH 09/14] goodix581a: use full-width config and average captures
+Subject: [PATCH 09/15] goodix581a: use full-width config and average captures
 
 ---
  README.md                                |  5 ++
@@ -3932,7 +3932,7 @@ index bfb0677..57b1402 100644
 From d6bc558ee44e1895ede9bbd59397d6e844b4fd16 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 13:52:46 +0530
-Subject: [PATCH 10/14] goodix581a: diagnose SIGFM verification failures
+Subject: [PATCH 10/15] goodix581a: diagnose SIGFM verification failures
 
 ---
  libfprint/fpi-image-device.c | 37 +++++++++++++++++++++++++++++++++---
@@ -4119,7 +4119,7 @@ index d22f003..26806ac 100644
 From f4425c17eab2781c4d05b9e70c95fa00130c1d0c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 14:07:58 +0530
-Subject: [PATCH 11/14] goodix581a: retain more SIGFM match candidates
+Subject: [PATCH 11/15] goodix581a: retain more SIGFM match candidates
 
 ---
  libfprint/sigfm/sigfm.cpp | 6 +++++-
@@ -4149,7 +4149,7 @@ index 26806ac..718035c 100644
 From b0fc8567f2e7272eb94499a08849f2e6792965a8 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 15:48:19 +0530
-Subject: [PATCH 12/14] goodix581a: compare matches at common finger scale
+Subject: [PATCH 12/15] goodix581a: compare matches at common finger scale
 
 ---
  libfprint/sigfm/sigfm.cpp | 68 ++++++++++++++++++++++++++++++---------
@@ -4267,7 +4267,7 @@ index 718035c..58168f7 100644
 From 5d3261a998cbf70c7232d61f9117dd3f7057abae Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:04:38 +0530
-Subject: [PATCH 13/14] goodix581a: report SIGFM matching diagnostics by stage
+Subject: [PATCH 13/15] goodix581a: report SIGFM matching diagnostics by stage
 
 ---
  libfprint/fpi-image-device.c |  11 +++-
@@ -4515,7 +4515,7 @@ index 7443baa..1ff6e81 100644
 From fc0eac823f379f5cf0c4cb58104760b1276082db Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:18:16 +0530
-Subject: [PATCH 14/14] goodix581a: apply SIGFM geometric score threshold
+Subject: [PATCH 14/15] goodix581a: apply SIGFM geometric score threshold
 
 ---
  libfprint/fpi-image-device.c | 8 ++++----
@@ -4579,6 +4579,56 @@ index 1ff6e81..d01bbd9 100644
  /**
   * @brief Contains information used by the sigfm algorithm for matching
   * @details Get one from sigfm_extract() and make sure to clean it up with sigfm_free_info()
+-- 
+2.56.0
+
+
+From cad62f533c086c02f3f823c608f1d1af6282a4b0 Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Thu, 29 Oct 2026 16:29:07 +0530
+Subject: [PATCH 15/15] goodix581a: require corroboration across enrollment
+ stages
+
+---
+ libfprint/fpi-image-device.c | 4 ++--
+ libfprint/sigfm/sigfm.hpp    | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
+index 42ea495..e9640f9 100644
+--- a/libfprint/fpi-image-device.c
++++ b/libfprint/fpi-image-device.c
+@@ -640,7 +640,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                   g_variant_unref (stage_bytes);
+                 }
+ 
+-              if (max_score >= SIGFM_MATCH_SCORE_THRESHOLD)
++              if (matched_stages >= 2)
+                 result = FPI_MATCH_SUCCESS;
+               else
+                 result = FPI_MATCH_FAIL;
+@@ -728,7 +728,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+               g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_score=%d, matched_stages=%d",
+                          t, stage_index, valid_stages, max_score, matched_stages);
+ 
+-              if (max_score >= SIGFM_MATCH_SCORE_THRESHOLD)
++              if (matched_stages >= 2)
+                 {
+                   matched_template = tmpl;
+                   break;
+diff --git a/libfprint/sigfm/sigfm.hpp b/libfprint/sigfm/sigfm.hpp
+index d01bbd9..06d799b 100644
+--- a/libfprint/sigfm/sigfm.hpp
++++ b/libfprint/sigfm/sigfm.hpp
+@@ -27,7 +27,7 @@ extern "C" {
+ typedef unsigned char SigfmPix;
+ 
+ /* SIGFM returns the count of mutually consistent geometric hypotheses.
+- * The reference matcher accepts a comparison once five hypotheses agree.
++ * Five is the per-stage vote cutoff; the caller also requires two stages.
+  */
+ #define SIGFM_MATCH_SCORE_THRESHOLD 5
+ 
 -- 
 2.56.0
 

@@ -18,7 +18,7 @@ This project integrates directly with `libfprint` and `fprintd` to deliver seaml
 - **7-tap high-pass filter**: Subtracts a separable binomial low-pass estimate to reduce slowly varying background structure; it can also attenuate ridge detail.
 - **SIGFM (SIFT-based Geometric Matcher)**: Replaces traditional minutiae (NBIS / Bozorth3) with a continuous gradient orientation matcher tailored for compact ($3.25\text{ mm} \times 4.06\text{ mm}$) sensors.
 - **Feature matching**: Uses CLAHE, SIFT descriptors, reciprocal ratio-filtered matches, and pairwise geometry. These settings are heuristics; the repository does not include a representative genuine/impostor dataset to validate error rates.
-- **Multi-touch enrollment**: Stores up to 12 enrollment samples; SIGFM compares each stage using a geometric-consensus score with a cutoff of five agreeing hypotheses. The cutoff has not been statistically calibrated for this sensor and user population.
+- **Multi-touch enrollment**: Stores up to 12 enrollment samples; matching requires a geometric-consensus score of at least five in two enrollment stages. This policy has not been statistically calibrated for this sensor and user population.
 - **SELinux Hardening**: Fully documented analysis and remediation for Intel TBB sysctl AVC alerts under Fedora / RHEL.
 
 ---
@@ -85,7 +85,7 @@ For developers, security researchers, and package maintainers, the architecture 
 ├── driver/                                # Goodix 581a driver source & standalone patch
 │   ├── goodix581a.c                       # C driver implementation (SSM, FDT, Mode 1/5)
 │   ├── goodix581a.h                       # Device registers, 256B AFE config, FDT tables
-│   ├── goodix581a-sigfm.patch             # Fourteen-commit git-am series for the GoodixTLS community base
+│   ├── goodix581a-sigfm.patch             # Fifteen-commit git-am series for the GoodixTLS community base
 │   └── sigfm/                             # SIGFM SIFT matcher module (C++)
 │       ├── sigfm.cpp
 │       ├── sigfm.hpp

@@ -49,7 +49,7 @@ Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ri
 |  [Geometric Verification](Pairwise relative vectors: len=12%, ang=12%)  |
 |          |                                                              |
 |          v                                                              |
-|  [Match Decision]        (max geometric score >= 5)                     |
+|  [Match Decision]        (score >= 5 in at least two enrollment stages) |
 +-------------------------------------------------------------------------+
 ```
 
@@ -108,18 +108,19 @@ agree when their wrapped angular difference is at most `angle_match`
 Every pair of consistent angles increments the geometric score. The score is
 therefore a small count of agreeing vector pairs, not a percentage. The
 [reference SIGFM matcher](https://github.com/goodix-fp-linux-dev/sigfm/blob/master/cpp/match.cpp)
-accepts at five agreeing pairs; the earlier 45/70
-gates used in this integration were on the wrong scale and rejected the
-observed genuine comparison with score 5. The cutoff is now 5, but it has not
-been calibrated against a set of genuine and impostor captures for the 581a.
+accepts at five agreeing pairs. The earlier 45/70 gates used in this
+integration were on the wrong scale. The 581a port now uses 5 as a per-stage
+vote, but requires two separate enrollment stages to reach it as an additional
+corroboration check. This policy has not been calibrated against a set of
+genuine and impostor captures for the 581a.
 
 ---
 
 ## 4. Final Match Criteria & 12-Stage Enrollment
 
 ```c
-/* Each SIGFM score is a count of agreeing geometric hypotheses. */
-if (max_score >= SIGFM_MATCH_SCORE_THRESHOLD) /* 5 */
+/* Require support from two independent enrollment captures. */
+if (matched_stages >= 2) /* each stage score >= SIGFM_MATCH_SCORE_THRESHOLD */
     result = FPI_MATCH_SUCCESS;
 else
     result = FPI_MATCH_FAIL;
@@ -127,13 +128,12 @@ else
 
 ### 4.1 12-Stage Multi-Angle Enrollment
 
-With a tiny $3.25\text{ mm} \times 4.06\text{ mm}$ sensor, 8 touches left unmapped gaps on the fingertip perimeter. Setting `dev_class->nr_enroll_stages = 12` prompts the user through:
-- 4 touches: Center pad (flat, firm, light)
-- 4 touches: Lateral edges (left 45°, right 45°)
-- 4 touches: Distal tip, knuckle, and rotational tilts
-
-Additional stages can cover more of the finger pad, but do not guarantee overlap or a particular false-accept rate. Enrollment prompts should encourage different placements while retaining enough repeated center touches to capture the same region consistently.
+The sensor sees only a small part of the finger. For the 12 enrollment touches,
+keep the pad centered and vary placement only slightly; lift fully between
+touches. Large shifts, edge-only presses, and deliberate rotations reduce
+overlap between probe and template. The verifier now needs two separate stages
+to match, so repeatable coverage matters more than touring the whole fingertip.
 
 ## 5. Threshold validation
 
-The score cutoff of `5` matches the reference SIGFM algorithm's minimum count of agreeing geometric hypotheses. It is not a statistically calibrated security threshold for the Goodix 581a. Before relying on it, collect repeated genuine comparisons across separate sessions and impostor comparisons across distinct fingers. Report false match and false non-match rates; include the sensor, enrollment procedure, image preprocessing, and number of comparisons. A tiny sample cannot establish a low false-accept probability.
+The per-stage score cutoff of `5` matches the reference SIGFM algorithm's minimum count of agreeing geometric hypotheses. This port additionally requires two stages to reach that score. This is a conservative policy, not a calibrated security threshold. Before relying on it, collect repeated genuine comparisons across separate sessions and impostor comparisons across distinct fingers. Report false match and false non-match rates; include the sensor, enrollment procedure, image preprocessing, and number of comparisons. A tiny sample cannot establish a low false-accept probability.

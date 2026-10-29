@@ -27,7 +27,7 @@ extern "C" {
 typedef unsigned char SigfmPix;
 
 /* SIGFM returns the count of mutually consistent geometric hypotheses.
- * The reference matcher accepts a comparison once five hypotheses agree.
+ * Five is the per-stage vote cutoff; the caller also requires two stages.
  */
 #define SIGFM_MATCH_SCORE_THRESHOLD 5
 
