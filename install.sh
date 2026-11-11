@@ -15,6 +15,15 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORK_DIR="${SCRIPT_DIR}/.build_cache"
 LIBFPRINT_DIR="${WORK_DIR}/libfprint-goodix581a"
+PATCH_FILE="${SCRIPT_DIR}/driver/goodix581a-sigfm.patch"
+LIBFPRINT_URL="https://github.com/goodix-fp-linux-dev/libfprint.git"
+LIBFPRINT_BRANCH="goodixtls"
+LIBFPRINT_BASE="c343b69"
+
+if [ ! -f "${PATCH_FILE}" ]; then
+    echo "[-] Missing patch series: ${PATCH_FILE}"
+    exit 1
+fi
 
 echo "[*] Installing udev rules..."
 sudo cp "${SCRIPT_DIR}/udev/99-goodix-581a.rules" /etc/udev/rules.d/
@@ -32,15 +41,37 @@ sudo systemctl daemon-reload
 echo "[*] Preparing build directory..."
 mkdir -p "${WORK_DIR}"
 
-if [ ! -d "${LIBFPRINT_DIR}" ]; then
-    echo "[*] Cloning Space-Dev0/libfprint-goodix581a (branch: goodix581a)..."
-    git clone --depth 1 -b goodix581a https://github.com/Space-Dev0/libfprint-goodix581a.git "${LIBFPRINT_DIR}"
+if [ -d "${LIBFPRINT_DIR}/.git" ] &&
+   [ "$(git -C "${LIBFPRINT_DIR}" remote get-url origin 2>/dev/null || true)" != "${LIBFPRINT_URL}" ]; then
+    echo "[*] Replacing an existing clone from a different remote..."
+    rm -rf "${LIBFPRINT_DIR}"
+fi
+
+if [ ! -d "${LIBFPRINT_DIR}/.git" ]; then
+    echo "[*] Cloning goodix-fp-linux-dev/libfprint (branch: ${LIBFPRINT_BRANCH})..."
+    git clone --branch "${LIBFPRINT_BRANCH}" "${LIBFPRINT_URL}" "${LIBFPRINT_DIR}"
 else
-    echo "[*] Updating existing libfprint-goodix581a clone..."
-    git -C "${LIBFPRINT_DIR}" pull --ff-only
+    echo "[*] Refreshing existing libfprint clone..."
+    if [ "$(git -C "${LIBFPRINT_DIR}" rev-parse --is-shallow-repository)" = "true" ]; then
+        git -C "${LIBFPRINT_DIR}" fetch --unshallow origin
+    else
+        git -C "${LIBFPRINT_DIR}" fetch --prune origin
+    fi
+    git -C "${LIBFPRINT_DIR}" fetch origin "${LIBFPRINT_BRANCH}"
 fi
 
 cd "${LIBFPRINT_DIR}"
+
+# Build from the known-good GoodixTLS community base plus the local patch
+# series. This avoids depending on a pull-request branch and keeps repeated
+# installer runs reproducible.
+echo "[*] Resetting libfprint to ${LIBFPRINT_BASE}..."
+git checkout --detach "${LIBFPRINT_BASE}"
+git reset --hard "${LIBFPRINT_BASE}"
+git clean -fdx
+
+echo "[*] Applying Goodix 581a patch series..."
+git am "${PATCH_FILE}"
 
 echo "[*] Configuring Meson build..."
 rm -rf build

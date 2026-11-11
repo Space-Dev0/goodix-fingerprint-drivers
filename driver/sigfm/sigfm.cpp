@@ -174,6 +174,14 @@ int sigfm_keypoints_count(SigfmImgInfo* info)
     return info->keypoints.size();
 }
 
+int sigfm_descriptors_count(SigfmImgInfo* info)
+{
+    if (info == nullptr) {
+        return 0;
+    }
+    return info->descriptors.rows;
+}
+
 unsigned char* sigfm_serialize_binary(SigfmImgInfo* info, int* outlen)
 {
     if (outlen != nullptr) {

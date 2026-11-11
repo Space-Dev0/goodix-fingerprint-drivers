@@ -53,11 +53,15 @@ chmod +x install.sh
 ### Option B: Building from Source Manually
 
 ```bash
-# 1. Clone the repository containing the GoodixTLS 581a pull-request branch
-git clone -b goodix581a https://github.com/Space-Dev0/libfprint-goodix581a.git
-cd libfprint-goodix581a
+# 1. Clone the GoodixTLS community libfprint tree
+git clone --branch goodixtls https://github.com/goodix-fp-linux-dev/libfprint.git
+cd libfprint
 
-# 2. Configure the Meson build
+# 2. Check out the patch base and apply the bundled series
+git checkout c343b69
+git am /path/to/goodix-fingerprint-drivers/driver/goodix581a-sigfm.patch
+
+# 3. Configure the Meson build
 meson setup build \
     --prefix=/usr \
     --sysconfdir=/etc \
@@ -65,10 +69,10 @@ meson setup build \
     -Dgtk-examples=false \
     -Ddoc=false
 
-# 3. Compile with Ninja
+# 4. Compile with Ninja
 ninja -C build
 
-# 4. Install into system library path
+# 5. Install into system library path
 sudo ninja -C build install
 sudo ldconfig
 ```
@@ -135,9 +139,8 @@ fprintd-enroll
 ```
 
 > **Enrollment Technique Tips**:
-> - Touch 1–4: Place the center of your finger pad flat and firm on the power button.
-> - Touch 5–8: Place the left edge and right edge of your finger at a slight tilt (30°–45°).
-> - Touch 9–12: Place the tip of your finger, lower knuckle, and slight rotational angles.
+> - Keep the center of your finger pad on the sensor for every touch.
+> - Vary placement only slightly between touches; do not deliberately rotate or press only the edges.
 > - **Lift your finger between each prompt** until the terminal indicates `Enroll result: enroll-stage-passed`.
 
 ### 4.3 Test Verification

@@ -14,11 +14,11 @@ This project integrates directly with `libfprint` and `fprintd` to deliver seaml
 ## 🌟 Key Engineering Highlights
 
 - **Proprietary TLS 1.2 Over USB Bulk**: Implements the proprietary Goodix TLS protocol negotiation over bulk endpoints, enabling encrypted command and biometric frame transmission with stock OEM firmware.
-- **Native 64×80 12-bit ADC Decoding**: Decodes packed 6-byte chunks (7,684-byte encrypted transfer) directly into native 12-bit resolution sensor frames.
-- **7-tap high-pass filter**: Subtracts a separable binomial low-pass estimate to reduce slowly varying background structure; it can also attenuate ridge detail.
+- **Native 80×64 12-bit ADC Decoding**: Decodes packed 6-byte chunks (7,684-byte encrypted transfer) directly into native 12-bit resolution sensor frames.
+- **Signed Least-Squares Flat-Fielding**: Fits and removes the ambient baseline gain/offset per pixel, then normalizes with 5th/95th percentiles instead of a high-pass blur that attenuates ridge detail.
 - **SIGFM (SIFT-based Geometric Matcher)**: Replaces traditional minutiae (NBIS / Bozorth3) with a continuous gradient orientation matcher tailored for compact ($3.25\text{ mm} \times 4.06\text{ mm}$) sensors.
 - **Feature matching**: Uses CLAHE, SIFT descriptors, reciprocal ratio-filtered matches, and pairwise geometry. These settings are heuristics; the repository does not include a representative genuine/impostor dataset to validate error rates.
-- **Multi-touch enrollment**: Stores up to 12 enrollment samples; matching requires a geometric-consensus score of at least five in two enrollment stages. This policy has not been statistically calibrated for this sensor and user population.
+- **Multi-touch enrollment**: Stores up to 12 enrollment samples; a stage counts with a geometric-consensus score of at least 20, and verification requires either two such stages or one stage scoring at least 45. This policy has not been statistically calibrated for this sensor and user population.
 - **SELinux Hardening**: Fully documented analysis and remediation for Intel TBB sysctl AVC alerts under Fedora / RHEL.
 
 ---
@@ -41,7 +41,7 @@ Once installed, enroll your finger:
 # 1. Clear any old templates
 fprintd-delete $USER
 
-# 2. Enroll (12 touches: center pad, edges, and tip)
+# 2. Enroll (12 touches; keep the pad centered and vary placement slightly)
 fprintd-enroll
 
 # 3. Test verification
@@ -59,9 +59,9 @@ For developers, security researchers, and package maintainers, the architecture 
 2. **[Cryptography & Proprietary TLS Protocol](docs/02_CRYPTO_AND_TLS_PROTOCOL.md)**
    - Neodyme CVE-2023-45866 analysis, TLS 1.2 handshake over bulk endpoints, PSK derivation, and record encapsulation.
 3. **[Image Decoding & Preprocessing Pipeline](docs/03_IMAGE_PIPELINE_AND_DECODING.md)**
-   - 12-bit nibble unpacking math, Mode 1 baseline vs Mode 5 scan, 7-tap separable Gaussian high-pass filter, dynamic percentile normalization.
+   - 12-bit nibble unpacking math, Mode 1 baseline vs Mode 5 scan, eight-frame averaging, signed least-squares flat-fielding, and 5th/95th percentile normalization.
 4. **[Biometric Matching Engine: SIGFM & SIFT Tuning](docs/04_MATCHING_ENGINE_SIGFM.md)**
-   - Why NIST Bozorth3 failed on 64×80 sensors, CLAHE parameter tuning, SIFT initial blur $\sigma = 1.2$, Lowe's ratio test $0.75$, geometric angle histograms, and two-tier decision logic.
+   - Why NIST Bozorth3 failed on 80×64 sensors, CLAHE parameter tuning, SIFT initial blur $\sigma = 1.2$, Lowe's ratio test $0.90$, geometric angle histograms, and the two-stage / strong-stage acceptance policy.
 5. **[System Integration, Concurrency & SELinux Hardening](docs/05_SYSTEM_INTEGRATION_AND_SELINUX.md)**
    - Concurrency SSM state flow, Intel TBB sysctl AVC analysis, and the scope of the Fedora/RHEL policy workaround.
 6. **[Build & Installation Guide](docs/06_BUILD_AND_INSTALLATION_GUIDE.md)**
@@ -85,7 +85,7 @@ For developers, security researchers, and package maintainers, the architecture 
 ├── driver/                                # Goodix 581a driver source & standalone patch
 │   ├── goodix581a.c                       # C driver implementation (SSM, FDT, Mode 1/5)
 │   ├── goodix581a.h                       # Device registers, 256B AFE config, FDT tables
-│   ├── goodix581a-sigfm.patch             # Sixteen-commit git-am series for the GoodixTLS community base
+│   ├── goodix581a-sigfm.patch             # Nineteen-commit git-am series for the GoodixTLS community base
 │   └── sigfm/                             # SIGFM SIFT matcher module (C++)
 │       ├── sigfm.cpp
 │       ├── sigfm.hpp
@@ -104,15 +104,22 @@ For developers, security researchers, and package maintainers, the architecture 
 
 ## 🛠️ Standalone Upstream Fork
 
-If you prefer building directly from the full `libfprint` repository:
+The `driver/goodix581a-sigfm.patch` series targets the GoodixTLS community tree
+at base commit `c343b69`, not a pull-request branch. To build it manually:
 
 ```bash
-git clone -b goodix581a https://github.com/Space-Dev0/libfprint.git
+git clone --branch goodixtls https://github.com/goodix-fp-linux-dev/libfprint.git
 cd libfprint
-meson setup build -Ddrivers=goodixtls581a
+git checkout c343b69
+git am /path/to/goodix-fingerprint-drivers/driver/goodix581a-sigfm.patch
+meson setup build -Ddrivers=goodixtls581a -Dgtk-examples=false -Ddoc=false
 ninja -C build
 sudo ninja -C build install
+sudo ldconfig
 ```
+
+The automated `install.sh` performs the same steps in `.build_cache/`, resetting
+to `c343b69` and re-applying the patch on each run.
 
 ---
 

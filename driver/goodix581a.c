@@ -565,6 +565,17 @@ dev_581a_change_state (FpImageDevice *img_dev, FpiImageDeviceState state)
   if (state == FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_ON)
     {
       fp_dbg ("581a entering AWAIT_FINGER_ON state");
+
+      if (self->scan_ssm)
+        {
+          FpiSsm *previous = self->scan_ssm;
+          self->scan_ssm = NULL;
+          fp_warn ("581a: superseding an existing scan state machine");
+          fpi_ssm_mark_failed (previous,
+                               g_error_new (G_IO_ERROR, G_IO_ERROR_CANCELLED,
+                                            "Superseded by a new scan"));
+        }
+
       self->scan_ssm = fpi_ssm_new (dev, scan_581a_run_state, SCAN_581A_NUM_STATES);
       fpi_ssm_start (self->scan_ssm, scan_581a_complete);
     }

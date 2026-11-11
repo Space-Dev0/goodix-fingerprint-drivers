@@ -54,7 +54,7 @@ Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ri
 |  [Geometric Verification](Pairwise relative vectors: len=12%, ang=12%)  |
 |          |                                                              |
 |          v                                                              |
-|  [Match Decision]        (score >= 5 in at least two enrollment stages) |
+|  [Match Decision]        (stage >= 20; two stages or one stage >= 45)  |
 +-------------------------------------------------------------------------+
 ```
 
@@ -67,11 +67,11 @@ Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ri
 In low-contrast or partially touched frames, unpressed sensor cells produce low-amplitude thermal noise.
 
 - **Initial Setting (`clipLimit = 4.0`, `tileGridSize = 4x4`)**:
-  - Divided the 64×80 image into 16 tiny $16 \times 20$ tiles.
+  - Divided the 80×64 image into 16 tiles of $20 \times 16$ pixels.
   - In background tiles, flat noise was amplified by $4.0\times$, generating **98 to 152 false keypoints** per frame.
-  - Because fixed-pattern noise is physically identical across different touches, false keypoints collided between different fingers, scoring **57 to 66** and slipping past threshold 50.
+  - Because fixed-pattern noise is physically identical across different touches, false keypoints collided between different fingers, scoring **57 to 66** and slipping past the acceptance threshold in use at the time.
 - **Tuned Setting (`clipLimit = 2.0`, `tileGridSize = 8x8`)**:
-  - Divides the image into $8 \times 10$ tiles.
+  - Divides the image into $10 \times 8$ tiles.
   - Mild 2.0 clip limit provides smooth local dynamic range without over-amplifying sensor cell noise.
 
 ### 3.2 Preserving 500 DPI Ridges: SIFT Gaussian Sigma
@@ -114,18 +114,21 @@ Every pair of consistent angles increments the geometric score. The score is
 therefore a small count of agreeing vector pairs, not a percentage. The
 [reference SIGFM matcher](https://github.com/goodix-fp-linux-dev/sigfm/blob/master/cpp/match.cpp)
 accepts at five agreeing pairs. The earlier 45/70 gates used in this
-integration were on the wrong scale. The 581a port now uses 5 as a per-stage
-vote, but requires two separate enrollment stages to reach it as an additional
-corroboration check. This policy has not been calibrated against a set of
-genuine and impostor captures for the 581a.
+integration were on the wrong scale. The 581a port uses a two-part policy: a
+stage counts when it reaches `SIGFM_MATCH_STAGE_SCORE_THRESHOLD` (20), and a
+match succeeds with either `SIGFM_MATCH_MIN_STAGES` (2) such stages or one
+stage reaching `SIGFM_MATCH_STRONG_SCORE_THRESHOLD` (45). These cutoffs are
+provisional and have not been calibrated against a set of genuine and impostor
+captures for the 581a.
 
 ---
 
 ## 4. Final Match Criteria & 12-Stage Enrollment
 
 ```c
-/* Require support from two independent enrollment captures. */
-if (matched_stages >= 2) /* each stage score >= SIGFM_MATCH_SCORE_THRESHOLD */
+/* Two corroborating stages, or one strongly scoring stage. */
+if (matched_stages >= SIGFM_MATCH_MIN_STAGES ||
+    max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD)
     result = FPI_MATCH_SUCCESS;
 else
     result = FPI_MATCH_FAIL;
@@ -141,4 +144,11 @@ to match, so repeatable coverage matters more than touring the whole fingertip.
 
 ## 5. Threshold validation
 
-The per-stage score cutoff of `5` matches the reference SIGFM algorithm's minimum count of agreeing geometric hypotheses. This port additionally requires two stages to reach that score. This is a conservative policy, not a calibrated security threshold. Before relying on it, collect repeated genuine comparisons across separate sessions and impostor comparisons across distinct fingers. Report false match and false non-match rates; include the sensor, enrollment procedure, image preprocessing, and number of comparisons. A tiny sample cannot establish a low false-accept probability.
+The per-stage score cutoff of `20` is a provisional acceptance threshold, not
+a calibrated security boundary. A single stage reaching `45` may also accept a
+match, so a false accept only needs one unusually strong impostor comparison.
+Before relying on this policy, collect repeated genuine comparisons across
+separate sessions and impostor comparisons across distinct fingers. Report
+false match and false non-match rates; include the sensor, enrollment
+procedure, image preprocessing, and number of comparisons. A tiny sample cannot
+establish a low false-accept probability.

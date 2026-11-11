@@ -27,9 +27,13 @@ extern "C" {
 typedef unsigned char SigfmPix;
 
 /* SIGFM returns the count of mutually consistent geometric hypotheses.
- * Five is the per-stage vote cutoff; the caller also requires two stages.
+ * These are provisional acceptance thresholds, not calibrated error rates.
+ * A stage must reach the first score to count towards consensus; one stage
+ * reaching the second score is sufficient on its own.
  */
-#define SIGFM_MATCH_SCORE_THRESHOLD 5
+#define SIGFM_MATCH_STAGE_SCORE_THRESHOLD 20
+#define SIGFM_MATCH_STRONG_SCORE_THRESHOLD 45
+#define SIGFM_MATCH_MIN_STAGES 2
 
 /**
  * @brief Contains information used by the sigfm algorithm for matching
@@ -92,6 +96,14 @@ SigfmImgInfo* sigfm_deserialize_binary(const unsigned char* bytes, int len);
  */
 
 int sigfm_keypoints_count(SigfmImgInfo* info);
+
+/**
+ * @brief Number of descriptors stored alongside the keypoints
+ *
+ * @param info Image information, or NULL
+ * @return int Descriptor count; zero when info is NULL or empty
+ */
+int sigfm_descriptors_count(SigfmImgInfo* info);
 
 /**
  * @brief Copy an SigfmImgInfo

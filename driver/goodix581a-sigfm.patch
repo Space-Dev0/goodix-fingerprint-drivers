@@ -1,7 +1,7 @@
-From a536363ea768269293bdb8b34fe56d2120db6178 Mon Sep 17 00:00:00 2001
+From 41df22dbdaae48b7c10e07ff51fe86ab87cc15b8 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/16] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/19] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2379,10 +2379,10 @@ index fa27507..8e5de6b 100644
 2.56.0
 
 
-From 1a31563394df3cf010fd55dd13f9e137bf145654 Mon Sep 17 00:00:00 2001
+From 9b886c6676dc697ea08f6377725d3ac2021898f9 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/16] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/19] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2661,10 +2661,10 @@ index f19b377..6e5b5df 100644
 2.56.0
 
 
-From 04912498fa08c200e05b4f83a4d2598286af7c89 Mon Sep 17 00:00:00 2001
+From ded714ca36844786cc204b86323d0f9fc5b0c28c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/16] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/19] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2865,10 +2865,10 @@ index 671a2b6..7443baa 100644
 2.56.0
 
 
-From 807462f4dc6087836d59735041561119a8dab3ee Mon Sep 17 00:00:00 2001
+From af0b18e606513eff96b85bfb2755c7fe170eaed7 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/16] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/19] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2948,10 +2948,10 @@ index 9b5c3d9..73f889d 100644
 2.56.0
 
 
-From c5e8503da7475e885712ac7523df673e93de95cd Mon Sep 17 00:00:00 2001
+From 044967d862b7253def5128047637b400166ff99d Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/16] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/19] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3016,10 +3016,10 @@ index b726b67..d010035 100644
 2.56.0
 
 
-From cec2a9a5d981b075c54b00bf9debb33af9083db6 Mon Sep 17 00:00:00 2001
+From 40b025d71d68210b124dda418ff652988cc11018 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/16] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/19] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3071,10 +3071,10 @@ index f2bf17d..f2332df 100644
 2.56.0
 
 
-From 12e8d48887290b96fd786e0e3b1f5b2a72539347 Mon Sep 17 00:00:00 2001
+From bc2963009e34c21f4ffa6182bb72ac5c6ad430d0 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/16] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/19] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3309,10 +3309,10 @@ index 215ef53..9c7ccc7 100644
 2.56.0
 
 
-From 396cb81c0ef175bca6f8cb48031e0e20319190cb Mon Sep 17 00:00:00 2001
+From 70bff5dd95dfc188fd4a869769b9bbe6756284cf Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/16] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/19] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3623,10 +3623,10 @@ index 0000000..bfb0677
 2.56.0
 
 
-From c10252e23b346f22e26f3eba11e974ce69e8de1f Mon Sep 17 00:00:00 2001
+From f3d3a39125d5fb1f647ae86624da48719ea06994 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 15:56:39 +0530
-Subject: [PATCH 09/16] goodix581a: use full-width config and average captures
+Subject: [PATCH 09/19] goodix581a: use full-width config and average captures
 
 ---
  README.md                                |  5 ++
@@ -3929,10 +3929,10 @@ index bfb0677..57b1402 100644
 2.56.0
 
 
-From d6bc558ee44e1895ede9bbd59397d6e844b4fd16 Mon Sep 17 00:00:00 2001
+From f8bd48232cc17704a6900ba0c6eef71e089ceb41 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 13:52:46 +0530
-Subject: [PATCH 10/16] goodix581a: diagnose SIGFM verification failures
+Subject: [PATCH 10/19] goodix581a: diagnose SIGFM verification failures
 
 ---
  libfprint/fpi-image-device.c | 37 +++++++++++++++++++++++++++++++++---
@@ -4116,10 +4116,10 @@ index d22f003..26806ac 100644
 2.56.0
 
 
-From f4425c17eab2781c4d05b9e70c95fa00130c1d0c Mon Sep 17 00:00:00 2001
+From db58a592ec91b8af9195b2adb51e45d39649a5c2 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 14:07:58 +0530
-Subject: [PATCH 11/16] goodix581a: retain more SIGFM match candidates
+Subject: [PATCH 11/19] goodix581a: retain more SIGFM match candidates
 
 ---
  libfprint/sigfm/sigfm.cpp | 6 +++++-
@@ -4146,10 +4146,10 @@ index 26806ac..718035c 100644
 2.56.0
 
 
-From b0fc8567f2e7272eb94499a08849f2e6792965a8 Mon Sep 17 00:00:00 2001
+From 81c9b9c585c80a17efab158ab9db527dc15a9d31 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 15:48:19 +0530
-Subject: [PATCH 12/16] goodix581a: compare matches at common finger scale
+Subject: [PATCH 12/19] goodix581a: compare matches at common finger scale
 
 ---
  libfprint/sigfm/sigfm.cpp | 68 ++++++++++++++++++++++++++++++---------
@@ -4264,10 +4264,10 @@ index 718035c..58168f7 100644
 2.56.0
 
 
-From 5d3261a998cbf70c7232d61f9117dd3f7057abae Mon Sep 17 00:00:00 2001
+From 760765fe135f84c390c491404c1d6a152bf3b98f Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:04:38 +0530
-Subject: [PATCH 13/16] goodix581a: report SIGFM matching diagnostics by stage
+Subject: [PATCH 13/19] goodix581a: report SIGFM matching diagnostics by stage
 
 ---
  libfprint/fpi-image-device.c |  11 +++-
@@ -4512,10 +4512,10 @@ index 7443baa..1ff6e81 100644
 2.56.0
 
 
-From fc0eac823f379f5cf0c4cb58104760b1276082db Mon Sep 17 00:00:00 2001
+From 4b9a865fe885403037c63c9d7bb100364a9b8760 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:18:16 +0530
-Subject: [PATCH 14/16] goodix581a: apply SIGFM geometric score threshold
+Subject: [PATCH 14/19] goodix581a: apply SIGFM geometric score threshold
 
 ---
  libfprint/fpi-image-device.c | 8 ++++----
@@ -4583,10 +4583,10 @@ index 1ff6e81..d01bbd9 100644
 2.56.0
 
 
-From cad62f533c086c02f3f823c608f1d1af6282a4b0 Mon Sep 17 00:00:00 2001
+From 0093774b4221a833c261d0bbceb13a89f79faef7 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:29:07 +0530
-Subject: [PATCH 15/16] goodix581a: require corroboration across enrollment
+Subject: [PATCH 15/19] goodix581a: require corroboration across enrollment
  stages
 
 ---
@@ -4633,10 +4633,10 @@ index d01bbd9..06d799b 100644
 2.56.0
 
 
-From 4df301d25afbcefdb0a68009323a6ad614496685 Mon Sep 17 00:00:00 2001
+From 8457ed0e849dc59e2293bcb34583a3d5d0dd3fac Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:39:25 +0530
-Subject: [PATCH 16/16] goodix581a: average eight scan frames
+Subject: [PATCH 16/19] goodix581a: average eight scan frames
 
 ---
  libfprint/drivers/goodixtls/goodix581a.h | 3 ++-
@@ -4682,6 +4682,444 @@ index 57b1402..1fb34ec 100644
  }
  
  int
+-- 
+2.56.0
+
+
+From f13329157c0b170941f306b3886d4dd9eebd25d2 Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Wed, 11 Nov 2026 15:50:56 +0530
+Subject: [PATCH 17/19] goodixtls: handle partial writes and packed handshake
+ flights
+
+---
+ libfprint/drivers/goodixtls/goodix.c    | 33 +++++++++--
+ libfprint/drivers/goodixtls/goodixtls.c | 76 ++++++++++++++++++++++---
+ 2 files changed, 98 insertions(+), 11 deletions(-)
+
+diff --git a/libfprint/drivers/goodixtls/goodix.c b/libfprint/drivers/goodixtls/goodix.c
+index 7fea3cd..ed36601 100644
+--- a/libfprint/drivers/goodixtls/goodix.c
++++ b/libfprint/drivers/goodixtls/goodix.c
+@@ -1247,10 +1247,12 @@ on_goodix_tls_read_handshake (FpDevice *dev, guint8 *data,
+ 
+   int sent = goodix_tls_client_write (priv->tls_hop, data, length);
+ 
+-  if (sent < 0)
++  if (sent != length)
+     {
++      fp_err ("failed to forward device handshake record bytes=%u written=%d",
++              length, sent);
+       fpi_ssm_mark_failed (ssm, g_error_new (g_io_error_quark (), sent,
+-                                             "failed to sent data to "
++                                             "failed to send data to "
+                                              "tls server"));
+       return;
+     }
+@@ -1403,7 +1405,17 @@ on_goodix_request_tls_connection (FpDevice *dev, guint8 *data,
+   FpiDeviceGoodixTlsPrivate *priv =
+     fpi_device_goodixtls_get_instance_private (self);
+ 
+-  goodix_tls_client_write (priv->tls_hop, data, length);
++  int written = goodix_tls_client_write (priv->tls_hop, data, length);
++  if (written != length)
++    {
++      fp_err ("failed to forward initial device handshake bytes=%u written=%d",
++              length, written);
++      on_tls_successfully_established (
++        dev, NULL,
++        g_error_new (G_IO_ERROR, G_IO_ERROR_FAILED,
++                     "Failed to forward initial TLS handshake to server"));
++      return;
++    }
+ 
+   do_tls_handshake (dev);
+ }
+@@ -1492,7 +1504,20 @@ goodix_tls_ready_image_handler (FpDevice *dev, guint8 *data,
+       tls_len = length - 9;
+     }
+ 
+-  goodix_tls_client_write (priv->tls_hop, tls_data, tls_len);
++  int written = goodix_tls_client_write (priv->tls_hop, tls_data, tls_len);
++  if (written != tls_len)
++    {
++      fp_err ("failed to forward encrypted command bytes=%u written=%d",
++              tls_len, written);
++      callback (dev,
++                NULL,
++                0,
++                cb_info->user_data,
++                g_error_new (G_IO_ERROR, G_IO_ERROR_FAILED,
++                             "Failed to forward TLS command to server"));
++      g_free (cb_info);
++      return;
++    }
+ 
+   const guint16 size = -1;
+   guint8 *buff = malloc (size);
+diff --git a/libfprint/drivers/goodixtls/goodixtls.c b/libfprint/drivers/goodixtls/goodixtls.c
+index 9c7ccc7..3e63d21 100644
+--- a/libfprint/drivers/goodixtls/goodixtls.c
++++ b/libfprint/drivers/goodixtls/goodixtls.c
+@@ -30,6 +30,7 @@
+ #include <pthread.h>
+ #include <signal.h>
+ #include <string.h>
++#include <unistd.h>
+ #include <sys/socket.h>
+ 
+ #include "drivers_api.h"
+@@ -102,7 +103,21 @@ tls_server_config_ctx (SSL_CTX *ctx)
+ int
+ goodix_tls_client_write (GoodixTlsServer *self, guint8 *data, guint16 length)
+ {
+-  return write (self->client_fd, data, length * sizeof (guint8));
++  size_t offset = 0;
++
++  while (offset < length)
++    {
++      ssize_t written = write (self->client_fd, data + offset, length - offset);
++
++      if (written < 0 && errno == EINTR)
++        continue;
++      if (written <= 0)
++        return written < 0 ? -errno : -EPIPE;
++
++      offset += written;
++    }
++
++  return offset;
+ }
+ static int
+ read_exact (int fd, guint8 *buf, size_t count, int timeout_ms)
+@@ -137,6 +152,55 @@ read_one_record (int fd, guint8 *buf, size_t max_len, int timeout_ms)
+   return 5 + plen;
+ }
+ 
++/* Return TRUE if the collected TLS records contain a handshake message of
++ * @type.  Handshake messages may be packed together in one record or split
++ * across records, so parse the concatenated handshake payload instead of
++ * assuming one message per record.
++ */
++static gboolean
++tls_records_contain_handshake_type (const guint8 *data, int total, guint8 type)
++{
++  g_autoptr(GByteArray) handshake = g_byte_array_new ();
++  gboolean found = FALSE;
++  int offset = 0;
++
++  while (offset + 5 <= total)
++    {
++      const guint8 *record = data + offset;
++      guint16 record_len = (record[3] << 8) | record[4];
++
++      if (offset + 5 + record_len > total)
++        break;
++
++      if (record[0] == 0x16)
++        g_byte_array_append (handshake, record + 5, record_len);
++
++      offset += 5 + record_len;
++    }
++
++  gsize pos = 0;
++  while (pos + 4 <= handshake->len)
++    {
++      guint8 msg_type = handshake->data[pos];
++      guint32 msg_len = ((guint32) handshake->data[pos + 1] << 16) |
++                        ((guint32) handshake->data[pos + 2] << 8) |
++                        handshake->data[pos + 3];
++
++      if (msg_type == type)
++        {
++          found = TRUE;
++          break;
++        }
++
++      if (msg_len > handshake->len - pos - 4)
++        break;
++
++      pos += 4 + msg_len;
++    }
++
++  return found;
++}
++
+ int
+ goodix_tls_client_read (GoodixTlsServer *self, guint8 *data, guint16 length)
+ {
+@@ -151,13 +215,11 @@ goodix_tls_client_read (GoodixTlsServer *self, guint8 *data, guint16 length)
+   /* Check if this is ServerHello (0x16, handshake type 0x02) which requires reading until ServerHelloDone (type 0x0E) */
+   if (data[0] == 0x16 && rec_len > 5 && data[5] == 0x02)
+     {
+-      while (total < length)
++      while (total < length &&
++             !tls_records_contain_handshake_type (data, total, 0x0e))
+         {
+-          /* If the last record was ServerHelloDone (type 0x16, handshake msg 0x0E), flight 1 is complete */
+-          if (rec_len > 5 && data[total - rec_len] == 0x16 && data[total - rec_len + 5] == 0x0e)
+-            break;
+-
+-          rec_len = read_one_record (self->client_fd, data + total, length - total, timeout_ms);
++          rec_len = read_one_record (self->client_fd, data + total,
++                                     length - total, timeout_ms);
+           if (rec_len <= 0)
+             break;
+           total += rec_len;
+-- 
+2.56.0
+
+
+From 19ccfcde3572593dc1bbeede8b11b1098a7a22bf Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Wed, 11 Nov 2026 15:50:59 +0530
+Subject: [PATCH 18/19] goodix581a: validate SIGFM stages and tighten match
+ acceptance
+
+---
+ libfprint/fpi-image-device.c | 56 +++++++++++++++++++++++++++++-------
+ libfprint/sigfm/sigfm.cpp    |  8 ++++++
+ libfprint/sigfm/sigfm.hpp    | 16 +++++++++--
+ 3 files changed, 67 insertions(+), 13 deletions(-)
+
+diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
+index e9640f9..797584d 100644
+--- a/libfprint/fpi-image-device.c
++++ b/libfprint/fpi-image-device.c
+@@ -508,11 +508,14 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+ 
+   SigfmImgInfo *info = sigfm_extract (img_data, width, height);
+   int kpts = sigfm_keypoints_count (info);
+-  g_message ("SIGFM: extracted %d keypoints from %dx%d image", kpts, width, height);
++  int descs = sigfm_descriptors_count (info);
++  g_message ("SIGFM: extracted %d keypoints and %d descriptors from %dx%d image",
++             kpts, descs, width, height);
+ 
+-  if (kpts < 6)
++  if (kpts < 6 || descs < 4)
+     {
+-      g_warning ("SIGFM: too few keypoints (%d < 6), requesting retry", kpts);
++      g_warning ("SIGFM: too few keypoints/descriptors (%d/%d), requesting retry",
++                 kpts, descs);
+       if (info)
+         sigfm_free_info (info);
+       info = NULL;
+@@ -597,6 +600,11 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+               g_warning ("SIGFM verify: template has no raw data!");
+               result = FPI_MATCH_ERROR;
+             }
++          else if (!g_variant_is_of_type (template_var, G_VARIANT_TYPE ("aay")))
++            {
++              g_warning ("SIGFM verify: template has unexpected raw data type");
++              result = FPI_MATCH_ERROR;
++            }
+           else
+             {
+               int max_score = 0;
+@@ -610,8 +618,15 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+               while ((stage_bytes = g_variant_iter_next_value (&iter)) != NULL)
+                 {
+                   gsize sz;
+-                  const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
+                   stage_index++;
++                  if (!g_variant_is_of_type (stage_bytes, G_VARIANT_TYPE ("ay")))
++                    {
++                      g_warning ("SIGFM verify: stage %d is not a byte array", stage_index);
++                      g_variant_unref (stage_bytes);
++                      continue;
++                    }
++
++                  const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
+                   if (b && sz > 0)
+                     {
+                       SigfmImgInfo *gallery_info = sigfm_deserialize_binary (b, (int) sz);
+@@ -624,7 +639,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                                                         match_context);
+                           if (score > max_score)
+                             max_score = score;
+-                          if (score >= SIGFM_MATCH_SCORE_THRESHOLD)
++                          if (score >= SIGFM_MATCH_STAGE_SCORE_THRESHOLD)
+                             matched_stages++;
+                           g_message ("SIGFM verify: stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
+                                      stage_index, sz,
+@@ -640,7 +655,8 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                   g_variant_unref (stage_bytes);
+                 }
+ 
+-              if (matched_stages >= 2)
++              if (max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
++                  matched_stages >= SIGFM_MATCH_MIN_STAGES)
+                 result = FPI_MATCH_SUCCESS;
+               else
+                 result = FPI_MATCH_FAIL;
+@@ -661,11 +677,13 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+       g_autoptr(FpPrint) probe_print = fp_print_new (device);
+       fpi_print_set_type (probe_print, FPI_PRINT_RAW);
+ 
++      gboolean fatal_error = error != NULL && error->domain != FP_DEVICE_RETRY;
++
+       if (!error || error->domain == FP_DEVICE_RETRY)
+         fpi_device_verify_report (device, result, g_steal_pointer (&probe_print), g_steal_pointer (&error));
+ 
+       fp_image_device_maybe_complete_action (self, g_steal_pointer (&error));
+-      if (error)
++      if (fatal_error)
+         fpi_image_device_deactivate (self, TRUE);
+     }
+   else if (action == FPI_DEVICE_ACTION_IDENTIFY)
+@@ -682,6 +700,11 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+               GVariant *template_var = fpi_print_get_raw_data (tmpl);
+               if (!template_var)
+                 continue;
++              if (!g_variant_is_of_type (template_var, G_VARIANT_TYPE ("aay")))
++                {
++                  g_warning ("SIGFM identify: template %u has unexpected raw data type", t);
++                  continue;
++                }
+ 
+               int max_score = 0;
+               int matched_stages = 0;
+@@ -694,8 +717,16 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+               while ((stage_bytes = g_variant_iter_next_value (&iter)) != NULL)
+                 {
+                   gsize sz;
+-                  const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
+                   stage_index++;
++                  if (!g_variant_is_of_type (stage_bytes, G_VARIANT_TYPE ("ay")))
++                    {
++                      g_warning ("SIGFM identify: template %u stage %d is not a byte array",
++                                 t, stage_index);
++                      g_variant_unref (stage_bytes);
++                      continue;
++                    }
++
++                  const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
+                   if (b && sz > 0)
+                     {
+                       SigfmImgInfo *gallery_info = sigfm_deserialize_binary (b, (int) sz);
+@@ -709,7 +740,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                                                         match_context);
+                           if (score > max_score)
+                             max_score = score;
+-                          if (score >= SIGFM_MATCH_SCORE_THRESHOLD)
++                          if (score >= SIGFM_MATCH_STAGE_SCORE_THRESHOLD)
+                             matched_stages++;
+                           g_message ("SIGFM identify: template %u stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
+                                      t, stage_index, sz,
+@@ -728,7 +759,8 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+               g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_score=%d, matched_stages=%d",
+                          t, stage_index, valid_stages, max_score, matched_stages);
+ 
+-              if (matched_stages >= 2)
++              if (max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
++                  matched_stages >= SIGFM_MATCH_MIN_STAGES)
+                 {
+                   matched_template = tmpl;
+                   break;
+@@ -742,11 +774,13 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+       g_autoptr(FpPrint) probe_print = fp_print_new (device);
+       fpi_print_set_type (probe_print, FPI_PRINT_RAW);
+ 
++      gboolean fatal_error = error != NULL && error->domain != FP_DEVICE_RETRY;
++
+       if (!error || error->domain == FP_DEVICE_RETRY)
+         fpi_device_identify_report (device, matched_template, g_steal_pointer (&probe_print), g_steal_pointer (&error));
+ 
+       fp_image_device_maybe_complete_action (self, g_steal_pointer (&error));
+-      if (error)
++      if (fatal_error)
+         fpi_image_device_deactivate (self, TRUE);
+     }
+ }
+diff --git a/libfprint/sigfm/sigfm.cpp b/libfprint/sigfm/sigfm.cpp
+index f529881..0bb5871 100644
+--- a/libfprint/sigfm/sigfm.cpp
++++ b/libfprint/sigfm/sigfm.cpp
+@@ -174,6 +174,14 @@ int sigfm_keypoints_count(SigfmImgInfo* info)
+     return info->keypoints.size();
+ }
+ 
++int sigfm_descriptors_count(SigfmImgInfo* info)
++{
++    if (info == nullptr) {
++        return 0;
++    }
++    return info->descriptors.rows;
++}
++
+ unsigned char* sigfm_serialize_binary(SigfmImgInfo* info, int* outlen)
+ {
+     if (outlen != nullptr) {
+diff --git a/libfprint/sigfm/sigfm.hpp b/libfprint/sigfm/sigfm.hpp
+index 06d799b..3c674b5 100644
+--- a/libfprint/sigfm/sigfm.hpp
++++ b/libfprint/sigfm/sigfm.hpp
+@@ -27,9 +27,13 @@ extern "C" {
+ typedef unsigned char SigfmPix;
+ 
+ /* SIGFM returns the count of mutually consistent geometric hypotheses.
+- * Five is the per-stage vote cutoff; the caller also requires two stages.
++ * These are provisional acceptance thresholds, not calibrated error rates.
++ * A stage must reach the first score to count towards consensus; one stage
++ * reaching the second score is sufficient on its own.
+  */
+-#define SIGFM_MATCH_SCORE_THRESHOLD 5
++#define SIGFM_MATCH_STAGE_SCORE_THRESHOLD 20
++#define SIGFM_MATCH_STRONG_SCORE_THRESHOLD 45
++#define SIGFM_MATCH_MIN_STAGES 2
+ 
+ /**
+  * @brief Contains information used by the sigfm algorithm for matching
+@@ -93,6 +97,14 @@ SigfmImgInfo* sigfm_deserialize_binary(const unsigned char* bytes, int len);
+ 
+ int sigfm_keypoints_count(SigfmImgInfo* info);
+ 
++/**
++ * @brief Number of descriptors stored alongside the keypoints
++ *
++ * @param info Image information, or NULL
++ * @return int Descriptor count; zero when info is NULL or empty
++ */
++int sigfm_descriptors_count(SigfmImgInfo* info);
++
+ /**
+  * @brief Copy an SigfmImgInfo
+  *
+-- 
+2.56.0
+
+
+From 3914d0f4bb05aa7b60adb74015e8f215ef36590b Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Wed, 11 Nov 2026 15:51:02 +0530
+Subject: [PATCH 19/19] goodix581a: cancel a superseded scan state machine
+
+---
+ libfprint/drivers/goodixtls/goodix581a.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
+index e8c7339..cb27a99 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.c
++++ b/libfprint/drivers/goodixtls/goodix581a.c
+@@ -565,6 +565,17 @@ dev_581a_change_state (FpImageDevice *img_dev, FpiImageDeviceState state)
+   if (state == FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_ON)
+     {
+       fp_dbg ("581a entering AWAIT_FINGER_ON state");
++
++      if (self->scan_ssm)
++        {
++          FpiSsm *previous = self->scan_ssm;
++          self->scan_ssm = NULL;
++          fp_warn ("581a: superseding an existing scan state machine");
++          fpi_ssm_mark_failed (previous,
++                               g_error_new (G_IO_ERROR, G_IO_ERROR_CANCELLED,
++                                            "Superseded by a new scan"));
++        }
++
+       self->scan_ssm = fpi_ssm_new (dev, scan_581a_run_state, SCAN_581A_NUM_STATES);
+       fpi_ssm_start (self->scan_ssm, scan_581a_complete);
+     }
 -- 
 2.56.0
 

@@ -43,7 +43,7 @@ The 581a employs a **Match-on-Host (MOH)** architecture with an embedded microco
 |                                                    v              |
 |                                          +--------------------+   |
 |                                          |   GM168 Sensor Die |   |
-|                                          |  (64x80 Capacitive)|   |
+|                                          |  (80x64 Capacitive)|   |
 |                                          +--------------------+   |
 +-------------------------------------------------------------------+
 ```
