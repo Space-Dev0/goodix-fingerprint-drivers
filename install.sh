@@ -32,6 +32,24 @@ sudo udevadm trigger
 
 echo "[*] Setting up fprintd service drop-in configuration..."
 sudo mkdir -p /etc/systemd/system/fprintd.service.d
+
+# Older builds were installed into /usr/local/lib64 and a systemd override
+# forced fprintd to load that stale library. This installer installs into the
+# normal system path, so remove the stale LD_LIBRARY_PATH setting. Keep any
+# unrelated drop-in settings, and delete the file if nothing else remains.
+FPRINTD_OVERRIDE="/etc/systemd/system/fprintd.service.d/override.conf"
+if [ -f "${FPRINTD_OVERRIDE}" ] &&
+   grep -q 'LD_LIBRARY_PATH=/usr/local/lib64' "${FPRINTD_OVERRIDE}" 2>/dev/null; then
+    echo "[*] Removing stale fprintd override pointing at /usr/local/lib64..."
+    sudo sed -i '/LD_LIBRARY_PATH=\/usr\/local\/lib64/d' "${FPRINTD_OVERRIDE}"
+
+    # Drop the file entirely if it no longer has any effective settings.
+    if ! grep -qE '^[[:space:]]*(Environment|ExecStart|ExecStop|ExecReload|ExecStartPre|ExecStartPost|EnvironmentFile)=' \
+            "${FPRINTD_OVERRIDE}" 2>/dev/null; then
+        sudo rm -f "${FPRINTD_OVERRIDE}"
+    fi
+fi
+
 sudo tee /etc/systemd/system/fprintd.service.d/sigfm.conf > /dev/null << 'EOF'
 [Service]
 Environment="OPENCV_NUM_THREADS=1" "TBB_MALLOC_USE_HUGE_PAGES=0"
