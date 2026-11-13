@@ -26,9 +26,9 @@ When Bozorth3 attempts to match two 5-minutiae sets:
 To solve the small-area limitation, we integrated **SIGFM** (Scale-Invariant Feature Transform Fingerprint Matcher).
 
 The 581a driver uses the authentic Windows-driver configuration table
-(image tcode `0x0100`) and averages eight frames for both the ambient baseline
-and each scan. This is the configuration that produced visible dermal ridges in
-the userspace capture; the eight-frame average suppresses per-frame read noise.
+(image tcode `0x0100`), averages eight frames for the ambient baseline, and
+captures a single Mode 5 frame per touch. This is the configuration and
+capture path that produced visible dermal ridges in the userspace capture.
 
 Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ridge flow as continuous local gradient texture. Every ridge bifurcation, curvature transition, frequency change, and ridge termination generates high-dimensional (128-byte) gradient orientation histograms.
 

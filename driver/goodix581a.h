@@ -17,6 +17,11 @@
 #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
 /* Average eight scans to suppress per-frame sensor noise. */
 #define GOODIX_581A_AVERAGE_FRAMES 8
+/* The verified userspace capture reads a single Mode 5 frame after the touch
+ * event. Reading further frames can mix in ambient/idle data and dilute the
+ * ridge signal, so capture exactly one by default.
+ */
+#define GOODIX_581A_SCAN_FRAMES 1
 /* 80x64 packed sensor samples plus the four-byte footer used by this device. */
 #define GOODIX_581A_RAW_FRAME_SIZE 7684
 

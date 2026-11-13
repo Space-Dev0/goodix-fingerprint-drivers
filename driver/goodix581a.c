@@ -372,10 +372,10 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
   goodix_581a_accumulate_frame (self->scan_sum, frame);
   self->scan_frame_count++;
 
-  if (self->scan_frame_count < GOODIX_581A_AVERAGE_FRAMES)
+  if (self->scan_frame_count < GOODIX_581A_SCAN_FRAMES)
     {
       fp_dbg ("581a: Mode 5 frame %u/%u",
-              self->scan_frame_count, GOODIX_581A_AVERAGE_FRAMES);
+              self->scan_frame_count, GOODIX_581A_SCAN_FRAMES);
       goodix_tls_read_image (dev, goodix_581a_get_image_mode5,
                              sizeof (goodix_581a_get_image_mode5),
                              on_581a_mode5_read, ssm);
@@ -384,14 +384,13 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
 
   GoodixTls5xxPix raw_frame[GOODIX_581A_FRAME_SIZE];
   goodix_581a_finish_average (raw_frame, self->scan_sum,
-                              GOODIX_581A_AVERAGE_FRAMES);
+                              GOODIX_581A_SCAN_FRAMES);
   g_clear_pointer (&self->scan_sum, g_free);
   self->scan_frame_count = 0;
 
-  /* Fit a gain and offset from the untouched baseline to this scan. Keeping
-   * the residual signed preserves both ridge polarities and accommodates
-   * sensor gain drift. Ignore pixels which are zero in both frames (inactive
-   * columns at some sensor tcodes) when fitting the flat field.
+  /* Subtract the ambient baseline directly, exactly like the verified
+   * userspace capture. A fitted gain/offset can absorb part of the finger's
+   * capacitive modulation, so it is only computed below for diagnostics.
    */
   double sum_baseline = 0.0;
   double sum_scan = 0.0;
@@ -429,19 +428,21 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
       for (int x = 0; x < GOODIX_581A_WIDTH; x++)
         {
           int idx = y * GOODIX_581A_WIDTH + x;
-          const double baseline = self->calibration_img ? self->calibration_img[idx] : 0;
-          residual[idx] = raw_frame[idx] - (gint32) (gain * baseline + offset);
+          const gint32 baseline = self->calibration_img ? self->calibration_img[idx] : 0;
+          residual[idx] = raw_frame[idx] - baseline;
         }
     }
 
-  /* The flat-fielded residual still contains slow baseline drift and the
-   * sensor's illumination gradient. High-pass it with a 3x3 box filter so
+  /* The baseline-subtracted residual still contains slow baseline drift and
+   * the sensor's illumination gradient. High-pass it with a 3x3 box filter so
    * that ridge detail, not drift, sets the normalization range. This mirrors
    * the known-good userspace capture that produced visible dermal ridges.
    */
   gint32 highpass[GOODIX_581A_FRAME_SIZE];
   gint32 active_vals[GOODIX_581A_FRAME_SIZE];
+  gint32 residual_vals[GOODIX_581A_FRAME_SIZE];
   int n_active = 0;
+  int n_residual = 0;
 
   for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
     {
@@ -463,9 +464,13 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
 
   for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
     for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
-      active_vals[n_active++] = highpass[y * GOODIX_581A_WIDTH + x];
+      {
+        active_vals[n_active++] = highpass[y * GOODIX_581A_WIDTH + x];
+        residual_vals[n_residual++] = residual[y * GOODIX_581A_WIDTH + x];
+      }
 
   gint32 p5 = 0, p95 = 0;
+  gint32 r5 = 0, r95 = 0;
   gboolean has_usable_contrast = FALSE;
   if (n_active > 50)
     {
@@ -474,10 +479,60 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
       p95 = active_vals[n_active * 97 / 100];
       has_usable_contrast = p95 - p5 >= 12;
     }
+  if (n_residual > 50)
+    {
+      qsort (residual_vals, n_residual, sizeof (gint32), compare_ints);
+      r5 = residual_vals[n_residual * 5 / 100];
+      r95 = residual_vals[n_residual * 95 / 100];
+    }
 
-  fp_dbg ("581a: gain=%.4f offset=%.1f ridge high-pass p3=%d p97=%d "
-          "active=%d pixels, usable=%d",
-          gain, offset, p5, p95, n_active, has_usable_contrast);
+  /* g_message so these numbers show up in the journal without requiring a
+   * libfprint debug build during a hardware tuning session. The lag-1 spatial
+   * autocorrelation distinguishes coherent ridge structure (positive, roughly
+   * 0.2-0.9) from per-pixel noise (near zero).
+   */
+  double hp_mean = 0.0, hp_var = 0.0, hp_cov_x = 0.0, hp_cov_y = 0.0;
+  int n_ac = 0, n_x = 0, n_y = 0;
+  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
+    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
+      {
+        hp_mean += highpass[y * GOODIX_581A_WIDTH + x];
+        n_ac++;
+      }
+  hp_mean /= n_ac > 0 ? n_ac : 1;
+
+  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
+    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
+      {
+        const double t = highpass[y * GOODIX_581A_WIDTH + x] - hp_mean;
+        hp_var += t * t;
+      }
+  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
+    for (int x = 2; x < GOODIX_581A_WIDTH - 3; x++)
+      {
+        const int idx = y * GOODIX_581A_WIDTH + x;
+        hp_cov_x += (highpass[idx] - hp_mean) * (highpass[idx + 1] - hp_mean);
+        n_x++;
+      }
+  for (int y = 2; y < GOODIX_581A_HEIGHT - 3; y++)
+    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
+      {
+        const int idx = y * GOODIX_581A_WIDTH + x;
+        hp_cov_y += (highpass[idx] - hp_mean) *
+                    (highpass[idx + GOODIX_581A_WIDTH] - hp_mean);
+        n_y++;
+      }
+
+  const double ac_x = n_x > 0 && hp_var > 0 ? (hp_cov_x / n_x) / (hp_var / n_ac) : 0.0;
+  const double ac_y = n_y > 0 && hp_var > 0 ? (hp_cov_y / n_y) / (hp_var / n_ac) : 0.0;
+
+  g_message ("581a capture: baseline=%.1f scan=%.1f fit_gain=%.4f fit_offset=%.1f "
+             "residual[p5=%d p95=%d] highpass[p3=%d p97=%d] ac_x=%.3f ac_y=%.3f "
+             "usable=%d",
+             n_fit ? sum_baseline / n_fit : 0.0,
+             n_fit ? sum_scan / n_fit : 0.0,
+             gain, offset, r5, r95, p5, p95, ac_x, ac_y,
+             has_usable_contrast);
 
   FpImage *img = fp_image_new (GOODIX_581A_WIDTH, GOODIX_581A_HEIGHT);
   img->flags |= FPI_IMAGE_PARTIAL;

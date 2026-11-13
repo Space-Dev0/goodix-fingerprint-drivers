@@ -66,24 +66,21 @@ The GM168 sensor supports two operational scan modes:
 
 ---
 
-## 3. Least-Squares Linear Flat-Fielding
+## 3. Baseline Subtraction and Ridge High-Pass
 
-Raw capacitive readings have low-frequency DC variations and thermal gain drift. Rather than using an arbitrary one-sided subtraction (`max(baseline - scan, 0)`) that clips valleys to zero, or a heavy 7-tap blur that attenuates ~69% of the 9–10px ridge signal, the driver performs **least-squares linear flat-fielding**:
+Raw capacitive readings have low-frequency DC variations and thermal drift. The driver subtracts the averaged ambient baseline **directly**:
 
-$$S(x, y) \approx g \cdot B(x, y) + o$$
+$$\text{Residual}(x, y) = S(x, y) - B(x, y)$$
 
-where $B$ is the untouched ambient baseline, $S$ is the active touch scan, $g$ is the fitted gain, and $o$ is the DC offset:
+where $B$ is the untouched ambient baseline and $S$ is the active touch scan. This is the same signed subtraction used by the userspace capture that produced visible dermal ridges. The residual stays signed so both ridge crests and valleys survive; a one-sided `max(B - S, 0)` would clip valleys to zero.
 
-$$g = \frac{N \sum (B \cdot S) - \sum B \sum S}{N \sum B^2 - (\sum B)^2}, \quad o = \frac{\sum S - g \sum B}{N}$$
-
-The flat-fielded residual is:
-$$\text{Residual}(x, y) = S(x, y) - \left(g \cdot B(x, y) + o\right)$$
-
-This keeps the residual **signed** (preserving both ridge crests and valleys) and absorbs baseline DC shifts.
+A least-squares gain/offset is still computed, but only for diagnostics and journal output. It is **not applied**, because fitting a gain can absorb part of the finger's capacitive modulation and suppress ridge contrast.
 
 A 3×3 box high-pass then removes the remaining slow illumination and thermal gradient, which would otherwise dominate the normalization range:
 
 $$\text{HighPass}(x, y) = \text{Residual}(x, y) - \frac{1}{9}\sum_{dy=-1}^{1}\sum_{dx=-1}^{1}\text{Residual}(x+dx, y+dy)$$
+
+Eight ambient baseline frames are averaged to suppress fixed-pattern noise, but each touch uses a **single Mode 5 frame**. Reading further Mode 5 frames after the first can mix ambient/idle data into the average and dilute the ridge signal.
 
 This matches the userspace capture pipeline that produced visible dermal ridges on real 581a hardware; the earlier flat-field-only variant scaled the image by drift instead of ridge contrast.
 
