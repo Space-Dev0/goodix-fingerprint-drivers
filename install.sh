@@ -54,6 +54,23 @@ sudo tee /etc/systemd/system/fprintd.service.d/sigfm.conf > /dev/null << 'EOF'
 [Service]
 Environment="OPENCV_NUM_THREADS=1" "TBB_MALLOC_USE_HUGE_PAGES=0"
 EOF
+
+# Optional diagnostic capture of the exact images SIGFM sees. Run the
+# installer with GOODIX581A_DEBUG=1 to enable it for a tuning session.
+if [ "${GOODIX581A_DEBUG:-0}" = "1" ]; then
+    echo "[*] Enabling diagnostic frame capture in /var/lib/fprint/goodix-debug..."
+    sudo install -d -m 0700 /var/lib/fprint/goodix-debug
+    sudo tee /etc/systemd/system/fprintd.service.d/sigfm-debug.conf > /dev/null << 'EOF'
+[Service]
+Environment="GOODIX_581A_DUMP_DIR=/var/lib/fprint/goodix-debug"
+EOF
+    if command -v restorecon >/dev/null 2>&1; then
+        sudo restorecon -R /var/lib/fprint/goodix-debug || true
+    fi
+else
+    sudo rm -f /etc/systemd/system/fprintd.service.d/sigfm-debug.conf
+fi
+
 sudo systemctl daemon-reload
 
 echo "[*] Preparing build directory..."

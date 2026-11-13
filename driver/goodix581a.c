@@ -83,6 +83,39 @@ goodix_581a_decode_frame (GoodixTls5xxPix *frame, guint32 frame_size,
     frame[goodix_581a_stream_to_image_index (i)] = stream[i];
 }
 
+/* Optional diagnostic capture. Set GOODIX_581A_DUMP_DIR to a writable
+ * directory to save the exact 8-bit image that SIGFM receives. This is off by
+ * default; it is useful when tuning matching thresholds against real presses.
+ */
+static void
+goodix_581a_dump_frame (const guint8 *data)
+{
+  const gchar *dir = g_getenv ("GOODIX_581A_DUMP_DIR");
+  static guint counter = 0;
+
+  if (dir == NULL || *dir == '\0')
+    return;
+
+  g_autofree gchar *name = g_strdup_printf ("581a-%" G_GINT64_FORMAT "-%03u.pgm",
+                                            g_get_real_time (), counter++);
+  g_autofree gchar *path = g_build_filename (dir, name, NULL);
+  g_autofree gchar *header = g_strdup_printf ("P5\n%d %d\n255\n",
+                                              GOODIX_581A_WIDTH,
+                                              GOODIX_581A_HEIGHT);
+  const gsize header_len = strlen (header);
+  const gsize image_len = GOODIX_581A_FRAME_SIZE;
+  g_autofree guint8 *pgm = g_malloc (header_len + image_len);
+
+  memcpy (pgm, header, header_len);
+  memcpy (pgm + header_len, data, image_len);
+
+  if (g_file_set_contents (path, (const gchar *) pgm,
+                           (gssize) (header_len + image_len), NULL))
+    fp_dbg ("581a: saved diagnostic frame %s", path);
+  else
+    fp_warn ("581a: failed to save diagnostic frame %s", path);
+}
+
 /* One scan action captures a Mode 1 ambient reference, waits for FDT touch,
  * captures Mode 5, then waits for finger-up. Keep the baseline across touches
  * in an enrollment action so samples share the same reference.
@@ -453,6 +486,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
 
   fp_dbg ("581a: Frame processed, reporting native 80x64 image captured for SIGFM!");
   img->ppmm = 500.0 / 25.4;
+  goodix_581a_dump_frame (img->data);
   fpi_image_device_image_captured (FP_IMAGE_DEVICE (dev), img);
 
   if (!self->scan_ssm)
