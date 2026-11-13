@@ -45,7 +45,7 @@ Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ri
 |  [SIFT Feature Detector] (sigma=1.2, contrastThreshold=0.04)           |
 |          |                                                              |
 |          v                                                              |
-|  [128-D Descriptors]    (25 to 45 high-quality ridge keypoints)        |
+|  [128-D Descriptors]    (roughly 140-195 ridge keypoints on current captures)
 |          |                                                              |
 |          v                                                              |
 |  [k-NN Descriptor Match] (Lowe's ratio test threshold = 0.90)           |
@@ -54,7 +54,7 @@ Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ri
 |  [Geometric Verification](Pairwise relative vectors: len=12%, ang=12%)  |
 |          |                                                              |
 |          v                                                              |
-|  [Match Decision]        (stage >= 20; two stages or one stage >= 45)  |
+|  [Match Decision]        (support >= 20 and >= 20%; 3 stages or one >= 25)
 +-------------------------------------------------------------------------+
 ```
 
@@ -110,25 +110,46 @@ probe vector to the enrolled vector using `atan2(cross, dot)`. Pair hypotheses
 agree when their wrapped angular difference is at most `angle_match`
 (`0.12` radians).
 
-Every pair of consistent angles increments the geometric score. The score is
-therefore a small count of agreeing vector pairs, not a percentage. The
-[reference SIGFM matcher](https://github.com/goodix-fp-linux-dev/sigfm/blob/master/cpp/match.cpp)
-accepts at five agreeing pairs. The earlier 45/70 gates used in this
-integration were on the wrong scale. The 581a port uses a two-part policy: a
-stage counts when it reaches `SIGFM_MATCH_STAGE_SCORE_THRESHOLD` (20), and a
-match succeeds with either `SIGFM_MATCH_MIN_STAGES` (2) such stages or one
-stage reaching `SIGFM_MATCH_STRONG_SCORE_THRESHOLD` (45). These cutoffs are
-provisional and have not been calibrated against a set of genuine and impostor
-captures for the 581a.
+Rather than counting every pair of angles that happens to agree, the matcher
+finds the dominant rotation, refines its centre from the circular mean of its
+inliers, and counts how many hypotheses lie within `angle_match` of it. That
+count is the stage score.
+
+The earlier implementation counted *all* consistent angle pairs. That value
+grows steeply with the number of mostly-spurious descriptor matches, so a large
+impostor stage could accumulate a high score even when no rotation dominated.
+On an 80×64 sensor, where descriptors are weak, that is exactly what caused
+wrong fingers to be accepted.
+
+For unrelated presses the pairwise rotations are not uniform, so a fixed ratio
+alone is not sufficient: on labelled 581a captures a wrong finger reached a 24%
+inlier ratio, but only 17-18 vectors in its largest cluster. The absolute size
+of the dominant cluster separates the two populations much better. A genuine
+press reached 25-281 inliers in the captures used for tuning, while the wrong
+finger never exceeded 18.
+
+The 581a port therefore requires a stage to have at least `20` agreeing
+vectors, with at least `20%` of its scale-consistent vectors on the dominant
+rotation; otherwise the stage scores zero. Verification succeeds with
+`SIGFM_MATCH_MIN_STAGES` (`3`) corroborating stages or one stage reaching
+`SIGFM_MATCH_STRONG_SCORE_THRESHOLD` (`25`).
+
+In a labelled test, three successful genuine presses scored 123, 123 and 281
+inliers and were accepted; three presses of a different finger scored at most
+18 and were rejected. A poor genuine press that only reached 25 raw inliers at
+a 13% ratio was rejected and required another press.
+
+The cutoffs remain provisional: they come from a small labelled set on one
+device and are not a measured false-accept rate.
 
 ---
 
 ## 4. Final Match Criteria & 12-Stage Enrollment
 
 ```c
-/* Two corroborating stages, or one strongly scoring stage. */
+/* Three corroborating stages, or one strongly supported stage. */
 if (matched_stages >= SIGFM_MATCH_MIN_STAGES ||
-    max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD)
+    max_support >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD)
     result = FPI_MATCH_SUCCESS;
 else
     result = FPI_MATCH_FAIL;
@@ -139,16 +160,19 @@ else
 The sensor sees only a small part of the finger. For the 12 enrollment touches,
 keep the pad centered and vary placement only slightly; lift fully between
 touches. Large shifts, edge-only presses, and deliberate rotations reduce
-overlap between probe and template. The verifier now needs two separate stages
-to match, so repeatable coverage matters more than touring the whole fingertip.
+overlap between probe and template. The verifier now needs three separate
+stages to corroborate a match, so repeatable coverage matters more than touring
+the whole fingertip.
 
 ## 5. Threshold validation
 
-The per-stage score cutoff of `20` is a provisional acceptance threshold, not
-a calibrated security boundary. A single stage reaching `45` may also accept a
-match, so a false accept only needs one unusually strong impostor comparison.
-Before relying on this policy, collect repeated genuine comparisons across
-separate sessions and impostor comparisons across distinct fingers. Report
-false match and false non-match rates; include the sensor, enrollment
-procedure, image preprocessing, and number of comparisons. A tiny sample cannot
-establish a low false-accept probability.
+The `20`-inlier cutoff for counting towards consensus, the 20% inlier-ratio
+floor, the `3`-stage requirement, and the `25` strong-stage cutoff are
+provisional acceptance thresholds, not a calibrated security boundary. A
+single stage reaching `25` may also accept a match, so a false accept only
+needs one unusually strong impostor comparison. Before relying on this policy,
+collect repeated genuine comparisons across separate sessions and impostor
+comparisons across distinct fingers. Report false match and false non-match
+rates; include the sensor, enrollment procedure, image preprocessing, and
+number of comparisons. A tiny sample cannot establish a low false-accept
+probability.

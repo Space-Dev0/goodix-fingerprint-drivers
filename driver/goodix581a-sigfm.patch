@@ -1,7 +1,7 @@
-From 37bf07fa64d272d38b168ab3513273bf6ad0243a Mon Sep 17 00:00:00 2001
+From 28c8d6a803671fb96f856ef6ed80a4c6969d4f79 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/22] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/23] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2379,10 +2379,10 @@ index fa27507..8e5de6b 100644
 2.56.0
 
 
-From 4bc41f900b6d94edb594d1e4f4d70c0f2fd9704d Mon Sep 17 00:00:00 2001
+From a693df39dac332ee900b38a9ccf3f639f1f9b81f Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/22] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/23] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2661,10 +2661,10 @@ index f19b377..6e5b5df 100644
 2.56.0
 
 
-From efeb58468997ba6198fe705352b07f024191806b Mon Sep 17 00:00:00 2001
+From 9fcd069cdb70f1bfc75f0580d304353ed959d54f Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/22] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/23] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2865,10 +2865,10 @@ index 671a2b6..7443baa 100644
 2.56.0
 
 
-From 2aafff8ddf9b7e28275e5fe19d05ce69d48d54f0 Mon Sep 17 00:00:00 2001
+From 3119e9f9db28aaf3d622078d13c33457f4ae817f Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/22] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/23] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2948,10 +2948,10 @@ index 9b5c3d9..73f889d 100644
 2.56.0
 
 
-From ae050cea2f876658e41532e2f09b1c6baed2b6d2 Mon Sep 17 00:00:00 2001
+From 7d2375f429c92b74ac4d44659f9710851256a879 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/22] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/23] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3016,10 +3016,10 @@ index b726b67..d010035 100644
 2.56.0
 
 
-From 7bd77d636f1fc3044240bd810de792e6d9349d77 Mon Sep 17 00:00:00 2001
+From 372061bc846791c5430447e41f1385d16598d37e Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/22] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/23] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3071,10 +3071,10 @@ index f2bf17d..f2332df 100644
 2.56.0
 
 
-From 208b5619eea1b36182b103fc8004c4ed9dfceff1 Mon Sep 17 00:00:00 2001
+From 48746fd5ce7098ed3260364f51197120943eebc0 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/22] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/23] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3309,10 +3309,10 @@ index 215ef53..9c7ccc7 100644
 2.56.0
 
 
-From b079cb14343daab3daaccf3242e3f6e87aa0787f Mon Sep 17 00:00:00 2001
+From 45a76fe64cd8fcffc85431b1336666dfd1e5f36f Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/22] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/23] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3623,10 +3623,10 @@ index 0000000..bfb0677
 2.56.0
 
 
-From cf0baf56dd312a7ed004e5fd19f91b5202c7cfc1 Mon Sep 17 00:00:00 2001
+From dd0d457253e7774611ae4f20f4d8cfe62e4a94a6 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 15:56:39 +0530
-Subject: [PATCH 09/22] goodix581a: use full-width config and average captures
+Subject: [PATCH 09/23] goodix581a: use full-width config and average captures
 
 ---
  README.md                                |  5 ++
@@ -3929,10 +3929,10 @@ index bfb0677..57b1402 100644
 2.56.0
 
 
-From 99de6a3f9eb3debed72bd70d34b0d3566e9efe37 Mon Sep 17 00:00:00 2001
+From 8d6baf93c128cafa6e6cdb3c5c4e1fc4e1443e8d Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 13:52:46 +0530
-Subject: [PATCH 10/22] goodix581a: diagnose SIGFM verification failures
+Subject: [PATCH 10/23] goodix581a: diagnose SIGFM verification failures
 
 ---
  libfprint/fpi-image-device.c | 37 +++++++++++++++++++++++++++++++++---
@@ -4116,10 +4116,10 @@ index d22f003..26806ac 100644
 2.56.0
 
 
-From 46165a7210a09d6d3874a71619ce556cae649320 Mon Sep 17 00:00:00 2001
+From 3a36191cde6894fd7c67299093727804865845a4 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 14:07:58 +0530
-Subject: [PATCH 11/22] goodix581a: retain more SIGFM match candidates
+Subject: [PATCH 11/23] goodix581a: retain more SIGFM match candidates
 
 ---
  libfprint/sigfm/sigfm.cpp | 6 +++++-
@@ -4146,10 +4146,10 @@ index 26806ac..718035c 100644
 2.56.0
 
 
-From 4c174fd89ed32c3fe6811c3e16d8aadc37f838d9 Mon Sep 17 00:00:00 2001
+From 52b02a7b51463fb8eed4b3d1b951ce35f9fe325b Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 15:48:19 +0530
-Subject: [PATCH 12/22] goodix581a: compare matches at common finger scale
+Subject: [PATCH 12/23] goodix581a: compare matches at common finger scale
 
 ---
  libfprint/sigfm/sigfm.cpp | 68 ++++++++++++++++++++++++++++++---------
@@ -4264,10 +4264,10 @@ index 718035c..58168f7 100644
 2.56.0
 
 
-From 634c93585f5d4c846abfcb92100dd37c554a697f Mon Sep 17 00:00:00 2001
+From c1996f9cfda0a1d4444b4d65a736aff75d5c869e Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:04:38 +0530
-Subject: [PATCH 13/22] goodix581a: report SIGFM matching diagnostics by stage
+Subject: [PATCH 13/23] goodix581a: report SIGFM matching diagnostics by stage
 
 ---
  libfprint/fpi-image-device.c |  11 +++-
@@ -4512,10 +4512,10 @@ index 7443baa..1ff6e81 100644
 2.56.0
 
 
-From a0c5dc2668fd28b335fd915f88841a5ef7cf8e2c Mon Sep 17 00:00:00 2001
+From f620cd5f2dcf290c3ec087350666aed17c6df05b Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:18:16 +0530
-Subject: [PATCH 14/22] goodix581a: apply SIGFM geometric score threshold
+Subject: [PATCH 14/23] goodix581a: apply SIGFM geometric score threshold
 
 ---
  libfprint/fpi-image-device.c | 8 ++++----
@@ -4583,10 +4583,10 @@ index 1ff6e81..d01bbd9 100644
 2.56.0
 
 
-From d8d02355d469b78db356157d5ba7b069f9ccb4f4 Mon Sep 17 00:00:00 2001
+From f84328e8b2217166d6c22a32a9a00df89d196a5d Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:29:07 +0530
-Subject: [PATCH 15/22] goodix581a: require corroboration across enrollment
+Subject: [PATCH 15/23] goodix581a: require corroboration across enrollment
  stages
 
 ---
@@ -4633,10 +4633,10 @@ index d01bbd9..06d799b 100644
 2.56.0
 
 
-From ed2e95ad1f3be25b73770e30865ea8788ab946b5 Mon Sep 17 00:00:00 2001
+From 95230b64e020536af3dd7745e2c08a84b5a6410e Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:39:25 +0530
-Subject: [PATCH 16/22] goodix581a: average eight scan frames
+Subject: [PATCH 16/23] goodix581a: average eight scan frames
 
 ---
  libfprint/drivers/goodixtls/goodix581a.h | 3 ++-
@@ -4686,10 +4686,10 @@ index 57b1402..1fb34ec 100644
 2.56.0
 
 
-From 54c6ae55ab1f1412bf3338e5eebcced64b473529 Mon Sep 17 00:00:00 2001
+From f15349e809cb90414fea88d1617529017866b883 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 11 Nov 2026 15:50:56 +0530
-Subject: [PATCH 17/22] goodixtls: handle partial writes and packed handshake
+Subject: [PATCH 17/23] goodixtls: handle partial writes and packed handshake
  flights
 
 ---
@@ -4870,10 +4870,10 @@ index 9c7ccc7..3e63d21 100644
 2.56.0
 
 
-From 057953137eace392088f52e7a713287e0b5c7d0e Mon Sep 17 00:00:00 2001
+From 15fa8e3169e03e596dec86cfe27bb76d79474aa3 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 11 Nov 2026 15:50:59 +0530
-Subject: [PATCH 18/22] goodix581a: validate SIGFM stages and tighten match
+Subject: [PATCH 18/23] goodix581a: validate SIGFM stages and tighten match
  acceptance
 
 ---
@@ -5089,10 +5089,10 @@ index 06d799b..3c674b5 100644
 2.56.0
 
 
-From 59cfa55a7994a730b0f98a0f1e1157e4b86df91d Mon Sep 17 00:00:00 2001
+From 3a4b9699923445282a2fa9b829c82fd205cd58d7 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 11 Nov 2026 15:51:02 +0530
-Subject: [PATCH 19/22] goodix581a: cancel a superseded scan state machine
+Subject: [PATCH 19/23] goodix581a: cancel a superseded scan state machine
 
 ---
  libfprint/drivers/goodixtls/goodix581a.c | 11 +++++++++++
@@ -5124,10 +5124,10 @@ index e8c7339..cb27a99 100644
 2.56.0
 
 
-From 5f0f4833848dab1d74cbb4ba84c49fc6e0f0f509 Mon Sep 17 00:00:00 2001
+From 03f89ae9b5e30d0c67493e857165b6ddf97710ed Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Fri, 13 Nov 2026 10:37:11 +0530
-Subject: [PATCH 20/22] goodix581a: add opt-in diagnostic frame capture
+Subject: [PATCH 20/23] goodix581a: add opt-in diagnostic frame capture
 
 Set GOODIX_581A_DUMP_DIR to save the exact 8-bit image passed to SIGFM.
 This makes it possible to tune matcher thresholds against real presses
@@ -5192,10 +5192,10 @@ index cb27a99..670dcc6 100644
 2.56.0
 
 
-From 1d0beac09002980b73e586892280eaa73276a82b Mon Sep 17 00:00:00 2001
+From e2284450186d16519adc91a757997c7cf792b252 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Fri, 13 Nov 2026 10:51:04 +0530
-Subject: [PATCH 21/22] goodix581a: restore authentic tcode and high-pass ridge
+Subject: [PATCH 21/23] goodix581a: restore authentic tcode and high-pass ridge
  pipeline
 
 The authentic Windows capture (scratch/xiaomi_real_config.bin, used by
@@ -5361,10 +5361,10 @@ index 1fb34ec..bf2fcfc 100644
 2.56.0
 
 
-From c52ac9efb45b5d512aac9a862d2ee9195d8858ed Mon Sep 17 00:00:00 2001
+From 15e6408bdd07059f44a7c6c87783de03a92ae985 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Fri, 13 Nov 2026 11:01:41 +0530
-Subject: [PATCH 22/22] goodix581a: match the verified single-frame capture
+Subject: [PATCH 22/23] goodix581a: match the verified single-frame capture
  pipeline
 
 Hardware testing with tcode 0x0100 restored still produced very few SIFT
@@ -5542,6 +5542,275 @@ index 1e01a20..f1f44df 100644
  /* 80x64 packed sensor samples plus the four-byte footer used by this device. */
  #define GOODIX_581A_RAW_FRAME_SIZE 7684
  
+-- 
+2.56.0
+
+
+From 4340af07bf98538409ee97f973299c0e68c0bfbc Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Fri, 13 Nov 2026 11:12:29 +0530
+Subject: [PATCH 23/23] sigfm: score the dominant rotation and reject weak
+ consensus
+
+Verification started accepting wrong fingers once genuine presses produced
+enough SIFT keypoints. The score was the cause: it counted every pair of
+pairwise-vector rotations within the tolerance, i.e. roughly C(K, 2) for K
+scale-consistent vectors. K grows with the number of mostly-spurious
+descriptor matches, so an impostor stage could accumulate a large score
+without any rotation dominating. On the 581a captures this is not
+hypothetical: chance alone predicts about 3.8% of pairs inside the 0.12 rad
+window, and a stage with 100+ vectors clears the old 45-point gate.
+
+Score a stage by the number of vectors that agree on the dominant rotation
+instead, after refining that rotation from the circular mean of its inliers.
+Require both 20 inliers and at least 20% of the scale-consistent vectors;
+otherwise the stage scores zero. Raise the reciprocal-match floor from 4 to 8.
+
+The thresholds come from replaying the exact diagnostic frames captured during
+a labelled hardware test: three successful genuine presses produced dominant
+clusters of 123, 123 and 281 inliers, while three presses of a different finger
+never exceeded 18. A poor genuine press reached only 25 raw inliers at a 13%
+ratio and was correctly asked to press again. Accept three stages at 20 inliers
+or one stage at 25, which separates that set with margin.
+
+Log the inlier ratio and chance level next to the support count.
+---
+ libfprint/fpi-image-device.c | 28 ++++++-------
+ libfprint/sigfm/sigfm.cpp    | 77 +++++++++++++++++++++++++++++-------
+ libfprint/sigfm/sigfm.hpp    | 21 ++++++----
+ 3 files changed, 90 insertions(+), 36 deletions(-)
+
+diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
+index 797584d..bdc48b5 100644
+--- a/libfprint/fpi-image-device.c
++++ b/libfprint/fpi-image-device.c
+@@ -607,7 +607,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+             }
+           else
+             {
+-              int max_score = 0;
++              int max_support = 0;
+               int matched_stages = 0;
+               int valid_stages = 0;
+               int stage_index = 0;
+@@ -637,11 +637,11 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                             g_strdup_printf ("verify stage %d", stage_index);
+                           int score = sigfm_match_score (info, gallery_info,
+                                                         match_context);
+-                          if (score > max_score)
+-                            max_score = score;
++                          if (score > max_support)
++                            max_support = score;
+                           if (score >= SIGFM_MATCH_STAGE_SCORE_THRESHOLD)
+                             matched_stages++;
+-                          g_message ("SIGFM verify: stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
++                          g_message ("SIGFM verify: stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, support=%d",
+                                      stage_index, sz,
+                                      sigfm_keypoints_count (gallery_info), score);
+                           sigfm_free_info (gallery_info);
+@@ -655,14 +655,14 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                   g_variant_unref (stage_bytes);
+                 }
+ 
+-              if (max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
++              if (max_support >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
+                   matched_stages >= SIGFM_MATCH_MIN_STAGES)
+                 result = FPI_MATCH_SUCCESS;
+               else
+                 result = FPI_MATCH_FAIL;
+ 
+-              g_message ("SIGFM verify: stages=%d, valid=%d, max_score=%d, matched_stages=%d -> %s",
+-                         stage_index, valid_stages, max_score, matched_stages,
++              g_message ("SIGFM verify: stages=%d, valid=%d, max_support=%d, matched_stages=%d -> %s",
++                         stage_index, valid_stages, max_support, matched_stages,
+                          result == FPI_MATCH_SUCCESS ? "MATCH" : "NO_MATCH");
+             }
+         }
+@@ -706,7 +706,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                   continue;
+                 }
+ 
+-              int max_score = 0;
++              int max_support = 0;
+               int matched_stages = 0;
+               int valid_stages = 0;
+               int stage_index = 0;
+@@ -738,11 +738,11 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                                              t, stage_index);
+                           int score = sigfm_match_score (info, gallery_info,
+                                                         match_context);
+-                          if (score > max_score)
+-                            max_score = score;
++                          if (score > max_support)
++                            max_support = score;
+                           if (score >= SIGFM_MATCH_STAGE_SCORE_THRESHOLD)
+                             matched_stages++;
+-                          g_message ("SIGFM identify: template %u stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
++                          g_message ("SIGFM identify: template %u stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, support=%d",
+                                      t, stage_index, sz,
+                                      sigfm_keypoints_count (gallery_info), score);
+                           sigfm_free_info (gallery_info);
+@@ -756,10 +756,10 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                   g_variant_unref (stage_bytes);
+                 }
+ 
+-              g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_score=%d, matched_stages=%d",
+-                         t, stage_index, valid_stages, max_score, matched_stages);
++              g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_support=%d, matched_stages=%d",
++                         t, stage_index, valid_stages, max_support, matched_stages);
+ 
+-              if (max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
++              if (max_support >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
+                   matched_stages >= SIGFM_MATCH_MIN_STAGES)
+                 {
+                   matched_template = tmpl;
+diff --git a/libfprint/sigfm/sigfm.cpp b/libfprint/sigfm/sigfm.cpp
+index 0bb5871..f37c432 100644
+--- a/libfprint/sigfm/sigfm.cpp
++++ b/libfprint/sigfm/sigfm.cpp
+@@ -123,7 +123,16 @@ constexpr auto length_match = 0.20;
+ constexpr auto min_pair_scale = 0.70;
+ constexpr auto max_pair_scale = 1.43;
+ constexpr auto angle_match = 0.12;
+-constexpr auto min_match = 4;
++constexpr auto min_match = 8;
++/* A genuine press puts a meaningful fraction of its scale-consistent pairwise
++ * vectors on one common rotation. Under an unrelated press the pairwise
++ * rotations cluster too, but the cluster stays small: labelled 581a captures
++ * reached at most 18 inliers for a wrong finger, versus 25-307 for a genuine
++ * one. Require a floor of 20 inliers and a 20% ratio, so a stage rich in
++ * random matches cannot trade volume for consensus.
++ */
++constexpr auto min_support = 20;
++constexpr auto min_support_ratio = 0.20;
+ constexpr auto sift_nfeatures = 0;
+ constexpr auto sift_octave_layers = 3;
+ constexpr auto sift_contrast_threshold = 0.04;
+@@ -447,6 +456,11 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled,
+             return 0;
+         }
+ 
++        /* Find the dominant rotation, then re-estimate its centre from the
++         * circular mean of its inliers and recount. The refinement keeps the
++         * support estimate stable when the seed angle sits near the edge of
++         * the tolerance window.
++         */
+         int best_rotation_support = 0;
+         double dominant_rotation = 0.0;
+         for (const auto& candidate_angle : angles) {
+@@ -464,24 +478,57 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled,
+             }
+         }
+ 
+-        int count = 0;
+-        for (std::size_t j = 0; j < angles.size(); j++) {
+-            const angle& angle_1 = angles[j];
+-            for (std::size_t k = j + 1; k < angles.size(); k++) {
+-                const angle& angle_2 = angles[k];
+-                const double delta = std::remainder(angle_1.radians - angle_2.radians,
+-                                                    2.0 * M_PI);
+-                if (std::abs(delta) <= angle_match) {
+-                    count += 1;
+-                }
++        double sin_sum = 0.0;
++        double cos_sum = 0.0;
++        for (const auto& other_angle : angles) {
++            const double delta = std::remainder(other_angle.radians -
++                                                    dominant_rotation,
++                                                2.0 * M_PI);
++            if (std::abs(delta) <= angle_match) {
++                sin_sum += std::sin(other_angle.radians);
++                cos_sum += std::cos(other_angle.radians);
+             }
+         }
+-        std::fprintf(stderr, "SIGFM match [%s]: ratio-passes=%d unique-candidates=%zu reciprocal=%d unique=%zu scale=[%.3f,%.3f,%.3f] consistent=%zu rotation-support=%d/%zu at %.1fdeg threshold=%.3frad score=%d\n",
++        if (sin_sum != 0.0 || cos_sum != 0.0)
++            dominant_rotation = std::atan2(sin_sum, cos_sum);
++
++        int support = 0;
++        for (const auto& other_angle : angles) {
++            const double delta = std::remainder(other_angle.radians -
++                                                    dominant_rotation,
++                                                2.0 * M_PI);
++            if (std::abs(delta) <= angle_match)
++                support++;
++        }
++
++        const double support_ratio = angles.empty()
++                                         ? 0.0
++                                         : static_cast<double>(support) /
++                                               static_cast<double>(angles.size());
++        /* Chance level: a random pair of rotations lands inside the tolerance
++         * with probability 2 * angle_match / (2 * pi).
++         */
++        const double chance_ratio = angle_match / M_PI;
++        const bool support_ok = support >= min_support &&
++                                support_ratio >= min_support_ratio;
++
++        std::fprintf(stderr,
++                     "SIGFM match [%s]: ratio-passes=%d unique-candidates=%zu reciprocal=%d unique=%zu scale=[%.3f,%.3f,%.3f] consistent=%zu rotation-support=%d/%zu ratio=%.3f chance=%.3f accepted=%d at %.1fdeg threshold=%.3frad score=%d\n",
+                      label, ratio_passes, candidate_indices.size(), nb_matched,
+                      matches.size(), scale_p10, median_scale, scale_p90,
+-                     angles.size(), best_rotation_support, angles.size(),
+-                     dominant_rotation * 180.0 / M_PI, angle_match, count);
+-        return count;
++                     angles.size(), support, angles.size(), support_ratio,
++                     chance_ratio, support_ok, dominant_rotation * 180.0 / M_PI,
++                     angle_match, support_ok ? support : 0);
++
++        if (!support_ok) {
++            std::fprintf(stderr,
++                         "SIGFM match [%s]: rotation support %d/%zu (ratio %.3f, need %d and %.2f)\n",
++                         label, support, angles.size(), support_ratio,
++                         min_support, min_support_ratio);
++            return 0;
++        }
++
++        return support;
+     }
+     catch (const cv::Exception& e) {
+         std::fprintf(stderr, "SIGFM match [%s]: OpenCV matching failed: %s\n",
+diff --git a/libfprint/sigfm/sigfm.hpp b/libfprint/sigfm/sigfm.hpp
+index 3c674b5..a01e4af 100644
+--- a/libfprint/sigfm/sigfm.hpp
++++ b/libfprint/sigfm/sigfm.hpp
+@@ -26,14 +26,20 @@ extern "C" {
+ #endif
+ typedef unsigned char SigfmPix;
+ 
+-/* SIGFM returns the count of mutually consistent geometric hypotheses.
+- * These are provisional acceptance thresholds, not calibrated error rates.
+- * A stage must reach the first score to count towards consensus; one stage
+- * reaching the second score is sufficient on its own.
++/* SIGFM scores a stage by the number of scale-consistent pairwise vectors
++ * that agree on one dominant rotation (the inlier support), after requiring
++ * at least 20% of them to agree. Unrelated presses produce a much smaller
++ * cluster; a stage below 20 inliers is rejected inside the matcher and
++ * reported as score zero.
++ *
++ * A stage counts towards consensus at the first score. Verification succeeds
++ * when three stages corroborate each other or when one stage reaches the
++ * second score on its own. These thresholds are deliberately conservative
++ * because accepting a wrong finger is worse than asking for another press.
+  */
+ #define SIGFM_MATCH_STAGE_SCORE_THRESHOLD 20
+-#define SIGFM_MATCH_STRONG_SCORE_THRESHOLD 45
+-#define SIGFM_MATCH_MIN_STAGES 2
++#define SIGFM_MATCH_STRONG_SCORE_THRESHOLD 25
++#define SIGFM_MATCH_MIN_STAGES 3
+ 
+ /**
+  * @brief Contains information used by the sigfm algorithm for matching
+@@ -65,7 +71,8 @@ void sigfm_free_info(SigfmImgInfo* info);
+  * @param frame Print to be checked
+  * @param enrolled Canonical print to verify against
+  * @param context Short label included in diagnostic messages
+- * @return int Non-negative match score; zero means reject or matching failed.
++ * @return int Non-negative support score (mutually consistent pairwise
++ * vectors on the dominant rotation); zero means reject or matching failed.
+  */
+ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled,
+                       const char* context);
 -- 
 2.56.0
 

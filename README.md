@@ -18,7 +18,7 @@ This project integrates directly with `libfprint` and `fprintd` to deliver seaml
 - **Direct Baseline Subtraction + Ridge High-Pass**: Subtracts the ambient baseline directly, then applies a 3×3 high-pass before 3rd/97th percentile normalization so slow drift does not swamp ridge detail. The capture config is the authentic Windows table (image tcode `0x0100`), and each touch uses one Mode 5 frame.
 - **SIGFM (SIFT-based Geometric Matcher)**: Replaces traditional minutiae (NBIS / Bozorth3) with a continuous gradient orientation matcher tailored for compact ($3.25\text{ mm} \times 4.06\text{ mm}$) sensors.
 - **Feature matching**: Uses CLAHE, SIFT descriptors, reciprocal ratio-filtered matches, and pairwise geometry. These settings are heuristics; the repository does not include a representative genuine/impostor dataset to validate error rates.
-- **Multi-touch enrollment**: Stores up to 12 enrollment samples; a stage counts with a geometric-consensus score of at least 20, and verification requires either two such stages or one stage scoring at least 45. This policy has not been statistically calibrated for this sensor and user population.
+- **Multi-touch enrollment**: Stores up to 12 enrollment samples; a stage counts only when at least 20 of its scale-consistent pairwise vectors agree on one dominant rotation and those inliers are at least 20% of the total, and verification requires either three such stages or one stage with support of at least 25. This policy has not been statistically calibrated for this sensor and user population.
 - **SELinux Hardening**: Fully documented analysis and remediation for Intel TBB sysctl AVC alerts under Fedora / RHEL.
 
 ---
@@ -61,7 +61,7 @@ For developers, security researchers, and package maintainers, the architecture 
 3. **[Image Decoding & Preprocessing Pipeline](docs/03_IMAGE_PIPELINE_AND_DECODING.md)**
    - 12-bit nibble unpacking math, Mode 1 baseline vs Mode 5 scan, averaged ambient baseline, single-frame Mode 5 capture, direct baseline subtraction, 3×3 ridge high-pass, and 3rd/97th percentile normalization.
 4. **[Biometric Matching Engine: SIGFM & SIFT Tuning](docs/04_MATCHING_ENGINE_SIGFM.md)**
-   - Why NIST Bozorth3 failed on 80×64 sensors, CLAHE parameter tuning, SIFT initial blur $\sigma = 1.2$, Lowe's ratio test $0.90$, geometric angle histograms, and the two-stage / strong-stage acceptance policy.
+   - Why NIST Bozorth3 failed on 80×64 sensors, CLAHE parameter tuning, SIFT initial blur $\sigma = 1.2$, Lowe's ratio test $0.90$, dominant-rotation support with a 20% inlier floor, and the two-stage / strong-stage acceptance policy.
 5. **[System Integration, Concurrency & SELinux Hardening](docs/05_SYSTEM_INTEGRATION_AND_SELINUX.md)**
    - Concurrency SSM state flow, Intel TBB sysctl AVC analysis, and the scope of the Fedora/RHEL policy workaround.
 6. **[Build & Installation Guide](docs/06_BUILD_AND_INSTALLATION_GUIDE.md)**
