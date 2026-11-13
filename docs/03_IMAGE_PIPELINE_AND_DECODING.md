@@ -79,23 +79,29 @@ $$g = \frac{N \sum (B \cdot S) - \sum B \sum S}{N \sum B^2 - (\sum B)^2}, \quad 
 The flat-fielded residual is:
 $$\text{Residual}(x, y) = S(x, y) - \left(g \cdot B(x, y) + o\right)$$
 
-This keeps the residual **signed** (preserving both ridge crests and valleys), absorbs baseline DC shifts, and eliminates fixed-pattern cell noise without blurring ridge details.
+This keeps the residual **signed** (preserving both ridge crests and valleys) and absorbs baseline DC shifts.
+
+A 3×3 box high-pass then removes the remaining slow illumination and thermal gradient, which would otherwise dominate the normalization range:
+
+$$\text{HighPass}(x, y) = \text{Residual}(x, y) - \frac{1}{9}\sum_{dy=-1}^{1}\sum_{dx=-1}^{1}\text{Residual}(x+dx, y+dy)$$
+
+This matches the userspace capture pipeline that produced visible dermal ridges on real 581a hardware; the earlier flat-field-only variant scaled the image by drift instead of ridge contrast.
 
 ---
 
 ## 4. Dynamic Percentile Contrast Stretching
 
-To ensure invariant dynamic range across skin types (dry vs moist), the driver computes the **5th percentile ($p_5$)** and **95th percentile ($p_{95}$)** of active non-boundary pixels:
+To ensure invariant dynamic range across skin types (dry vs moist), the driver computes the **3rd percentile ($p_3$)** and **97th percentile ($p_{97}$)** of the high-passed active non-boundary pixels:
 
 ```c
 qsort (active_vals, n_active, sizeof (gint32), compare_ints);
-p5 = active_vals[n_active * 5 / 100];
-p95 = active_vals[n_active * 95 / 100];
-has_usable_contrast = (p95 - p5 >= 20);
+p3 = active_vals[n_active * 3 / 100];
+p97 = active_vals[n_active * 97 / 100];
+has_usable_contrast = (p97 - p3 >= 12);
 ```
 
-When $p_{95} - p_5 \ge 20$, the residual is stretched onto 8-bit grayscale:
+When $p_{97} - p_3 \ge 12$, the high-passed residual is stretched onto 8-bit grayscale:
 
-$$\text{Pixel}_{\text{out}}(x, y) = 255 - \text{clamp}\left( \frac{\text{Residual}(x, y) - p_5}{p_{95} - p_5} \times 255,\ 0,\ 255 \right)$$
+$$\text{Pixel}_{\text{out}}(x, y) = 255 - \text{clamp}\left( \frac{\text{HighPass}(x, y) - p_3}{p_{97} - p_3} \times 255,\ 0,\ 255 \right)$$
 
 Edges within 2 pixels of the perimeter are masked to 255 (white) to eliminate boundary edge artifacts.

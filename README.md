@@ -15,7 +15,7 @@ This project integrates directly with `libfprint` and `fprintd` to deliver seaml
 
 - **Proprietary TLS 1.2 Over USB Bulk**: Implements the proprietary Goodix TLS protocol negotiation over bulk endpoints, enabling encrypted command and biometric frame transmission with stock OEM firmware.
 - **Native 80×64 12-bit ADC Decoding**: Decodes packed 6-byte chunks (7,684-byte encrypted transfer) directly into native 12-bit resolution sensor frames.
-- **Signed Least-Squares Flat-Fielding**: Fits and removes the ambient baseline gain/offset per pixel, then normalizes with 5th/95th percentiles instead of a high-pass blur that attenuates ridge detail.
+- **Signed Least-Squares Flat-Fielding + Ridge High-Pass**: Fits and removes the ambient baseline gain/offset, then applies a 3×3 high-pass before 3rd/97th percentile normalization so slow drift does not swamp ridge detail. The capture config is the authentic Windows table (image tcode `0x0100`).
 - **SIGFM (SIFT-based Geometric Matcher)**: Replaces traditional minutiae (NBIS / Bozorth3) with a continuous gradient orientation matcher tailored for compact ($3.25\text{ mm} \times 4.06\text{ mm}$) sensors.
 - **Feature matching**: Uses CLAHE, SIFT descriptors, reciprocal ratio-filtered matches, and pairwise geometry. These settings are heuristics; the repository does not include a representative genuine/impostor dataset to validate error rates.
 - **Multi-touch enrollment**: Stores up to 12 enrollment samples; a stage counts with a geometric-consensus score of at least 20, and verification requires either two such stages or one stage scoring at least 45. This policy has not been statistically calibrated for this sensor and user population.
@@ -59,7 +59,7 @@ For developers, security researchers, and package maintainers, the architecture 
 2. **[Cryptography & Proprietary TLS Protocol](docs/02_CRYPTO_AND_TLS_PROTOCOL.md)**
    - Neodyme CVE-2023-45866 analysis, TLS 1.2 handshake over bulk endpoints, PSK derivation, and record encapsulation.
 3. **[Image Decoding & Preprocessing Pipeline](docs/03_IMAGE_PIPELINE_AND_DECODING.md)**
-   - 12-bit nibble unpacking math, Mode 1 baseline vs Mode 5 scan, eight-frame averaging, signed least-squares flat-fielding, and 5th/95th percentile normalization.
+   - 12-bit nibble unpacking math, Mode 1 baseline vs Mode 5 scan, eight-frame averaging, signed least-squares flat-fielding, 3×3 ridge high-pass, and 3rd/97th percentile normalization.
 4. **[Biometric Matching Engine: SIGFM & SIFT Tuning](docs/04_MATCHING_ENGINE_SIGFM.md)**
    - Why NIST Bozorth3 failed on 80×64 sensors, CLAHE parameter tuning, SIFT initial blur $\sigma = 1.2$, Lowe's ratio test $0.90$, geometric angle histograms, and the two-stage / strong-stage acceptance policy.
 5. **[System Integration, Concurrency & SELinux Hardening](docs/05_SYSTEM_INTEGRATION_AND_SELINUX.md)**

@@ -1,7 +1,7 @@
-From 6bfc94e2249ca3070b9a46d4cf7551e28eef8e77 Mon Sep 17 00:00:00 2001
+From 699388a15cadb2695dad0cc8b5d14d1595c6de1d Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/20] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/21] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2379,10 +2379,10 @@ index fa27507..8e5de6b 100644
 2.56.0
 
 
-From 464a9bd42a31e083206e3df7917a7ffb3de444cf Mon Sep 17 00:00:00 2001
+From 1acb4076461e554cfb1a8823ba2f901de82e4f7f Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/20] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/21] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2661,10 +2661,10 @@ index f19b377..6e5b5df 100644
 2.56.0
 
 
-From a375bbd056acc445f8b5e84b5bab66430b3204fa Mon Sep 17 00:00:00 2001
+From 68a94c619a68b6d29a6fd992a71f9a6a1774432a Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/20] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/21] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2865,10 +2865,10 @@ index 671a2b6..7443baa 100644
 2.56.0
 
 
-From 84166339f0e582e7ae22b18265f220674e64b988 Mon Sep 17 00:00:00 2001
+From 01a012be62a8ed33477ab0146e2eecaaffa3ccd4 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/20] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/21] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2948,10 +2948,10 @@ index 9b5c3d9..73f889d 100644
 2.56.0
 
 
-From e69548b4ede7912885fed2d1c39db2e990f3690c Mon Sep 17 00:00:00 2001
+From c59223b2835348c072714af2061f66d4b7c840bb Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/20] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/21] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3016,10 +3016,10 @@ index b726b67..d010035 100644
 2.56.0
 
 
-From 1e887ae8873e46e74ffbf5b9a50651dc41589ee8 Mon Sep 17 00:00:00 2001
+From 3fe50133e16840afc21e273c1a212c5172e8793d Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/20] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/21] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3071,10 +3071,10 @@ index f2bf17d..f2332df 100644
 2.56.0
 
 
-From e75d3d8ebb5a98bdb3a3353e39469459153fb89c Mon Sep 17 00:00:00 2001
+From 0b8dcc2301707cd94f815813b0c3afddb9a406f5 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/20] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/21] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3309,10 +3309,10 @@ index 215ef53..9c7ccc7 100644
 2.56.0
 
 
-From 2c640fa04ec487f81ec0e362f4b6d05aceea6efb Mon Sep 17 00:00:00 2001
+From a766c457d3f28bdd841f43429d89de9737825ec0 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/20] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/21] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3623,10 +3623,10 @@ index 0000000..bfb0677
 2.56.0
 
 
-From 3d785547102f453454106cbe64de7926b5e48411 Mon Sep 17 00:00:00 2001
+From fec5565c84db746dcbdc1cdecba4e9400dc73466 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 15:56:39 +0530
-Subject: [PATCH 09/20] goodix581a: use full-width config and average captures
+Subject: [PATCH 09/21] goodix581a: use full-width config and average captures
 
 ---
  README.md                                |  5 ++
@@ -3929,10 +3929,10 @@ index bfb0677..57b1402 100644
 2.56.0
 
 
-From d14fc72a5feb7789fc43ee018d4b601ccda58b9d Mon Sep 17 00:00:00 2001
+From 5e3e50272ddb6a4d14f1935148bf0532915775d0 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 13:52:46 +0530
-Subject: [PATCH 10/20] goodix581a: diagnose SIGFM verification failures
+Subject: [PATCH 10/21] goodix581a: diagnose SIGFM verification failures
 
 ---
  libfprint/fpi-image-device.c | 37 +++++++++++++++++++++++++++++++++---
@@ -4116,10 +4116,10 @@ index d22f003..26806ac 100644
 2.56.0
 
 
-From e5f4c28091a04764442989bb380467b3b4667710 Mon Sep 17 00:00:00 2001
+From cf095699e095daf83453e712b2e43c3ecbf278e9 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 14:07:58 +0530
-Subject: [PATCH 11/20] goodix581a: retain more SIGFM match candidates
+Subject: [PATCH 11/21] goodix581a: retain more SIGFM match candidates
 
 ---
  libfprint/sigfm/sigfm.cpp | 6 +++++-
@@ -4146,10 +4146,10 @@ index 26806ac..718035c 100644
 2.56.0
 
 
-From ebd43f6fb7f056b87bb1a744c48931dc44ae84c7 Mon Sep 17 00:00:00 2001
+From de035720bc6060128bfbccb2ad9d2cdfa97c7c31 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 15:48:19 +0530
-Subject: [PATCH 12/20] goodix581a: compare matches at common finger scale
+Subject: [PATCH 12/21] goodix581a: compare matches at common finger scale
 
 ---
  libfprint/sigfm/sigfm.cpp | 68 ++++++++++++++++++++++++++++++---------
@@ -4264,10 +4264,10 @@ index 718035c..58168f7 100644
 2.56.0
 
 
-From a689d8f91f06f2a9e109315c618431e1aa247406 Mon Sep 17 00:00:00 2001
+From aba7b3502e727f78ef4558e923280c096dad794d Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:04:38 +0530
-Subject: [PATCH 13/20] goodix581a: report SIGFM matching diagnostics by stage
+Subject: [PATCH 13/21] goodix581a: report SIGFM matching diagnostics by stage
 
 ---
  libfprint/fpi-image-device.c |  11 +++-
@@ -4512,10 +4512,10 @@ index 7443baa..1ff6e81 100644
 2.56.0
 
 
-From 6ce08e94377dd47bbe3d16eed9778e6052d70610 Mon Sep 17 00:00:00 2001
+From 941067e1b2554b137208c00c4bad2d4d26deed45 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:18:16 +0530
-Subject: [PATCH 14/20] goodix581a: apply SIGFM geometric score threshold
+Subject: [PATCH 14/21] goodix581a: apply SIGFM geometric score threshold
 
 ---
  libfprint/fpi-image-device.c | 8 ++++----
@@ -4583,10 +4583,10 @@ index 1ff6e81..d01bbd9 100644
 2.56.0
 
 
-From 1cde595babc4649054308b4b3e9c63209ffea2d0 Mon Sep 17 00:00:00 2001
+From e32cfadbe63a53b84f2b14d8e3836224af6cc38e Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:29:07 +0530
-Subject: [PATCH 15/20] goodix581a: require corroboration across enrollment
+Subject: [PATCH 15/21] goodix581a: require corroboration across enrollment
  stages
 
 ---
@@ -4633,10 +4633,10 @@ index d01bbd9..06d799b 100644
 2.56.0
 
 
-From 2bf887ca731aeebd3e64458ac3f23861a9289e57 Mon Sep 17 00:00:00 2001
+From a98ea6cd5f1827ddca0641a25297fd9e5ac5e04c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 29 Oct 2026 16:39:25 +0530
-Subject: [PATCH 16/20] goodix581a: average eight scan frames
+Subject: [PATCH 16/21] goodix581a: average eight scan frames
 
 ---
  libfprint/drivers/goodixtls/goodix581a.h | 3 ++-
@@ -4686,10 +4686,10 @@ index 57b1402..1fb34ec 100644
 2.56.0
 
 
-From d0d42825d871fe1f4a191a84921b031b9ca40579 Mon Sep 17 00:00:00 2001
+From d7e8629fdd959546687717c7345541afd22410c4 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 11 Nov 2026 15:50:56 +0530
-Subject: [PATCH 17/20] goodixtls: handle partial writes and packed handshake
+Subject: [PATCH 17/21] goodixtls: handle partial writes and packed handshake
  flights
 
 ---
@@ -4870,10 +4870,10 @@ index 9c7ccc7..3e63d21 100644
 2.56.0
 
 
-From 861745dc01813b3f3e9c4d807a20edf01959f9fc Mon Sep 17 00:00:00 2001
+From 853ef917b88371bd42141cb32a5ffdd0fb5eba0c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 11 Nov 2026 15:50:59 +0530
-Subject: [PATCH 18/20] goodix581a: validate SIGFM stages and tighten match
+Subject: [PATCH 18/21] goodix581a: validate SIGFM stages and tighten match
  acceptance
 
 ---
@@ -5089,10 +5089,10 @@ index 06d799b..3c674b5 100644
 2.56.0
 
 
-From 451fe11992158ba96206518b03b7483a79f8ec59 Mon Sep 17 00:00:00 2001
+From c1f7840c1433ba93a28fc4c65be2e4a89d1e8a61 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 11 Nov 2026 15:51:02 +0530
-Subject: [PATCH 19/20] goodix581a: cancel a superseded scan state machine
+Subject: [PATCH 19/21] goodix581a: cancel a superseded scan state machine
 
 ---
  libfprint/drivers/goodixtls/goodix581a.c | 11 +++++++++++
@@ -5124,10 +5124,10 @@ index e8c7339..cb27a99 100644
 2.56.0
 
 
-From f9d98de1766c2ed293e3385dd4cfc3b1c7b34ff8 Mon Sep 17 00:00:00 2001
+From d779abbf7b760155e8ad5e6a9fbe5827167eb27d Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Fri, 13 Nov 2026 10:37:11 +0530
-Subject: [PATCH 20/20] goodix581a: add opt-in diagnostic frame capture
+Subject: [PATCH 20/21] goodix581a: add opt-in diagnostic frame capture
 
 Set GOODIX_581A_DUMP_DIR to save the exact 8-bit image passed to SIGFM.
 This makes it possible to tune matcher thresholds against real presses
@@ -5188,6 +5188,175 @@ index cb27a99..670dcc6 100644
    fpi_image_device_image_captured (FP_IMAGE_DEVICE (dev), img);
  
    if (!self->scan_ssm)
+-- 
+2.56.0
+
+
+From b68b97592f13a85c53dd3a78772a27261189f3ce Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Fri, 13 Nov 2026 10:51:04 +0530
+Subject: [PATCH 21/21] goodix581a: restore authentic tcode and high-pass ridge
+ pipeline
+
+The authentic Windows capture (scratch/xiaomi_real_config.bin, used by
+tools/capture_finger_xiaomi.py) uses image tcode 0x0100 and shows clear
+dermal ridges. A later change silently replaced it with tcode 0x0010,
+which produces low-contrast noise; averaging eight frames could not
+recover any ridge structure, so SIGFM only ever saw noise.
+
+Restore the verified 256-byte config (tcode 0x0100, checksum 0x74a1) and
+restore the 3x3 high-pass on the flat-fielded residual before percentile
+normalization. This matches the userspace pipeline that produced the
+known-good ridge captures instead of scaling the image by slow baseline
+drift.
+---
+ libfprint/drivers/goodixtls/goodix581a.c | 55 ++++++++++++++++--------
+ libfprint/drivers/goodixtls/goodix581a.h | 10 +++--
+ tests/test-goodix581a-frame-layout.c     |  4 +-
+ 3 files changed, 45 insertions(+), 24 deletions(-)
+
+diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
+index 670dcc6..5bcabfc 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.c
++++ b/libfprint/drivers/goodixtls/goodix581a.c
+@@ -424,9 +424,6 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+     }
+ 
+   gint32 residual[GOODIX_581A_FRAME_SIZE];
+-  gint32 active_vals[GOODIX_581A_FRAME_SIZE];
+-  int n_active = 0;
+-
+   for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
+     {
+       for (int x = 0; x < GOODIX_581A_WIDTH; x++)
+@@ -434,31 +431,53 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+           int idx = y * GOODIX_581A_WIDTH + x;
+           const double baseline = self->calibration_img ? self->calibration_img[idx] : 0;
+           residual[idx] = raw_frame[idx] - (gint32) (gain * baseline + offset);
+-
+-          if (x >= 2 && x < GOODIX_581A_WIDTH - 2 &&
+-              y >= 2 && y < GOODIX_581A_HEIGHT - 2)
+-            {
+-              active_vals[n_active++] = residual[idx];
+-            }
+         }
+     }
+ 
+-  /* Use the signed, flat-fielded difference before any high-pass operation.
+-   * 20 counts is a provisional separation point from early 581a captures;
+-   * validate it across more devices and repeated air/finger frames.
++  /* The flat-fielded residual still contains slow baseline drift and the
++   * sensor's illumination gradient. High-pass it with a 3x3 box filter so
++   * that ridge detail, not drift, sets the normalization range. This mirrors
++   * the known-good userspace capture that produced visible dermal ridges.
+    */
++  gint32 highpass[GOODIX_581A_FRAME_SIZE];
++  gint32 active_vals[GOODIX_581A_FRAME_SIZE];
++  int n_active = 0;
++
++  for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
++    {
++      for (int x = 0; x < GOODIX_581A_WIDTH; x++)
++        {
++          gint32 blur_sum = 0;
++          for (int dy = -1; dy <= 1; dy++)
++            for (int dx = -1; dx <= 1; dx++)
++              {
++                const int sy = CLAMP (y + dy, 0, GOODIX_581A_HEIGHT - 1);
++                const int sx = CLAMP (x + dx, 0, GOODIX_581A_WIDTH - 1);
++                blur_sum += residual[sy * GOODIX_581A_WIDTH + sx];
++              }
++
++          highpass[y * GOODIX_581A_WIDTH + x] =
++            residual[y * GOODIX_581A_WIDTH + x] - blur_sum / 9;
++        }
++    }
++
++  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
++    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
++      active_vals[n_active++] = highpass[y * GOODIX_581A_WIDTH + x];
++
+   gint32 p5 = 0, p95 = 0;
+   gboolean has_usable_contrast = FALSE;
+   if (n_active > 50)
+     {
+       qsort (active_vals, n_active, sizeof (gint32), compare_ints);
+-      p5 = active_vals[n_active * 5 / 100];
+-      p95 = active_vals[n_active * 95 / 100];
+-      has_usable_contrast = p95 - p5 >= 20;
++      p5 = active_vals[n_active * 3 / 100];
++      p95 = active_vals[n_active * 97 / 100];
++      has_usable_contrast = p95 - p5 >= 12;
+     }
+ 
+-  fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels, usable=%d",
+-          p5, p95, n_active, has_usable_contrast);
++  fp_dbg ("581a: gain=%.4f offset=%.1f ridge high-pass p3=%d p97=%d "
++          "active=%d pixels, usable=%d",
++          gain, offset, p5, p95, n_active, has_usable_contrast);
+ 
+   FpImage *img = fp_image_new (GOODIX_581A_WIDTH, GOODIX_581A_HEIGHT);
+   img->flags |= FPI_IMAGE_PARTIAL;
+@@ -476,7 +495,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+             }
+           else
+             {
+-              gint32 val = (residual[idx] - p5) * 255 / (p95 - p5);
++              gint32 val = (highpass[idx] - p5) * 255 / (p95 - p5);
+               if (val < 0) val = 0;
+               if (val > 255) val = 255;
+               img->data[idx] = (guint8) (255 - val);
+diff --git a/libfprint/drivers/goodixtls/goodix581a.h b/libfprint/drivers/goodixtls/goodix581a.h
+index 69d7996..1e01a20 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.h
++++ b/libfprint/drivers/goodixtls/goodix581a.h
+@@ -15,7 +15,7 @@
+ #define GOODIX_581A_STREAM_ROWS 64
+ #define GOODIX_581A_STREAM_COLUMNS 80
+ #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
+-/* Initial capture data at tcode 0x0010 needed about eight frames to settle. */
++/* Average eight scans to suppress per-frame sensor noise. */
+ #define GOODIX_581A_AVERAGE_FRAMES 8
+ /* 80x64 packed sensor samples plus the four-byte footer used by this device. */
+ #define GOODIX_581A_RAW_FRAME_SIZE 7684
+@@ -46,7 +46,9 @@ goodix_581a_finish_average (GoodixTls5xxPix *average, const guint32 *sum,
+     average[i] = (sum[i] + frame_count / 2) / frame_count;
+ }
+ 
+-// Xiaomi GM168 config using full-width image tcode 0x0010; checksum is 0x64a2.
++// Xiaomi GM168 config exactly as captured from the Windows driver. The
++// image tcode is 0x0100; this is the setting that produces usable ridge
++// contrast. Checksum is 0x74a1.
+ static const guint8 goodix_581a_config[256] = {
+   0x58, 0x11, 0x60, 0x71, 0x2c, 0x9d, 0x2c, 0xc9, 0x1c, 0xe5, 0x18, 0xfd, 0x00, 0xfd, 0x00, 0xfd,
+   0x03, 0xba, 0x00, 0x01, 0x80, 0xca, 0x00, 0x04, 0x00, 0x84, 0x00, 0xc0, 0xb3, 0x86, 0x00, 0xbb,
+@@ -62,8 +64,8 @@ static const guint8 goodix_581a_config[256] = {
+   0x01, 0x56, 0x00, 0x04, 0x20, 0x58, 0x00, 0x03, 0x00, 0x32, 0x00, 0x0c, 0x02, 0x66, 0x00, 0x00,
+   0x02, 0x7c, 0x00, 0x00, 0x58, 0x82, 0x00, 0x80, 0x19, 0x2a, 0x01, 0x08, 0x00, 0x5c, 0x00, 0x00,
+   0x01, 0x54, 0x00, 0x00, 0x01, 0x62, 0x00, 0x08, 0x04, 0x64, 0x00, 0x10, 0x00, 0x66, 0x00, 0x00,
+-  0x02, 0x7c, 0x00, 0x00, 0x58, 0x2a, 0x01, 0x08, 0x00, 0x5c, 0x00, 0x10, 0x00, 0x52, 0x00, 0x08,
+-  0x00, 0x54, 0x00, 0x00, 0x01, 0x66, 0x00, 0x00, 0x02, 0x7c, 0x00, 0x00, 0x58, 0x00, 0xa2, 0x64
++  0x02, 0x7c, 0x00, 0x00, 0x58, 0x2a, 0x01, 0x08, 0x00, 0x5c, 0x00, 0x00, 0x01, 0x52, 0x00, 0x08,
++  0x00, 0x54, 0x00, 0x00, 0x01, 0x66, 0x00, 0x00, 0x02, 0x7c, 0x00, 0x00, 0x58, 0x00, 0xa1, 0x74
+ };
+ 
+ // 36-byte FDT down threshold payload for hardware touch interrupt
+diff --git a/tests/test-goodix581a-frame-layout.c b/tests/test-goodix581a-frame-layout.c
+index 1fb34ec..bf2fcfc 100644
+--- a/tests/test-goodix581a-frame-layout.c
++++ b/tests/test-goodix581a-frame-layout.c
+@@ -37,9 +37,9 @@ test_sensor_config (void)
+   const guint16 tcode = goodix_581a_config[0xeb] |
+                         (goodix_581a_config[0xec] << 8);
+ 
+-  g_assert_cmpuint (tcode, ==, 0x0010);
++  g_assert_cmpuint (tcode, ==, 0x0100);
+   g_assert_cmpuint (stored_checksum, ==, checksum);
+-  g_assert_cmpuint (stored_checksum, ==, 0x64a2);
++  g_assert_cmpuint (stored_checksum, ==, 0x74a1);
+ }
+ 
+ static void
 -- 
 2.56.0
 

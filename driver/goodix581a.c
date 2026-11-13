@@ -424,9 +424,6 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
     }
 
   gint32 residual[GOODIX_581A_FRAME_SIZE];
-  gint32 active_vals[GOODIX_581A_FRAME_SIZE];
-  int n_active = 0;
-
   for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
     {
       for (int x = 0; x < GOODIX_581A_WIDTH; x++)
@@ -434,31 +431,53 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
           int idx = y * GOODIX_581A_WIDTH + x;
           const double baseline = self->calibration_img ? self->calibration_img[idx] : 0;
           residual[idx] = raw_frame[idx] - (gint32) (gain * baseline + offset);
-
-          if (x >= 2 && x < GOODIX_581A_WIDTH - 2 &&
-              y >= 2 && y < GOODIX_581A_HEIGHT - 2)
-            {
-              active_vals[n_active++] = residual[idx];
-            }
         }
     }
 
-  /* Use the signed, flat-fielded difference before any high-pass operation.
-   * 20 counts is a provisional separation point from early 581a captures;
-   * validate it across more devices and repeated air/finger frames.
+  /* The flat-fielded residual still contains slow baseline drift and the
+   * sensor's illumination gradient. High-pass it with a 3x3 box filter so
+   * that ridge detail, not drift, sets the normalization range. This mirrors
+   * the known-good userspace capture that produced visible dermal ridges.
    */
+  gint32 highpass[GOODIX_581A_FRAME_SIZE];
+  gint32 active_vals[GOODIX_581A_FRAME_SIZE];
+  int n_active = 0;
+
+  for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
+    {
+      for (int x = 0; x < GOODIX_581A_WIDTH; x++)
+        {
+          gint32 blur_sum = 0;
+          for (int dy = -1; dy <= 1; dy++)
+            for (int dx = -1; dx <= 1; dx++)
+              {
+                const int sy = CLAMP (y + dy, 0, GOODIX_581A_HEIGHT - 1);
+                const int sx = CLAMP (x + dx, 0, GOODIX_581A_WIDTH - 1);
+                blur_sum += residual[sy * GOODIX_581A_WIDTH + sx];
+              }
+
+          highpass[y * GOODIX_581A_WIDTH + x] =
+            residual[y * GOODIX_581A_WIDTH + x] - blur_sum / 9;
+        }
+    }
+
+  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
+    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
+      active_vals[n_active++] = highpass[y * GOODIX_581A_WIDTH + x];
+
   gint32 p5 = 0, p95 = 0;
   gboolean has_usable_contrast = FALSE;
   if (n_active > 50)
     {
       qsort (active_vals, n_active, sizeof (gint32), compare_ints);
-      p5 = active_vals[n_active * 5 / 100];
-      p95 = active_vals[n_active * 95 / 100];
-      has_usable_contrast = p95 - p5 >= 20;
+      p5 = active_vals[n_active * 3 / 100];
+      p95 = active_vals[n_active * 97 / 100];
+      has_usable_contrast = p95 - p5 >= 12;
     }
 
-  fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels, usable=%d",
-          p5, p95, n_active, has_usable_contrast);
+  fp_dbg ("581a: gain=%.4f offset=%.1f ridge high-pass p3=%d p97=%d "
+          "active=%d pixels, usable=%d",
+          gain, offset, p5, p95, n_active, has_usable_contrast);
 
   FpImage *img = fp_image_new (GOODIX_581A_WIDTH, GOODIX_581A_HEIGHT);
   img->flags |= FPI_IMAGE_PARTIAL;
@@ -476,7 +495,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
             }
           else
             {
-              gint32 val = (residual[idx] - p5) * 255 / (p95 - p5);
+              gint32 val = (highpass[idx] - p5) * 255 / (p95 - p5);
               if (val < 0) val = 0;
               if (val > 255) val = 255;
               img->data[idx] = (guint8) (255 - val);
