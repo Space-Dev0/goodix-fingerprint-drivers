@@ -128,12 +128,12 @@ one ridge pitch on this sensor).
 A stage only counts when at least `8` reciprocal matches agree on the
 transform and those inliers are at least `20%` of all reciprocal matches.
 Verification succeeds with `SIGFM_MIN_STAGES` (`3`) corroborating stages or one
-stage reaching `SIGFM_STRONG_INLIERS` (`10`).
+stage reaching `SIGFM_STRONG_INLIERS` (`9`).
 
-In a labelled test, ten genuine presses scored up to 27 inliers and ten presses
-of different fingers never exceeded seven. Genuine presses that scored five or
-six were rejected; those presses overlap the enrolled gallery too weakly to be
-told apart from an impostor.
+In a labelled test with a 20-stage gallery, genuine presses scored 8–27 inliers
+and 21 presses of different fingers never exceeded seven. The single-stage
+cutoff of nine therefore sits one inlier above the best impostor cluster and
+still recovers the weakest genuine presses.
 
 The cutoffs remain provisional: they come from a small labelled set on one
 device and are not a measured false-accept rate.
@@ -152,7 +152,7 @@ else
 ```
 
 `SIGFM_STAGE_MIN_INLIERS` (`8`) is the per-stage gate; `SIGFM_STRONG_INLIERS`
-(`10`) is the single-stage path; `SIGFM_MIN_STAGES` (`3`) is the corroboration
+(`9`) is the single-stage path; `SIGFM_MIN_STAGES` (`3`) is the corroboration
 path.
 
 ### 4.1 Duplicate Press Rejection
@@ -210,8 +210,8 @@ SIGFM: extracted 193 keypoints from 80x64 image (ridge coverage 0.98)
 ## 5. Threshold validation
 
 The `8`-inlier per-stage cutoff, the 20% inlier-ratio floor, the `3`-stage
-requirement, and the `10` strong-stage cutoff are provisional acceptance
-thresholds, not a calibrated security boundary. A single stage reaching `10`
+requirement, and the `9` strong-stage cutoff are provisional acceptance
+thresholds, not a calibrated security boundary. A single stage reaching `9`
 may also accept a match, so a false accept only needs one unusually strong
 impostor comparison. Before relying on this policy, collect repeated genuine
 comparisons across separate sessions and impostor comparisons across distinct

@@ -18,7 +18,7 @@ This project integrates directly with `libfprint` and `fprintd` to deliver seaml
 - **Direct Baseline Subtraction + 3×3 Ridge High-Pass**: Subtracts the untouched ambient baseline directly, then removes the remaining slow drift and illumination gradient with a 3×3 box high-pass before 3rd/97th percentile normalization. Keeping the difference signed preserves both ridge polarities, and the least-squares gain/offset fit is reported for diagnostics only so it cannot absorb the finger's capacitive modulation. The capture uses the authentic hardware config (image tcode `0x0100`) and one Mode 5 frame per touch; asking the sensor for further Mode 5 frames after the first returns idle data and dilutes the ridges.
 - **SIGFM (SIFT-based Geometric Matcher)**: Replaces traditional minutiae (NBIS / Bozorth3) with a continuous gradient orientation matcher tailored for compact ($3.25\text{ mm} \times 4.06\text{ mm}$) sensors.
 - **Feature matching**: Uses CLAHE, SIFT descriptors, reciprocal ratio-filtered matches, and pairwise geometry. These settings are heuristics; the repository does not include a representative genuine/impostor dataset to validate error rates.
-- **Multi-touch enrollment**: Stores up to 20 enrollment samples; a stage counts only when at least 8 reciprocal matches agree on one rotation, scale and translation and those inliers are at least 20% of all matches, and verification requires either three such stages or one stage with at least 10 inliers. A press that closely repeats an already stored placement is rejected during enrollment so the gallery covers more of the finger. This policy has not been statistically calibrated for this sensor and user population.
+- **Multi-touch enrollment**: Stores up to 20 enrollment samples; a stage counts only when at least 8 reciprocal matches agree on one rotation, scale and translation and those inliers are at least 20% of all matches, and verification requires either three such stages or one stage with at least 9 inliers. A press that closely repeats an already stored placement is rejected during enrollment so the gallery covers more of the finger. This policy has not been statistically calibrated for this sensor and user population.
 - **Capture Quality Gate**: A press with fewer than 30 keypoints, or ridge detail over less than 55% of the sensor area, is answered with a "center your finger" retry instead of a mismatch, so partial presses do not count as failed verifications.
 - **SELinux Hardening**: Fully documented analysis and remediation for Intel TBB sysctl AVC alerts under Fedora / RHEL.
 
@@ -86,7 +86,7 @@ For developers, security researchers, and package maintainers, the architecture 
 ├── driver/                                # Goodix 581a driver source & standalone patch
 │   ├── goodix581a.c                       # C driver implementation (SSM, FDT, Mode 1/5)
 │   ├── goodix581a.h                       # Device registers, 256B AFE config, FDT tables
-│   ├── goodix581a-sigfm.patch             # Thirteen-commit git-am series for the GoodixTLS community base
+│   ├── goodix581a-sigfm.patch             # Fourteen-commit git-am series for the GoodixTLS community base
 │   └── sigfm/                             # SIGFM SIFT matcher module (C++)
 │       ├── sigfm.cpp
 │       ├── sigfm.hpp

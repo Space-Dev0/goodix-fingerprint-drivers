@@ -1,7 +1,7 @@
-From 0b36d01e9ec9a296d09f91db8e6841680d038c72 Mon Sep 17 00:00:00 2001
+From 139586db51d80939c324953234a54cdaf415c6b8 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/13] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/14] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2379,10 +2379,10 @@ index fa27507..8e5de6b 100644
 2.56.0
 
 
-From 4d06cb9933a71d3f2ebe990f5988c771a39554d3 Mon Sep 17 00:00:00 2001
+From 8864cf6794a6f9100ce9eb2ca1aa8f906cea11dc Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/13] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/14] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2661,10 +2661,10 @@ index f19b377..6e5b5df 100644
 2.56.0
 
 
-From 6fb79e4269dfdae283b674d5ae9b647d373d14f5 Mon Sep 17 00:00:00 2001
+From c8494ea567fd07639e49743332b606b8ac29e5dd Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/13] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/14] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2865,10 +2865,10 @@ index 671a2b6..7443baa 100644
 2.56.0
 
 
-From 2fa1c643f01d3d63d5cdb47be271fd0460421cbf Mon Sep 17 00:00:00 2001
+From c029fffb725419944f590b1e9c76313a45ea04f6 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/13] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/14] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2948,10 +2948,10 @@ index 9b5c3d9..73f889d 100644
 2.56.0
 
 
-From 005f657b9f66de78ca4b749051845633f58fb918 Mon Sep 17 00:00:00 2001
+From dd7abc3a79945363a7c2f4487c209796208235bd Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/13] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/14] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3016,10 +3016,10 @@ index b726b67..d010035 100644
 2.56.0
 
 
-From c72bdf9782a627de9ddca6d2ee826134f996affd Mon Sep 17 00:00:00 2001
+From 4cabe395379956122aed9aa0a2dba55b8e33c79f Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/13] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/14] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3071,10 +3071,10 @@ index f2bf17d..f2332df 100644
 2.56.0
 
 
-From bc7763995c86a7e096698a01c9e75d3018266677 Mon Sep 17 00:00:00 2001
+From af5403b6cc888f67ac0e24dd5e02db068285a9d3 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/13] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/14] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3309,10 +3309,10 @@ index 215ef53..9c7ccc7 100644
 2.56.0
 
 
-From b4a20fc24883c0f96ec92e6edf6612d03948a751 Mon Sep 17 00:00:00 2001
+From d3d47f614200b263a4083469f1efd458ec0f4fbd Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/13] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/14] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3623,10 +3623,10 @@ index 0000000..bfb0677
 2.56.0
 
 
-From a7b40644c7b3d5e229a88740988d4e7ea5d06169 Mon Sep 17 00:00:00 2001
+From 639aca936d3db7a439606fe39452f3111904b743 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:30:05 +0530
-Subject: [PATCH 09/13] sigfm: verify one similarity transform, not just
+Subject: [PATCH 09/14] sigfm: verify one similarity transform, not just
  rotation
 
 Wrong fingers were still accepted after the dominant-rotation score landed.
@@ -4098,10 +4098,10 @@ index 7443baa..ca4e3f0 100644
 2.56.0
 
 
-From 611356e6202746dfd67c8a91071ecb02b71cb434 Mon Sep 17 00:00:00 2001
+From aa7203870da35b6ad86e1f0ce12e5b2216ee81f4 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:33:06 +0530
-Subject: [PATCH 10/13] goodix581a: add opt-in diagnostic frame capture
+Subject: [PATCH 10/14] goodix581a: add opt-in diagnostic frame capture
 
 Set GOODIX_581A_DUMP_DIR to a writable directory to save the exact 8-bit
 image that SIGFM receives. The hook is off by default and sits after image
@@ -4168,10 +4168,10 @@ index 88e387a..514d9ca 100644
 2.56.0
 
 
-From a48804d4e89b8b2299b49df199ce100459ee8dfe Mon Sep 17 00:00:00 2001
+From 427bd4e02be31f6d984dbc55afd9211f54cd3c00 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:58:01 +0530
-Subject: [PATCH 11/13] goodix581a: restore the verified ridge high-pass
+Subject: [PATCH 11/14] goodix581a: restore the verified ridge high-pass
  pipeline
 
 The no-high-pass flat field left only ~70-120 SIFT keypoints per press, and
@@ -4358,10 +4358,10 @@ index 514d9ca..a56fd55 100644
 2.56.0
 
 
-From 0baa64aea89e5a2d83c123f5f56f7152f48ef905 Mon Sep 17 00:00:00 2001
+From c68236f565caa755d934000d2ed5f287bec84f58 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 20:57:36 +0530
-Subject: [PATCH 12/13] sigfm: tighten duplicate enrollment, accept modest
+Subject: [PATCH 12/14] sigfm: tighten duplicate enrollment, accept modest
  strong stages
 
 A labelled hardware run on 2026-11-14 pressed ten times with the enrolled
@@ -4491,10 +4491,10 @@ index bcf7b31..46bca16 100644
 2.56.0
 
 
-From 7b01817251ddbb933ac86a0976a690eb5a041e10 Mon Sep 17 00:00:00 2001
+From a982395ee6a0bc053b886d17149cffb1ca178439 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 22:24:12 +0530
-Subject: [PATCH 13/13] goodix581a: enlarge the gallery and retry partial
+Subject: [PATCH 13/14] goodix581a: enlarge the gallery and retry partial
  captures
 
 Duplicate rejection raised the genuine acceptance rate from 5/10 to 16/20 in
@@ -4648,6 +4648,54 @@ index 46bca16..b7b45e2 100644
  
                g_message ("SIGFM verify: stages=%d, max_inliers=%d, "
                           "matched_stages=%d -> %s",
+-- 
+2.56.0
+
+
+From 897ee30d46274f479c41a8b312987f1cbde8a1d6 Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 22:56:45 +0530
+Subject: [PATCH 14/14] sigfm: accept nine-inlier stages
+
+The 20-stage gallery changed the evidence distribution. Across the labelled
+run on 2026-11-14, 20 genuine presses scored 8, 8, 9, 9, 11-20 and 27 inliers,
+while 21 presses of different fingers never exceeded seven (0, 3-7).
+
+At the previous cutoff of ten inliers, four genuine presses were rejected at
+eight and nine. Lowering the single-stage cutoff to nine recovers two of them:
+18/20 genuine presses are accepted and all 21 impostor presses still fail,
+leaving one inlier of headroom over the strongest impostor cluster.
+
+Two further verifies sat between the two labelled batches and cannot be
+attributed with certainty. One scored eight inliers (rejected) and one scored
+ten (accepted); the acceptance outcome is unchanged by this cutoff, so the
+change neither hides nor introduces a false accept for them.
+---
+ libfprint/fpi-image-device.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
+index b7b45e2..4df3a0e 100644
+--- a/libfprint/fpi-image-device.c
++++ b/libfprint/fpi-image-device.c
+@@ -28,12 +28,13 @@
+ /* SIGFM scores a stage by the number of matches that agree on one rotation,
+  * scale and translation. A stage needs eight such inliers to count towards
+  * consensus. Verification succeeds with one strongly supported stage or three
+- * corroborating stages. On labelled 581a captures genuine presses scored up to
+- * 27, while ten different-finger presses never exceeded seven; these cutoffs
+- * therefore leave a margin without accepting a single chance cluster.
++ * corroborating stages. On labelled 581a captures with a 20-stage gallery,
++ * genuine presses scored 8-27 inliers while 21 different-finger presses never
++ * exceeded seven. A single stage therefore needs nine inliers: one above the
++ * best impostor cluster, and enough to recover the weakest genuine presses.
+  */
+ #define SIGFM_STAGE_MIN_INLIERS 8
+-#define SIGFM_STRONG_INLIERS 10
++#define SIGFM_STRONG_INLIERS 9
+ #define SIGFM_MIN_STAGES 3
+ 
+ /* A new enrollment press scoring this well against an already stored stage is
 -- 
 2.56.0
 
