@@ -1,7 +1,7 @@
-From ec2f40d7fd4c06be806fc017625e1e8ac8faf705 Mon Sep 17 00:00:00 2001
+From 0b36d01e9ec9a296d09f91db8e6841680d038c72 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/12] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/13] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2379,10 +2379,10 @@ index fa27507..8e5de6b 100644
 2.56.0
 
 
-From a252283431f6dc360076d001318f1dfae81bb9ad Mon Sep 17 00:00:00 2001
+From 4d06cb9933a71d3f2ebe990f5988c771a39554d3 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/12] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/13] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2661,10 +2661,10 @@ index f19b377..6e5b5df 100644
 2.56.0
 
 
-From aa6d59f0cb4571087a6caa76e686205da08f425d Mon Sep 17 00:00:00 2001
+From 6fb79e4269dfdae283b674d5ae9b647d373d14f5 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/12] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/13] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2865,10 +2865,10 @@ index 671a2b6..7443baa 100644
 2.56.0
 
 
-From 7ade1c182632586b105a673a7eaedf05c32f2cb1 Mon Sep 17 00:00:00 2001
+From 2fa1c643f01d3d63d5cdb47be271fd0460421cbf Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/12] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/13] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2948,10 +2948,10 @@ index 9b5c3d9..73f889d 100644
 2.56.0
 
 
-From 1a165f4eea415e34fbcde6274509fa314b0fa7c5 Mon Sep 17 00:00:00 2001
+From 005f657b9f66de78ca4b749051845633f58fb918 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/12] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/13] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3016,10 +3016,10 @@ index b726b67..d010035 100644
 2.56.0
 
 
-From d7104fabc45b6f02609bbe9ad1de5e97d7fe003b Mon Sep 17 00:00:00 2001
+From c72bdf9782a627de9ddca6d2ee826134f996affd Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/12] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/13] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3071,10 +3071,10 @@ index f2bf17d..f2332df 100644
 2.56.0
 
 
-From 3abd1144fdde6c317344e205f64331c66b20de0b Mon Sep 17 00:00:00 2001
+From bc7763995c86a7e096698a01c9e75d3018266677 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/12] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/13] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3309,10 +3309,10 @@ index 215ef53..9c7ccc7 100644
 2.56.0
 
 
-From 14b2b3380d7484e63a3e50adc29a9a8b0ffc48e0 Mon Sep 17 00:00:00 2001
+From b4a20fc24883c0f96ec92e6edf6612d03948a751 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/12] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/13] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3623,10 +3623,10 @@ index 0000000..bfb0677
 2.56.0
 
 
-From 101ee357df0f168b55aaf6397882d7d79231c71e Mon Sep 17 00:00:00 2001
+From a7b40644c7b3d5e229a88740988d4e7ea5d06169 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:30:05 +0530
-Subject: [PATCH 09/12] sigfm: verify one similarity transform, not just
+Subject: [PATCH 09/13] sigfm: verify one similarity transform, not just
  rotation
 
 Wrong fingers were still accepted after the dominant-rotation score landed.
@@ -4098,10 +4098,10 @@ index 7443baa..ca4e3f0 100644
 2.56.0
 
 
-From 94c146bb8a62edeb8192656dba3531092430225b Mon Sep 17 00:00:00 2001
+From 611356e6202746dfd67c8a91071ecb02b71cb434 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:33:06 +0530
-Subject: [PATCH 10/12] goodix581a: add opt-in diagnostic frame capture
+Subject: [PATCH 10/13] goodix581a: add opt-in diagnostic frame capture
 
 Set GOODIX_581A_DUMP_DIR to a writable directory to save the exact 8-bit
 image that SIGFM receives. The hook is off by default and sits after image
@@ -4168,10 +4168,10 @@ index 88e387a..514d9ca 100644
 2.56.0
 
 
-From aa59580f0b009a89d799470e89ffb1f18d81c1ea Mon Sep 17 00:00:00 2001
+From a48804d4e89b8b2299b49df199ce100459ee8dfe Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:58:01 +0530
-Subject: [PATCH 11/12] goodix581a: restore the verified ridge high-pass
+Subject: [PATCH 11/13] goodix581a: restore the verified ridge high-pass
  pipeline
 
 The no-high-pass flat field left only ~70-120 SIFT keypoints per press, and
@@ -4358,10 +4358,10 @@ index 514d9ca..a56fd55 100644
 2.56.0
 
 
-From facadfa404553d939149da90fe0d010716beb86e Mon Sep 17 00:00:00 2001
+From 0baa64aea89e5a2d83c123f5f56f7152f48ef905 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 20:57:36 +0530
-Subject: [PATCH 12/12] sigfm: tighten duplicate enrollment, accept modest
+Subject: [PATCH 12/13] sigfm: tighten duplicate enrollment, accept modest
  strong stages
 
 A labelled hardware run on 2026-11-14 pressed ten times with the enrolled
@@ -4487,6 +4487,167 @@ index bcf7b31..46bca16 100644
        if (!error && info)
          {
            int out_len = 0;
+-- 
+2.56.0
+
+
+From 7b01817251ddbb933ac86a0976a690eb5a041e10 Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 22:24:12 +0530
+Subject: [PATCH 13/13] goodix581a: enlarge the gallery and retry partial
+ captures
+
+Duplicate rejection raised the genuine acceptance rate from 5/10 to 16/20 in
+the labelled run on 2026-11-14, and the remaining failures were presses that
+overlapped the gallery poorly. Store 20 stages instead of 12 so each print
+covers more of the pad, and reject presses whose ridge detail covers less than
+55% of the active area during enrollment.
+
+Verification also reports a bad capture as a retry rather than a mismatch: a
+press below 30 keypoints, or one whose ridge detail covers less than 55% of the
+sensor, is answered with "center your finger". Validated presses produced
+66-256 keypoints and covered at least 62% of the area, so the cutoffs sit below
+the observed range. The metrics are logged for every capture:
+
+  SIGFM: extracted 193 keypoints from 80x64 image (ridge coverage 0.98)
+---
+ libfprint/drivers/goodixtls/goodix581a.c |  2 +-
+ libfprint/fpi-image-device.c             | 76 ++++++++++++++++++++++--
+ 2 files changed, 72 insertions(+), 6 deletions(-)
+
+diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
+index a56fd55..19128f7 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.c
++++ b/libfprint/drivers/goodixtls/goodix581a.c
+@@ -725,7 +725,7 @@ fpi_device_goodixtls581a_class_init (FpiDeviceGoodixTls581aClass * class)
+   dev_class->full_name = "Goodix TLS Fingerprint Sensor 581a (Xiaomi GM168)";
+   dev_class->type = FP_DEVICE_TYPE_USB;
+   dev_class->id_table = id_table;
+-  dev_class->nr_enroll_stages = 12;
++  dev_class->nr_enroll_stages = 20;
+   dev_class->scan_type = FP_SCAN_TYPE_PRESS;
+ 
+   img_dev_class->bz3_threshold = 24;
+diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
+index 46bca16..b7b45e2 100644
+--- a/libfprint/fpi-image-device.c
++++ b/libfprint/fpi-image-device.c
+@@ -42,6 +42,14 @@
+  */
+ #define SIGFM_ENROLL_DUPLICATE_INLIERS 16
+ 
++/* Usable presses on this sensor produced 66-256 keypoints, while a frame
++ * captured without a proper finger produced 10. A partial press leaves large
++ * flat areas with no ridge detail; every validated press covered at least 62%
++ * of the active area, so these cutoffs sit below the observed range.
++ */
++#define SIGFM_MIN_KEYPOINTS 30
++#define SIGFM_MIN_COVERAGE 0.55
++
+ /**
+  * SECTION: fpi-image-device
+  * @title: Internal FpImageDevice
+@@ -502,6 +510,42 @@ fpi_image_device_report_finger_status (FpImageDevice *self,
+  * including e.g. an enroll operation which captures multiple images during
+  * one session.
+  */
++/* Fraction of the active sensor area that carries ridge-like detail. Pressed
++ * tiles have a grey-level standard deviation far above the flat areas left by a
++ * finger that only touches an edge, so a low value means the press is partial.
++ */
++static gdouble
++sigfm_image_coverage (const guchar *data, gint width, gint height)
++{
++  const gint tile = 8;
++  const gdouble min_std = 25.0;
++  gint active = 0;
++  gint total = 0;
++
++  for (gint ty = 2; ty + tile <= height - 2; ty += tile)
++    for (gint tx = 2; tx + tile <= width - 2; tx += tile)
++      {
++        gdouble sum = 0.0;
++        gdouble sum_sq = 0.0;
++        const gdouble n = tile * tile;
++
++        for (gint y = ty; y < ty + tile; y++)
++          for (gint x = tx; x < tx + tile; x++)
++            {
++              const gdouble v = data[y * width + x];
++              sum += v;
++              sum_sq += v * v;
++            }
++
++        total++;
++
++        if (sum_sq / n - (sum / n) * (sum / n) >= min_std * min_std)
++          active++;
++      }
++
++  return total > 0 ? (gdouble) active / total : 0.0;
++}
++
+ /* Reject a press that is nearly identical to an already stored enrollment
+  * stage: it would only duplicate existing coverage. The threshold is well above
+  * what any wrong finger scored, so only repeated placements are discarded.
+@@ -568,15 +612,18 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+ 
+   SigfmImgInfo *info = sigfm_extract (img_data, width, height);
+   int kpts = sigfm_keypoints_count (info);
+-  g_message ("SIGFM: extracted %d keypoints from %dx%d image", kpts, width, height);
++  const gdouble coverage = sigfm_image_coverage (img_data, width, height);
++  g_message ("SIGFM: extracted %d keypoints from %dx%d image (ridge coverage %.2f)",
++             kpts, width, height, coverage);
+ 
+-  if (kpts < 6)
++  if (kpts < SIGFM_MIN_KEYPOINTS)
+     {
+-      g_warning ("SIGFM: too few keypoints (%d < 6), requesting retry", kpts);
++      g_warning ("SIGFM: too few keypoints (%d < %d), requesting retry",
++                 kpts, SIGFM_MIN_KEYPOINTS);
+       if (info)
+         sigfm_free_info (info);
+       info = NULL;
+-      error = fpi_device_retry_new_msg (FP_DEVICE_RETRY_CENTER_FINGER, "Please center finger on sensor");
++      error = fpi_device_retry_new_msg (FP_DEVICE_RETRY_CENTER_FINGER, "Please place your finger over the sensor");
+     }
+ 
+   if (action == FPI_DEVICE_ACTION_ENROLL)
+@@ -587,6 +634,14 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+       if (!priv->enroll_features)
+         priv->enroll_features = g_ptr_array_new_with_free_func ((GDestroyNotify) g_bytes_unref);
+ 
++      if (!error && info && coverage < SIGFM_MIN_COVERAGE)
++        {
++          g_warning ("SIGFM enroll: ridge coverage %.2f is below %.2f; requesting a new placement",
++                     coverage, SIGFM_MIN_COVERAGE);
++          error = fpi_device_retry_new_msg (FP_DEVICE_RETRY_CENTER_FINGER,
++                                            "Center your finger on the sensor");
++        }
++
+       if (!error && info && priv->enroll_features->len > 0)
+         {
+           guint matched_stage = 0;
+@@ -707,7 +762,18 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+                   matched_stages >= SIGFM_MIN_STAGES)
+                 result = FPI_MATCH_SUCCESS;
+               else
+-                result = FPI_MATCH_FAIL;
++                {
++                  result = FPI_MATCH_FAIL;
++
++                  /* A failed match on a partial press says more about the
++                   * capture than about the finger, so ask for a better press
++                   * instead of reporting a mismatch.
++                   */
++                  if (coverage < SIGFM_MIN_COVERAGE)
++                    error = fpi_device_retry_new_msg (
++                      FP_DEVICE_RETRY_CENTER_FINGER,
++                      "Center your finger on the sensor");
++                }
+ 
+               g_message ("SIGFM verify: stages=%d, max_inliers=%d, "
+                          "matched_stages=%d -> %s",
 -- 
 2.56.0
 

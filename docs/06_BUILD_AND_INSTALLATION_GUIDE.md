@@ -132,7 +132,7 @@ the corrected 80x64 image geometry changes the stored feature coordinates.
 fprintd-delete "$USER"
 ```
 
-### 4.2 Enroll Your Finger (12 Touches)
+### 4.2 Enroll Your Finger (20 Touches)
 
 ```bash
 fprintd-enroll
@@ -142,6 +142,8 @@ fprintd-enroll
 > - Keep the center of your finger pad on the sensor for every touch.
 > - Vary placement only slightly between touches; do not deliberately rotate or press only the edges.
 > - **Lift your finger between each prompt** until the terminal indicates `Enroll result: enroll-stage-passed`.
+> - If a press repeats an earlier placement, the terminal asks you to move your finger to a different area; that press is not counted, so shift it slightly and press again.
+> - A press with very little ridge detail asks you to center your finger instead of being stored.
 
 ### 4.3 Test Verification
 

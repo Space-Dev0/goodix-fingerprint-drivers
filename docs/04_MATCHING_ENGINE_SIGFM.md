@@ -55,7 +55,7 @@ Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ri
 |  [Geometric Verification](common scale, rotation, then translation)     |
 |          |                                                              |
 |          v                                                              |
-|  [Match Decision]        (inliers >= 8 and >= 20%; 3 stages or one >= 12)
+|  [Match Decision]        (inliers >= 8 and >= 20%; 3 stages or one >= 10)
 +-------------------------------------------------------------------------+
 ```
 
@@ -140,7 +140,7 @@ device and are not a measured false-accept rate.
 
 ---
 
-## 4. Final Match Criteria & 12-Stage Enrollment
+## 4. Final Match Criteria & 20-Stage Enrollment
 
 ```c
 /* Three corroborating stages, or one strongly supported stage. */
@@ -174,14 +174,38 @@ of the same placement is rejected. On the labelled enrollment set this would
 have discarded three of twelve presses, replacing near-identical stages with
 new coverage.
 
-### 4.2 12-Stage Multi-Angle Enrollment
+### 4.2 20-Stage Multi-Angle Enrollment
 
-The sensor sees only a small part of the finger. For the 12 enrollment touches,
+The sensor sees only a small part of the finger. For the 20 enrollment touches,
 keep the pad centered and vary placement only slightly; lift fully between
 touches. Large shifts, edge-only presses, and deliberate rotations reduce
 overlap between probe and template. Duplicate rejection asks for a new
 placement when two presses are effectively the same, so slight variation
 between presses is now required rather than optional.
+
+### 4.3 Capture Quality Retries
+
+Matching a pressed-but-poor frame is pointless: on this sensor a usable press
+produced 66–256 SIFT keypoints, while a frame captured without a proper finger
+produced 10. The device therefore measures, before matching:
+
+- **Keypoint count** — fewer than `SIGFM_MIN_KEYPOINTS` (`30`) means there is
+  not enough ridge detail to compare.
+- **Ridge coverage** — the active area is split into 8×8 tiles and a tile counts
+  as covered when its grey-level standard deviation reaches 25 levels. Every
+  validated press covered at least 62% of the area, so
+  `SIGFM_MIN_COVERAGE` (`0.55`) only triggers on partial presses that leave a
+  large flat region.
+
+A press that fails either check is reported as a retry asking the user to place
+the finger over the sensor, not as a failed verification. During verification
+the same hint is returned when the match fails on a low-coverage capture, so a
+partial press is never counted as a wrong finger. The metrics are logged on
+every capture:
+
+```
+SIGFM: extracted 193 keypoints from 80x64 image (ridge coverage 0.98)
+```
 
 ## 5. Threshold validation
 

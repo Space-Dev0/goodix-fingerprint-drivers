@@ -725,7 +725,7 @@ fpi_device_goodixtls581a_class_init (FpiDeviceGoodixTls581aClass * class)
   dev_class->full_name = "Goodix TLS Fingerprint Sensor 581a (Xiaomi GM168)";
   dev_class->type = FP_DEVICE_TYPE_USB;
   dev_class->id_table = id_table;
-  dev_class->nr_enroll_stages = 12;
+  dev_class->nr_enroll_stages = 20;
   dev_class->scan_type = FP_SCAN_TYPE_PRESS;
 
   img_dev_class->bz3_threshold = 24;
