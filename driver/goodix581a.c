@@ -29,10 +29,6 @@ struct _FpiDeviceGoodixTls581a
   FpiDeviceGoodixTls5xx parent;
 
   GoodixTls5xxPix *calibration_img;
-  guint32 *calibration_sum;
-  guint calibration_frame_count;
-  guint32 *scan_sum;
-  guint scan_frame_count;
   FpiSsm *scan_ssm;
 };
 
@@ -81,39 +77,6 @@ goodix_581a_decode_frame (GoodixTls5xxPix *frame, guint32 frame_size,
 
   for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
     frame[goodix_581a_stream_to_image_index (i)] = stream[i];
-}
-
-/* Optional diagnostic capture. Set GOODIX_581A_DUMP_DIR to a writable
- * directory to save the exact 8-bit image that SIGFM receives. This is off by
- * default; it is useful when tuning matching thresholds against real presses.
- */
-static void
-goodix_581a_dump_frame (const guint8 *data)
-{
-  const gchar *dir = g_getenv ("GOODIX_581A_DUMP_DIR");
-  static guint counter = 0;
-
-  if (dir == NULL || *dir == '\0')
-    return;
-
-  g_autofree gchar *name = g_strdup_printf ("581a-%" G_GINT64_FORMAT "-%03u.pgm",
-                                            g_get_real_time (), counter++);
-  g_autofree gchar *path = g_build_filename (dir, name, NULL);
-  g_autofree gchar *header = g_strdup_printf ("P5\n%d %d\n255\n",
-                                              GOODIX_581A_WIDTH,
-                                              GOODIX_581A_HEIGHT);
-  const gsize header_len = strlen (header);
-  const gsize image_len = GOODIX_581A_FRAME_SIZE;
-  g_autofree guint8 *pgm = g_malloc (header_len + image_len);
-
-  memcpy (pgm, header, header_len);
-  memcpy (pgm + header_len, data, image_len);
-
-  if (g_file_set_contents (path, (const gchar *) pgm,
-                           (gssize) (header_len + image_len), NULL))
-    fp_dbg ("581a: saved diagnostic frame %s", path);
-  else
-    fp_warn ("581a: failed to save diagnostic frame %s", path);
 }
 
 /* One scan action captures a Mode 1 ambient reference, waits for FDT touch,
@@ -248,8 +211,6 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
 
   if (error)
     {
-      g_clear_pointer (&self->calibration_sum, g_free);
-      self->calibration_frame_count = 0;
       fp_err ("581a: Failed to capture baseline image: %s", error->message);
       fpi_ssm_mark_failed (ssm, error);
       return;
@@ -257,8 +218,6 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
 
   if (!data || length != GOODIX_581A_RAW_FRAME_SIZE)
     {
-      g_clear_pointer (&self->calibration_sum, g_free);
-      self->calibration_frame_count = 0;
       fpi_ssm_mark_failed (ssm,
                            g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
                                         "581a baseline frame has invalid length %u (expected %u)",
@@ -266,33 +225,14 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
       return;
     }
 
-  GoodixTls5xxPix frame[GOODIX_581A_FRAME_SIZE];
-  goodix_581a_decode_frame (frame, length, data, 0, 4);
-
-  if (!self->calibration_sum)
-    self->calibration_sum = g_new0 (guint32, GOODIX_581A_FRAME_SIZE);
-  goodix_581a_accumulate_frame (self->calibration_sum, frame);
-  self->calibration_frame_count++;
-
-  if (self->calibration_frame_count < GOODIX_581A_AVERAGE_FRAMES)
-    {
-      fp_dbg ("581a: Ambient baseline frame %u/%u",
-              self->calibration_frame_count, GOODIX_581A_AVERAGE_FRAMES);
-      goodix_tls_read_image (dev, goodix_581a_get_image_mode1,
-                             sizeof (goodix_581a_get_image_mode1),
-                             on_581a_calib_read, ssm);
-      return;
-    }
-
   g_clear_pointer (&self->calibration_img, g_free);
-  self->calibration_img = g_new (GoodixTls5xxPix, GOODIX_581A_FRAME_SIZE);
-  goodix_581a_finish_average (self->calibration_img, self->calibration_sum,
-                              GOODIX_581A_AVERAGE_FRAMES);
-  g_clear_pointer (&self->calibration_sum, g_free);
-  self->calibration_frame_count = 0;
+  self->calibration_img = g_malloc0 (GOODIX_581A_FRAME_SIZE * sizeof (GoodixTls5xxPix));
+  /* Save the untouched-pad frame as the reference for subsequent Mode 5
+   * captures. The image callback subtracts this baseline before filtering.
+   */
+  goodix_581a_decode_frame (self->calibration_img, length, data, 0, 4);
 
-  fp_dbg ("581a: Ambient baseline averaged from %u frames",
-          GOODIX_581A_AVERAGE_FRAMES);
+  fp_dbg ("581a: Ambient baseline acquired successfully!");
   fpi_ssm_next_state (ssm);
 }
 
@@ -330,6 +270,39 @@ compare_ints (const void *a, const void *b)
   return (arg1 > arg2) - (arg1 < arg2);
 }
 
+/* Optional diagnostic capture. Set GOODIX_581A_DUMP_DIR to a writable
+ * directory to save the exact 8-bit image that SIGFM receives. This is off by
+ * default and does not change the capture or matching path.
+ */
+static void
+goodix_581a_dump_frame (const guint8 *data)
+{
+  const gchar *dir = g_getenv ("GOODIX_581A_DUMP_DIR");
+  static guint counter = 0;
+
+  if (dir == NULL || *dir == '\0')
+    return;
+
+  g_autofree gchar *name = g_strdup_printf ("581a-%" G_GINT64_FORMAT "-%03u.pgm",
+                                            g_get_real_time (), counter++);
+  g_autofree gchar *path = g_build_filename (dir, name, NULL);
+  g_autofree gchar *header = g_strdup_printf ("P5\n%d %d\n255\n",
+                                              GOODIX_581A_WIDTH,
+                                              GOODIX_581A_HEIGHT);
+  const gsize header_len = strlen (header);
+  const gsize image_len = GOODIX_581A_FRAME_SIZE;
+  g_autofree guint8 *pgm = g_malloc (header_len + image_len);
+
+  memcpy (pgm, header, header_len);
+  memcpy (pgm + header_len, data, image_len);
+
+  if (g_file_set_contents (path, (const gchar *) pgm,
+                           (gssize) (header_len + image_len), NULL))
+    fp_dbg ("581a: saved diagnostic frame %s", path);
+  else
+    fp_warn ("581a: failed to save diagnostic frame %s", path);
+}
+
 static void
 on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
                     gpointer user_data, GError *error)
@@ -346,8 +319,6 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
 
   if (error)
     {
-      g_clear_pointer (&self->scan_sum, g_free);
-      self->scan_frame_count = 0;
       fp_err ("581a: Failed to capture Mode 5 scan: %s", error->message);
       fpi_ssm_mark_failed (ssm, error);
       return;
@@ -355,8 +326,6 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
 
   if (!data || length != GOODIX_581A_RAW_FRAME_SIZE)
     {
-      g_clear_pointer (&self->scan_sum, g_free);
-      self->scan_frame_count = 0;
       fpi_ssm_mark_failed (ssm,
                            g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
                                         "581a scan frame has invalid length %u (expected %u)",
@@ -364,33 +333,13 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
       return;
     }
 
-  GoodixTls5xxPix frame[GOODIX_581A_FRAME_SIZE];
-  goodix_581a_decode_frame (frame, length, data, 0, 4);
-
-  if (!self->scan_sum)
-    self->scan_sum = g_new0 (guint32, GOODIX_581A_FRAME_SIZE);
-  goodix_581a_accumulate_frame (self->scan_sum, frame);
-  self->scan_frame_count++;
-
-  if (self->scan_frame_count < GOODIX_581A_SCAN_FRAMES)
-    {
-      fp_dbg ("581a: Mode 5 frame %u/%u",
-              self->scan_frame_count, GOODIX_581A_SCAN_FRAMES);
-      goodix_tls_read_image (dev, goodix_581a_get_image_mode5,
-                             sizeof (goodix_581a_get_image_mode5),
-                             on_581a_mode5_read, ssm);
-      return;
-    }
-
   GoodixTls5xxPix raw_frame[GOODIX_581A_FRAME_SIZE];
-  goodix_581a_finish_average (raw_frame, self->scan_sum,
-                              GOODIX_581A_SCAN_FRAMES);
-  g_clear_pointer (&self->scan_sum, g_free);
-  self->scan_frame_count = 0;
+  goodix_581a_decode_frame (raw_frame, length, data, 0, 4);
 
-  /* Subtract the ambient baseline directly, exactly like the verified
-   * userspace capture. A fitted gain/offset can absorb part of the finger's
-   * capacitive modulation, so it is only computed below for diagnostics.
+  /* Fit a gain and offset from the untouched baseline to this scan. Keeping
+   * the residual signed preserves both ridge polarities and accommodates
+   * sensor gain drift. Ignore pixels which are zero in both frames (inactive
+   * columns at some sensor tcodes) when fitting the flat field.
    */
   double sum_baseline = 0.0;
   double sum_scan = 0.0;
@@ -423,116 +372,41 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
     }
 
   gint32 residual[GOODIX_581A_FRAME_SIZE];
+  gint32 active_vals[GOODIX_581A_FRAME_SIZE];
+  int n_active = 0;
+
   for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
     {
       for (int x = 0; x < GOODIX_581A_WIDTH; x++)
         {
           int idx = y * GOODIX_581A_WIDTH + x;
-          const gint32 baseline = self->calibration_img ? self->calibration_img[idx] : 0;
-          residual[idx] = raw_frame[idx] - baseline;
+          const double baseline = self->calibration_img ? self->calibration_img[idx] : 0;
+          residual[idx] = raw_frame[idx] - (gint32) (gain * baseline + offset);
+
+          if (x >= 2 && x < GOODIX_581A_WIDTH - 2 &&
+              y >= 2 && y < GOODIX_581A_HEIGHT - 2)
+            {
+              active_vals[n_active++] = residual[idx];
+            }
         }
     }
 
-  /* The baseline-subtracted residual still contains slow baseline drift and
-   * the sensor's illumination gradient. High-pass it with a 3x3 box filter so
-   * that ridge detail, not drift, sets the normalization range. This mirrors
-   * the known-good userspace capture that produced visible dermal ridges.
+  /* Use the signed, flat-fielded difference before any high-pass operation.
+   * 20 counts is a provisional separation point from early 581a captures;
+   * validate it across more devices and repeated air/finger frames.
    */
-  gint32 highpass[GOODIX_581A_FRAME_SIZE];
-  gint32 active_vals[GOODIX_581A_FRAME_SIZE];
-  gint32 residual_vals[GOODIX_581A_FRAME_SIZE];
-  int n_active = 0;
-  int n_residual = 0;
-
-  for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
-    {
-      for (int x = 0; x < GOODIX_581A_WIDTH; x++)
-        {
-          gint32 blur_sum = 0;
-          for (int dy = -1; dy <= 1; dy++)
-            for (int dx = -1; dx <= 1; dx++)
-              {
-                const int sy = CLAMP (y + dy, 0, GOODIX_581A_HEIGHT - 1);
-                const int sx = CLAMP (x + dx, 0, GOODIX_581A_WIDTH - 1);
-                blur_sum += residual[sy * GOODIX_581A_WIDTH + sx];
-              }
-
-          highpass[y * GOODIX_581A_WIDTH + x] =
-            residual[y * GOODIX_581A_WIDTH + x] - blur_sum / 9;
-        }
-    }
-
-  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
-    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
-      {
-        active_vals[n_active++] = highpass[y * GOODIX_581A_WIDTH + x];
-        residual_vals[n_residual++] = residual[y * GOODIX_581A_WIDTH + x];
-      }
-
   gint32 p5 = 0, p95 = 0;
-  gint32 r5 = 0, r95 = 0;
   gboolean has_usable_contrast = FALSE;
   if (n_active > 50)
     {
       qsort (active_vals, n_active, sizeof (gint32), compare_ints);
-      p5 = active_vals[n_active * 3 / 100];
-      p95 = active_vals[n_active * 97 / 100];
-      has_usable_contrast = p95 - p5 >= 12;
-    }
-  if (n_residual > 50)
-    {
-      qsort (residual_vals, n_residual, sizeof (gint32), compare_ints);
-      r5 = residual_vals[n_residual * 5 / 100];
-      r95 = residual_vals[n_residual * 95 / 100];
+      p5 = active_vals[n_active * 5 / 100];
+      p95 = active_vals[n_active * 95 / 100];
+      has_usable_contrast = p95 - p5 >= 20;
     }
 
-  /* g_message so these numbers show up in the journal without requiring a
-   * libfprint debug build during a hardware tuning session. The lag-1 spatial
-   * autocorrelation distinguishes coherent ridge structure (positive, roughly
-   * 0.2-0.9) from per-pixel noise (near zero).
-   */
-  double hp_mean = 0.0, hp_var = 0.0, hp_cov_x = 0.0, hp_cov_y = 0.0;
-  int n_ac = 0, n_x = 0, n_y = 0;
-  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
-    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
-      {
-        hp_mean += highpass[y * GOODIX_581A_WIDTH + x];
-        n_ac++;
-      }
-  hp_mean /= n_ac > 0 ? n_ac : 1;
-
-  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
-    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
-      {
-        const double t = highpass[y * GOODIX_581A_WIDTH + x] - hp_mean;
-        hp_var += t * t;
-      }
-  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
-    for (int x = 2; x < GOODIX_581A_WIDTH - 3; x++)
-      {
-        const int idx = y * GOODIX_581A_WIDTH + x;
-        hp_cov_x += (highpass[idx] - hp_mean) * (highpass[idx + 1] - hp_mean);
-        n_x++;
-      }
-  for (int y = 2; y < GOODIX_581A_HEIGHT - 3; y++)
-    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
-      {
-        const int idx = y * GOODIX_581A_WIDTH + x;
-        hp_cov_y += (highpass[idx] - hp_mean) *
-                    (highpass[idx + GOODIX_581A_WIDTH] - hp_mean);
-        n_y++;
-      }
-
-  const double ac_x = n_x > 0 && hp_var > 0 ? (hp_cov_x / n_x) / (hp_var / n_ac) : 0.0;
-  const double ac_y = n_y > 0 && hp_var > 0 ? (hp_cov_y / n_y) / (hp_var / n_ac) : 0.0;
-
-  g_message ("581a capture: baseline=%.1f scan=%.1f fit_gain=%.4f fit_offset=%.1f "
-             "residual[p5=%d p95=%d] highpass[p3=%d p97=%d] ac_x=%.3f ac_y=%.3f "
-             "usable=%d",
-             n_fit ? sum_baseline / n_fit : 0.0,
-             n_fit ? sum_scan / n_fit : 0.0,
-             gain, offset, r5, r95, p5, p95, ac_x, ac_y,
-             has_usable_contrast);
+  fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels, usable=%d",
+          p5, p95, n_active, has_usable_contrast);
 
   FpImage *img = fp_image_new (GOODIX_581A_WIDTH, GOODIX_581A_HEIGHT);
   img->flags |= FPI_IMAGE_PARTIAL;
@@ -550,7 +424,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
             }
           else
             {
-              gint32 val = (highpass[idx] - p5) * 255 / (p95 - p5);
+              gint32 val = (residual[idx] - p5) * 255 / (p95 - p5);
               if (val < 0) val = 0;
               if (val > 255) val = 255;
               img->data[idx] = (guint8) (255 - val);
@@ -629,8 +503,7 @@ scan_581a_run_state (FpiSsm *ssm, FpDevice *dev)
       break;
 
     case SCAN_581A_CAPTURE:
-      fp_dbg ("581a: Capturing %u Mode 5 frames...",
-              GOODIX_581A_AVERAGE_FRAMES);
+      fp_dbg ("581a: Capturing Mode 5 image...");
       goodix_tls_read_image (dev, goodix_581a_get_image_mode5,
                              sizeof (goodix_581a_get_image_mode5),
                              on_581a_mode5_read, ssm);
@@ -673,17 +546,6 @@ dev_581a_change_state (FpImageDevice *img_dev, FpiImageDeviceState state)
   if (state == FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_ON)
     {
       fp_dbg ("581a entering AWAIT_FINGER_ON state");
-
-      if (self->scan_ssm)
-        {
-          FpiSsm *previous = self->scan_ssm;
-          self->scan_ssm = NULL;
-          fp_warn ("581a: superseding an existing scan state machine");
-          fpi_ssm_mark_failed (previous,
-                               g_error_new (G_IO_ERROR, G_IO_ERROR_CANCELLED,
-                                            "Superseded by a new scan"));
-        }
-
       self->scan_ssm = fpi_ssm_new (dev, scan_581a_run_state, SCAN_581A_NUM_STATES);
       fpi_ssm_start (self->scan_ssm, scan_581a_complete);
     }
@@ -709,10 +571,6 @@ dev_581a_deactivate (FpImageDevice *img_dev)
   goodix_reset_state (dev);
   goodix_shutdown_tls (dev, &error);
   g_clear_pointer (&self->calibration_img, g_free);
-  g_clear_pointer (&self->calibration_sum, g_free);
-  self->calibration_frame_count = 0;
-  g_clear_pointer (&self->scan_sum, g_free);
-  self->scan_frame_count = 0;
 
   fpi_image_device_deactivate_complete (img_dev, error);
 }
@@ -721,10 +579,6 @@ static void
 fpi_device_goodixtls581a_init (FpiDeviceGoodixTls581a *self)
 {
   self->calibration_img = NULL;
-  self->calibration_sum = NULL;
-  self->calibration_frame_count = 0;
-  self->scan_sum = NULL;
-  self->scan_frame_count = 0;
   self->scan_ssm = NULL;
 }
 
@@ -734,8 +588,6 @@ fpi_device_goodixtls581a_finalize (GObject *object)
   FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (object);
 
   g_clear_pointer (&self->calibration_img, g_free);
-  g_clear_pointer (&self->calibration_sum, g_free);
-  g_clear_pointer (&self->scan_sum, g_free);
 
   G_OBJECT_CLASS (fpi_device_goodixtls581a_parent_class)->finalize (object);
 }

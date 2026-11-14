@@ -15,13 +15,6 @@
 #define GOODIX_581A_STREAM_ROWS 64
 #define GOODIX_581A_STREAM_COLUMNS 80
 #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
-/* Average eight scans to suppress per-frame sensor noise. */
-#define GOODIX_581A_AVERAGE_FRAMES 8
-/* The verified userspace capture reads a single Mode 5 frame after the touch
- * event. Reading further frames can mix in ambient/idle data and dilute the
- * ridge signal, so capture exactly one by default.
- */
-#define GOODIX_581A_SCAN_FRAMES 1
 /* 80x64 packed sensor samples plus the four-byte footer used by this device. */
 #define GOODIX_581A_RAW_FRAME_SIZE 7684
 
@@ -34,26 +27,7 @@ goodix_581a_stream_to_image_index (guint stream_index)
   return y * GOODIX_581A_WIDTH + x;
 }
 
-static inline void
-goodix_581a_accumulate_frame (guint32 *sum, const GoodixTls5xxPix *frame)
-{
-  for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
-    sum[i] += frame[i];
-}
-
-static inline void
-goodix_581a_finish_average (GoodixTls5xxPix *average, const guint32 *sum,
-                            guint frame_count)
-{
-  g_return_if_fail (frame_count > 0);
-
-  for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
-    average[i] = (sum[i] + frame_count / 2) / frame_count;
-}
-
-// Xiaomi GM168 config exactly as captured from the Windows driver. The
-// image tcode is 0x0100; this is the setting that produces usable ridge
-// contrast. Checksum is 0x74a1.
+// Xiaomi GM168 256-byte authentic hardware configuration table
 static const guint8 goodix_581a_config[256] = {
   0x58, 0x11, 0x60, 0x71, 0x2c, 0x9d, 0x2c, 0xc9, 0x1c, 0xe5, 0x18, 0xfd, 0x00, 0xfd, 0x00, 0xfd,
   0x03, 0xba, 0x00, 0x01, 0x80, 0xca, 0x00, 0x04, 0x00, 0x84, 0x00, 0xc0, 0xb3, 0x86, 0x00, 0xbb,

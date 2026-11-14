@@ -25,16 +25,6 @@
 extern "C" {
 #endif
 typedef unsigned char SigfmPix;
-
-/* SIGFM returns the count of mutually consistent geometric hypotheses.
- * These are provisional acceptance thresholds, not calibrated error rates.
- * A stage must reach the first score to count towards consensus; one stage
- * reaching the second score is sufficient on its own.
- */
-#define SIGFM_MATCH_STAGE_SCORE_THRESHOLD 20
-#define SIGFM_MATCH_STRONG_SCORE_THRESHOLD 45
-#define SIGFM_MATCH_MIN_STAGES 2
-
 /**
  * @brief Contains information used by the sigfm algorithm for matching
  * @details Get one from sigfm_extract() and make sure to clean it up with sigfm_free_info()
@@ -64,8 +54,9 @@ void sigfm_free_info(SigfmImgInfo* info);
  *
  * @param frame Print to be checked
  * @param enrolled Canonical print to verify against
- * @param context Short label included in diagnostic messages
- * @return int Non-negative match score; zero means reject or matching failed.
+ * @param context Short label used in diagnostics (may be NULL)
+ * @return int Number of matches agreeing on one similarity transform, or zero
+ *             when the stage is rejected or matching failed.
  */
 int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled,
                       const char* context);
@@ -96,14 +87,6 @@ SigfmImgInfo* sigfm_deserialize_binary(const unsigned char* bytes, int len);
  */
 
 int sigfm_keypoints_count(SigfmImgInfo* info);
-
-/**
- * @brief Number of descriptors stored alongside the keypoints
- *
- * @param info Image information, or NULL
- * @return int Descriptor count; zero when info is NULL or empty
- */
-int sigfm_descriptors_count(SigfmImgInfo* info);
 
 /**
  * @brief Copy an SigfmImgInfo

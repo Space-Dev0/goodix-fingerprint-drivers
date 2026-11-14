@@ -1,7 +1,7 @@
-From 28c8d6a803671fb96f856ef6ed80a4c6969d4f79 Mon Sep 17 00:00:00 2001
+From d16236ad40dad91dcad304937857e6de1c186590 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/23] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/10] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2379,10 +2379,10 @@ index fa27507..8e5de6b 100644
 2.56.0
 
 
-From a693df39dac332ee900b38a9ccf3f639f1f9b81f Mon Sep 17 00:00:00 2001
+From 2192f9baba2222a70b32c4751448a3cf445197dc Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/23] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/10] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2661,10 +2661,10 @@ index f19b377..6e5b5df 100644
 2.56.0
 
 
-From 9fcd069cdb70f1bfc75f0580d304353ed959d54f Mon Sep 17 00:00:00 2001
+From e85708503fb27859b11b657596ed3b543fc4043a Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/23] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/10] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2865,10 +2865,10 @@ index 671a2b6..7443baa 100644
 2.56.0
 
 
-From 3119e9f9db28aaf3d622078d13c33457f4ae817f Mon Sep 17 00:00:00 2001
+From 3c89318cac4f7cc7756892a193058afafc2cfef9 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/23] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/10] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2948,10 +2948,10 @@ index 9b5c3d9..73f889d 100644
 2.56.0
 
 
-From 7d2375f429c92b74ac4d44659f9710851256a879 Mon Sep 17 00:00:00 2001
+From 8e5087c3efcf47a75ead7f476576e94262e3eae6 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/23] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/10] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3016,10 +3016,10 @@ index b726b67..d010035 100644
 2.56.0
 
 
-From 372061bc846791c5430447e41f1385d16598d37e Mon Sep 17 00:00:00 2001
+From b00d6d14ac68473a1eb6e263c33fce9acbb61fc7 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/23] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/10] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3071,10 +3071,10 @@ index f2bf17d..f2332df 100644
 2.56.0
 
 
-From 48746fd5ce7098ed3260364f51197120943eebc0 Mon Sep 17 00:00:00 2001
+From e5f656188a69bd128ca4bdaf53ef117e72461889 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/23] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/10] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3309,10 +3309,10 @@ index 215ef53..9c7ccc7 100644
 2.56.0
 
 
-From 45a76fe64cd8fcffc85431b1336666dfd1e5f36f Mon Sep 17 00:00:00 2001
+From ba2db55439b85b6edb5d4a0ae35e8ec9b64e6e90 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/23] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/10] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3623,692 +3623,202 @@ index 0000000..bfb0677
 2.56.0
 
 
-From dd0d457253e7774611ae4f20f4d8cfe62e4a94a6 Mon Sep 17 00:00:00 2001
+From ba692f5928727e1dd919d3e2a542b399daed45fb Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Wed, 28 Oct 2026 15:56:39 +0530
-Subject: [PATCH 09/23] goodix581a: use full-width config and average captures
+Date: Sat, 14 Nov 2026 13:30:05 +0530
+Subject: [PATCH 09/10] sigfm: verify one similarity transform, not just
+ rotation
 
+Wrong fingers were still accepted after the dominant-rotation score landed.
+Rotation clusters alone are not enough: unrelated presses can coincide on an
+angle, and the previous code never checked that the matched points also share
+a translation.
+
+Score a stage by the largest set of reciprocal matches that agree on one
+rotation, scale and translation. Estimate the common press scale first, find
+the dominant rotation and refine it, then project every participating match
+through that transform and count the largest translation cluster within four
+pixels (about one ridge pitch). A stage counts only with at least eight
+inliers and a 20% inlier ratio. Verification succeeds with one stage of 12
+inliers or three stages of eight.
+
+Replaying the exact labelled 581a frames from the hardware test gives a clean
+separation. Three successful genuine presses scored 14, 16 and 24 inliers;
+three presses of a different finger scored zero at every stage. The earlier
+poor genuine press also scored zero and is asked to press again.
+
+Also widen the Lowe ratio, allow a consistent press-wide scale change, and
+keep more reciprocal candidates, because this 80x64 sensor yields few
+distinctive descriptors per press.
 ---
- README.md                                |  5 ++
- libfprint/drivers/goodixtls/goodix581a.c | 81 +++++++++++++++++++++---
- libfprint/drivers/goodixtls/goodix581a.h | 24 ++++++-
- tests/test-goodix581a-frame-layout.c     | 44 +++++++++++++
- 4 files changed, 142 insertions(+), 12 deletions(-)
-
-diff --git a/README.md b/README.md
-index aec2e0b..c41b6e6 100644
---- a/README.md
-+++ b/README.md
-@@ -8,6 +8,11 @@ This is an experimental libfprint driver implementation for Goodix drivers.
- 
- Currently in the works:
- - 27c6x5110 (80x64 resolution)
-+- 27c6x581a (Xiaomi GM168, experimental)
-+
-+After updating an experimental 581a driver with the corrected 80x64 image
-+layout, delete and re-enroll existing fingerprints made by an earlier 581a
-+build.
- 
- *LibFPrint is part of the **[FPrint][Website]** project.*
- 
-diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
-index 88e387a..e8c7339 100644
---- a/libfprint/drivers/goodixtls/goodix581a.c
-+++ b/libfprint/drivers/goodixtls/goodix581a.c
-@@ -29,6 +29,10 @@ struct _FpiDeviceGoodixTls581a
-   FpiDeviceGoodixTls5xx parent;
- 
-   GoodixTls5xxPix *calibration_img;
-+  guint32 *calibration_sum;
-+  guint calibration_frame_count;
-+  guint32 *scan_sum;
-+  guint scan_frame_count;
-   FpiSsm *scan_ssm;
- };
- 
-@@ -211,6 +215,8 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
- 
-   if (error)
-     {
-+      g_clear_pointer (&self->calibration_sum, g_free);
-+      self->calibration_frame_count = 0;
-       fp_err ("581a: Failed to capture baseline image: %s", error->message);
-       fpi_ssm_mark_failed (ssm, error);
-       return;
-@@ -218,6 +224,8 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
- 
-   if (!data || length != GOODIX_581A_RAW_FRAME_SIZE)
-     {
-+      g_clear_pointer (&self->calibration_sum, g_free);
-+      self->calibration_frame_count = 0;
-       fpi_ssm_mark_failed (ssm,
-                            g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
-                                         "581a baseline frame has invalid length %u (expected %u)",
-@@ -225,14 +233,33 @@ on_581a_calib_read (FpDevice *dev, guint8 *data, guint16 length,
-       return;
-     }
- 
--  g_clear_pointer (&self->calibration_img, g_free);
--  self->calibration_img = g_malloc0 (GOODIX_581A_FRAME_SIZE * sizeof (GoodixTls5xxPix));
--  /* Save the untouched-pad frame as the reference for subsequent Mode 5
--   * captures. The image callback subtracts this baseline before filtering.
--   */
--  goodix_581a_decode_frame (self->calibration_img, length, data, 0, 4);
-+  GoodixTls5xxPix frame[GOODIX_581A_FRAME_SIZE];
-+  goodix_581a_decode_frame (frame, length, data, 0, 4);
-+
-+  if (!self->calibration_sum)
-+    self->calibration_sum = g_new0 (guint32, GOODIX_581A_FRAME_SIZE);
-+  goodix_581a_accumulate_frame (self->calibration_sum, frame);
-+  self->calibration_frame_count++;
-+
-+  if (self->calibration_frame_count < GOODIX_581A_AVERAGE_FRAMES)
-+    {
-+      fp_dbg ("581a: Ambient baseline frame %u/%u",
-+              self->calibration_frame_count, GOODIX_581A_AVERAGE_FRAMES);
-+      goodix_tls_read_image (dev, goodix_581a_get_image_mode1,
-+                             sizeof (goodix_581a_get_image_mode1),
-+                             on_581a_calib_read, ssm);
-+      return;
-+    }
- 
--  fp_dbg ("581a: Ambient baseline acquired successfully!");
-+  g_clear_pointer (&self->calibration_img, g_free);
-+  self->calibration_img = g_new (GoodixTls5xxPix, GOODIX_581A_FRAME_SIZE);
-+  goodix_581a_finish_average (self->calibration_img, self->calibration_sum,
-+                              GOODIX_581A_AVERAGE_FRAMES);
-+  g_clear_pointer (&self->calibration_sum, g_free);
-+  self->calibration_frame_count = 0;
-+
-+  fp_dbg ("581a: Ambient baseline averaged from %u frames",
-+          GOODIX_581A_AVERAGE_FRAMES);
-   fpi_ssm_next_state (ssm);
- }
- 
-@@ -286,6 +313,8 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
- 
-   if (error)
-     {
-+      g_clear_pointer (&self->scan_sum, g_free);
-+      self->scan_frame_count = 0;
-       fp_err ("581a: Failed to capture Mode 5 scan: %s", error->message);
-       fpi_ssm_mark_failed (ssm, error);
-       return;
-@@ -293,6 +322,8 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
- 
-   if (!data || length != GOODIX_581A_RAW_FRAME_SIZE)
-     {
-+      g_clear_pointer (&self->scan_sum, g_free);
-+      self->scan_frame_count = 0;
-       fpi_ssm_mark_failed (ssm,
-                            g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
-                                         "581a scan frame has invalid length %u (expected %u)",
-@@ -300,8 +331,29 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
-       return;
-     }
- 
-+  GoodixTls5xxPix frame[GOODIX_581A_FRAME_SIZE];
-+  goodix_581a_decode_frame (frame, length, data, 0, 4);
-+
-+  if (!self->scan_sum)
-+    self->scan_sum = g_new0 (guint32, GOODIX_581A_FRAME_SIZE);
-+  goodix_581a_accumulate_frame (self->scan_sum, frame);
-+  self->scan_frame_count++;
-+
-+  if (self->scan_frame_count < GOODIX_581A_AVERAGE_FRAMES)
-+    {
-+      fp_dbg ("581a: Mode 5 frame %u/%u",
-+              self->scan_frame_count, GOODIX_581A_AVERAGE_FRAMES);
-+      goodix_tls_read_image (dev, goodix_581a_get_image_mode5,
-+                             sizeof (goodix_581a_get_image_mode5),
-+                             on_581a_mode5_read, ssm);
-+      return;
-+    }
-+
-   GoodixTls5xxPix raw_frame[GOODIX_581A_FRAME_SIZE];
--  goodix_581a_decode_frame (raw_frame, length, data, 0, 4);
-+  goodix_581a_finish_average (raw_frame, self->scan_sum,
-+                              GOODIX_581A_AVERAGE_FRAMES);
-+  g_clear_pointer (&self->scan_sum, g_free);
-+  self->scan_frame_count = 0;
- 
-   /* Fit a gain and offset from the untouched baseline to this scan. Keeping
-    * the residual signed preserves both ridge polarities and accommodates
-@@ -469,7 +521,8 @@ scan_581a_run_state (FpiSsm *ssm, FpDevice *dev)
-       break;
- 
-     case SCAN_581A_CAPTURE:
--      fp_dbg ("581a: Capturing Mode 5 image...");
-+      fp_dbg ("581a: Capturing %u Mode 5 frames...",
-+              GOODIX_581A_AVERAGE_FRAMES);
-       goodix_tls_read_image (dev, goodix_581a_get_image_mode5,
-                              sizeof (goodix_581a_get_image_mode5),
-                              on_581a_mode5_read, ssm);
-@@ -537,6 +590,10 @@ dev_581a_deactivate (FpImageDevice *img_dev)
-   goodix_reset_state (dev);
-   goodix_shutdown_tls (dev, &error);
-   g_clear_pointer (&self->calibration_img, g_free);
-+  g_clear_pointer (&self->calibration_sum, g_free);
-+  self->calibration_frame_count = 0;
-+  g_clear_pointer (&self->scan_sum, g_free);
-+  self->scan_frame_count = 0;
- 
-   fpi_image_device_deactivate_complete (img_dev, error);
- }
-@@ -545,6 +602,10 @@ static void
- fpi_device_goodixtls581a_init (FpiDeviceGoodixTls581a *self)
- {
-   self->calibration_img = NULL;
-+  self->calibration_sum = NULL;
-+  self->calibration_frame_count = 0;
-+  self->scan_sum = NULL;
-+  self->scan_frame_count = 0;
-   self->scan_ssm = NULL;
- }
- 
-@@ -554,6 +615,8 @@ fpi_device_goodixtls581a_finalize (GObject *object)
-   FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (object);
- 
-   g_clear_pointer (&self->calibration_img, g_free);
-+  g_clear_pointer (&self->calibration_sum, g_free);
-+  g_clear_pointer (&self->scan_sum, g_free);
- 
-   G_OBJECT_CLASS (fpi_device_goodixtls581a_parent_class)->finalize (object);
- }
-diff --git a/libfprint/drivers/goodixtls/goodix581a.h b/libfprint/drivers/goodixtls/goodix581a.h
-index 2b1c01b..f53676e 100644
---- a/libfprint/drivers/goodixtls/goodix581a.h
-+++ b/libfprint/drivers/goodixtls/goodix581a.h
-@@ -15,6 +15,7 @@
- #define GOODIX_581A_STREAM_ROWS 64
- #define GOODIX_581A_STREAM_COLUMNS 80
- #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
-+#define GOODIX_581A_AVERAGE_FRAMES 4
- /* 80x64 packed sensor samples plus the four-byte footer used by this device. */
- #define GOODIX_581A_RAW_FRAME_SIZE 7684
- 
-@@ -27,7 +28,24 @@ goodix_581a_stream_to_image_index (guint stream_index)
-   return y * GOODIX_581A_WIDTH + x;
- }
- 
--// Xiaomi GM168 256-byte authentic hardware configuration table
-+static inline void
-+goodix_581a_accumulate_frame (guint32 *sum, const GoodixTls5xxPix *frame)
-+{
-+  for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
-+    sum[i] += frame[i];
-+}
-+
-+static inline void
-+goodix_581a_finish_average (GoodixTls5xxPix *average, const guint32 *sum,
-+                            guint frame_count)
-+{
-+  g_return_if_fail (frame_count > 0);
-+
-+  for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
-+    average[i] = (sum[i] + frame_count / 2) / frame_count;
-+}
-+
-+// Xiaomi GM168 config using full-width image tcode 0x0010; checksum is 0x64a2.
- static const guint8 goodix_581a_config[256] = {
-   0x58, 0x11, 0x60, 0x71, 0x2c, 0x9d, 0x2c, 0xc9, 0x1c, 0xe5, 0x18, 0xfd, 0x00, 0xfd, 0x00, 0xfd,
-   0x03, 0xba, 0x00, 0x01, 0x80, 0xca, 0x00, 0x04, 0x00, 0x84, 0x00, 0xc0, 0xb3, 0x86, 0x00, 0xbb,
-@@ -43,8 +61,8 @@ static const guint8 goodix_581a_config[256] = {
-   0x01, 0x56, 0x00, 0x04, 0x20, 0x58, 0x00, 0x03, 0x00, 0x32, 0x00, 0x0c, 0x02, 0x66, 0x00, 0x00,
-   0x02, 0x7c, 0x00, 0x00, 0x58, 0x82, 0x00, 0x80, 0x19, 0x2a, 0x01, 0x08, 0x00, 0x5c, 0x00, 0x00,
-   0x01, 0x54, 0x00, 0x00, 0x01, 0x62, 0x00, 0x08, 0x04, 0x64, 0x00, 0x10, 0x00, 0x66, 0x00, 0x00,
--  0x02, 0x7c, 0x00, 0x00, 0x58, 0x2a, 0x01, 0x08, 0x00, 0x5c, 0x00, 0x00, 0x01, 0x52, 0x00, 0x08,
--  0x00, 0x54, 0x00, 0x00, 0x01, 0x66, 0x00, 0x00, 0x02, 0x7c, 0x00, 0x00, 0x58, 0x00, 0xa1, 0x74
-+  0x02, 0x7c, 0x00, 0x00, 0x58, 0x2a, 0x01, 0x08, 0x00, 0x5c, 0x00, 0x10, 0x00, 0x52, 0x00, 0x08,
-+  0x00, 0x54, 0x00, 0x00, 0x01, 0x66, 0x00, 0x00, 0x02, 0x7c, 0x00, 0x00, 0x58, 0x00, 0xa2, 0x64
- };
- 
- // 36-byte FDT down threshold payload for hardware touch interrupt
-diff --git a/tests/test-goodix581a-frame-layout.c b/tests/test-goodix581a-frame-layout.c
-index bfb0677..57b1402 100644
---- a/tests/test-goodix581a-frame-layout.c
-+++ b/tests/test-goodix581a-frame-layout.c
-@@ -23,12 +23,56 @@ test_stream_to_image_index (void)
-                     GOODIX_581A_FRAME_SIZE - 1);
- }
- 
-+static void
-+test_sensor_config (void)
-+{
-+  guint32 sum = 0xa5a5;
-+  for (guint i = 0; i < 127; i++)
-+    sum += goodix_581a_config[i * 2] |
-+           (goodix_581a_config[i * 2 + 1] << 8);
-+
-+  const guint16 checksum = -sum;
-+  const guint16 stored_checksum = goodix_581a_config[0xfe] |
-+                                  (goodix_581a_config[0xff] << 8);
-+  const guint16 tcode = goodix_581a_config[0xeb] |
-+                        (goodix_581a_config[0xec] << 8);
-+
-+  g_assert_cmpuint (tcode, ==, 0x0010);
-+  g_assert_cmpuint (stored_checksum, ==, checksum);
-+  g_assert_cmpuint (stored_checksum, ==, 0x64a2);
-+}
-+
-+static void
-+test_frame_average (void)
-+{
-+  g_autofree guint32 *sum = g_new0 (guint32, GOODIX_581A_FRAME_SIZE);
-+  g_autofree GoodixTls5xxPix *frame =
-+    g_new (GoodixTls5xxPix, GOODIX_581A_FRAME_SIZE);
-+  g_autofree GoodixTls5xxPix *average =
-+    g_new (GoodixTls5xxPix, GOODIX_581A_FRAME_SIZE);
-+
-+  for (guint frame_index = 1; frame_index <= GOODIX_581A_AVERAGE_FRAMES;
-+       frame_index++)
-+    {
-+      for (guint i = 0; i < GOODIX_581A_FRAME_SIZE; i++)
-+        frame[i] = frame_index * 10;
-+      goodix_581a_accumulate_frame (sum, frame);
-+    }
-+
-+  goodix_581a_finish_average (average, sum, GOODIX_581A_AVERAGE_FRAMES);
-+  g_assert_cmpuint (average[0], ==, 25);
-+  g_assert_cmpuint (average[GOODIX_581A_FRAME_SIZE / 2], ==, 25);
-+  g_assert_cmpuint (average[GOODIX_581A_FRAME_SIZE - 1], ==, 25);
-+}
-+
- int
- main (int argc, char **argv)
- {
-   g_test_init (&argc, &argv, NULL);
-   g_test_add_func ("/goodix581a/stream-to-image-index",
-                    test_stream_to_image_index);
-+  g_test_add_func ("/goodix581a/sensor-config", test_sensor_config);
-+  g_test_add_func ("/goodix581a/frame-average", test_frame_average);
- 
-   return g_test_run ();
- }
--- 
-2.56.0
-
-
-From 8d6baf93c128cafa6e6cdb3c5c4e1fc4e1443e8d Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Thu, 29 Oct 2026 13:52:46 +0530
-Subject: [PATCH 10/23] goodix581a: diagnose SIGFM verification failures
-
----
- libfprint/fpi-image-device.c | 37 +++++++++++++++++++++++++++++++++---
- libfprint/sigfm/sigfm.cpp    | 20 +++++++++++++++++++
- 2 files changed, 54 insertions(+), 3 deletions(-)
+ libfprint/fpi-image-device.c |  41 +++++--
+ libfprint/sigfm/sigfm.cpp    | 231 ++++++++++++++++++++++++++++-------
+ libfprint/sigfm/sigfm.hpp    |   7 +-
+ 3 files changed, 226 insertions(+), 53 deletions(-)
 
 diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
-index 04919b7..d9cb197 100644
+index 04919b7..bcf7b31 100644
 --- a/libfprint/fpi-image-device.c
 +++ b/libfprint/fpi-image-device.c
-@@ -566,7 +566,10 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-             }
-           GVariant *var = g_variant_builder_end (&builder);
-           fpi_print_set_raw_data (enroll_print, var);
--          fpi_print_set_type (enroll_print, FPI_PRINT_RAW);
-+          /* fp_image_device_start_capture_action() sets the template type
-+           * before the device starts enrollment. Setting it again here trips
-+           * fpi_print_set_type()'s one-time initialization guard.
-+           */
-           g_ptr_array_set_size (priv->enroll_features, 0);
+@@ -25,6 +25,17 @@
+ #include "fpi-print.h"
+ #include "sigfm/sigfm.hpp"
  
-           g_message ("SIGFM enroll: completed successfully with %u stages stored",
-@@ -598,6 +601,8 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
++/* SIGFM scores a stage by the number of matches that agree on one rotation,
++ * scale and translation. A stage needs eight such inliers to count towards
++ * consensus. Verification succeeds with one strongly supported stage or three
++ * corroborating stages. On labelled 581a captures genuine presses scored
++ * 15-28, while wrong fingers never exceeded five; these cutoffs therefore
++ * leave a wide margin without accepting a single chance cluster.
++ */
++#define SIGFM_STAGE_MIN_INLIERS 8
++#define SIGFM_STRONG_INLIERS 12
++#define SIGFM_MIN_STAGES 3
++
+ /**
+  * SECTION: fpi-image-device
+  * @title: Internal FpImageDevice
+@@ -598,6 +609,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
              {
                int max_score = 0;
                int matched_stages = 0;
-+              int valid_stages = 0;
-+              int stage_index = 0;
++              int stage = 0;
                GVariantIter iter;
                GVariant *stage_bytes;
  
-@@ -606,18 +611,28 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+@@ -606,15 +618,19 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
                  {
                    gsize sz;
                    const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
-+                  stage_index++;
++                  stage++;
                    if (b && sz > 0)
                      {
                        SigfmImgInfo *gallery_info = sigfm_deserialize_binary (b, (int) sz);
                        if (gallery_info)
                          {
-+                          valid_stages++;
-                           int score = sigfm_match_score (info, gallery_info);
+-                          int score = sigfm_match_score (info, gallery_info);
++                          g_autofree gchar *stage_label =
++                            g_strdup_printf ("verify stage %d", stage);
++                          int score = sigfm_match_score (info, gallery_info,
++                                                         stage_label);
                            if (score > max_score)
                              max_score = score;
-                           if (score >= 40)
+-                          if (score >= 40)
++                          if (score >= SIGFM_STAGE_MIN_INLIERS)
                              matched_stages++;
-+                          g_message ("SIGFM verify: stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
-+                                     stage_index, sz,
-+                                     sigfm_keypoints_count (gallery_info), score);
                            sigfm_free_info (gallery_info);
                          }
-+                      else
-+                        {
-+                          g_message ("SIGFM verify: stage %d: failed to decode %" G_GSIZE_FORMAT " template bytes",
-+                                     stage_index, sz);
-+                        }
-                     }
+@@ -622,13 +638,16 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
                    g_variant_unref (stage_bytes);
                  }
-@@ -627,8 +642,9 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+ 
+-              if (max_score >= 70 || (max_score >= 45 && matched_stages >= 2))
++              if (max_score >= SIGFM_STRONG_INLIERS ||
++                  matched_stages >= SIGFM_MIN_STAGES)
+                 result = FPI_MATCH_SUCCESS;
                else
                  result = FPI_MATCH_FAIL;
  
 -              g_message ("SIGFM verify: max_score = %d, matched_stages = %d -> %s",
 -                         max_score, matched_stages, result == FPI_MATCH_SUCCESS ? "MATCH" : "NO_MATCH");
-+              g_message ("SIGFM verify: stages=%d, valid=%d, max_score=%d, matched_stages=%d -> %s",
-+                         stage_index, valid_stages, max_score, matched_stages,
++              g_message ("SIGFM verify: stages=%d, max_inliers=%d, "
++                         "matched_stages=%d -> %s",
++                         stage, max_score, matched_stages,
 +                         result == FPI_MATCH_SUCCESS ? "MATCH" : "NO_MATCH");
              }
          }
        else
-@@ -666,6 +682,8 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+@@ -666,6 +685,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
  
                int max_score = 0;
                int matched_stages = 0;
-+              int valid_stages = 0;
-+              int stage_index = 0;
++              int stage = 0;
                GVariantIter iter;
                GVariant *stage_bytes;
  
-@@ -674,22 +692,35 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+@@ -674,15 +694,19 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
                  {
                    gsize sz;
                    const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
-+                  stage_index++;
++                  stage++;
                    if (b && sz > 0)
                      {
                        SigfmImgInfo *gallery_info = sigfm_deserialize_binary (b, (int) sz);
                        if (gallery_info)
                          {
-+                          valid_stages++;
-                           int score = sigfm_match_score (info, gallery_info);
+-                          int score = sigfm_match_score (info, gallery_info);
++                          g_autofree gchar *stage_label =
++                            g_strdup_printf ("identify stage %d", stage);
++                          int score = sigfm_match_score (info, gallery_info,
++                                                         stage_label);
                            if (score > max_score)
                              max_score = score;
-                           if (score >= 40)
+-                          if (score >= 40)
++                          if (score >= SIGFM_STAGE_MIN_INLIERS)
                              matched_stages++;
-+                          g_message ("SIGFM identify: template %u stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
-+                                     t, stage_index, sz,
-+                                     sigfm_keypoints_count (gallery_info), score);
                            sigfm_free_info (gallery_info);
                          }
-+                      else
-+                        {
-+                          g_message ("SIGFM identify: template %u stage %d: failed to decode %" G_GSIZE_FORMAT " template bytes",
-+                                     t, stage_index, sz);
-+                        }
-                     }
+@@ -690,7 +714,8 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
                    g_variant_unref (stage_bytes);
                  }
  
-+              g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_score=%d, matched_stages=%d",
-+                         t, stage_index, valid_stages, max_score, matched_stages);
-+
-               if (max_score >= 70 || (max_score >= 45 && matched_stages >= 2))
+-              if (max_score >= 70 || (max_score >= 45 && matched_stages >= 2))
++              if (max_score >= SIGFM_STRONG_INLIERS ||
++                  matched_stages >= SIGFM_MIN_STAGES)
                  {
                    matched_template = tmpl;
+                   break;
 diff --git a/libfprint/sigfm/sigfm.cpp b/libfprint/sigfm/sigfm.cpp
-index d22f003..26806ac 100644
+index d22f003..b63a3e5 100644
 --- a/libfprint/sigfm/sigfm.cpp
 +++ b/libfprint/sigfm/sigfm.cpp
-@@ -264,6 +264,9 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-         enrolled->descriptors.empty() ||
-         frame->keypoints.size() != static_cast<std::size_t>(frame->descriptors.rows) ||
-         enrolled->keypoints.size() != static_cast<std::size_t>(enrolled->descriptors.rows)) {
-+        std::fprintf(stderr, "SIGFM pair: invalid feature data (probe=%d, template=%d)\n",
-+                     frame ? frame->descriptors.rows : 0,
-+                     enrolled ? enrolled->descriptors.rows : 0);
-         return 0;
-     }
- 
-@@ -293,6 +296,8 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-         }
- 
-         if (candidate_indices.size() < min_match) {
-+            std::fprintf(stderr, "SIGFM pair: only %zu ratio-test candidates (need %d)\n",
-+                         candidate_indices.size(), min_match);
-             return 0;
-         }
- 
-@@ -319,6 +324,8 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-             }
-         }
-         if (nb_matched < min_match) {
-+            std::fprintf(stderr, "SIGFM pair: only %d reciprocal matches from %zu candidates (need %d)\n",
-+                         nb_matched, candidate_indices.size(), min_match);
-             return 0;
-         }
-         std::vector<match> matches{matches_unique.begin(),
-@@ -356,6 +363,8 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-         }
- 
-         if (angles.size() < min_match) {
-+            std::fprintf(stderr, "SIGFM pair: %zu reciprocal matches produced only %zu length-compatible vectors (need %d)\n",
-+                         matches.size(), angles.size(), min_match);
-             return 0;
-         }
- 
-@@ -371,9 +380,20 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-                 }
-             }
-         }
-+        std::fprintf(stderr, "SIGFM pair: reciprocal=%d, unique=%zu, geometric=%zu, score=%d\n",
-+                     nb_matched, matches.size(), angles.size(), count);
-         return count;
-     }
-+    catch (const cv::Exception& e) {
-+        std::fprintf(stderr, "SIGFM pair: OpenCV matching failed: %s\n", e.what());
-+        return -1;
-+    }
-+    catch (const std::exception& e) {
-+        std::fprintf(stderr, "SIGFM pair: matching failed: %s\n", e.what());
-+        return -1;
-+    }
-     catch (...) {
-+        std::fprintf(stderr, "SIGFM pair: matching failed with an unknown exception\n");
-         return -1;
-     }
- }
--- 
-2.56.0
-
-
-From 3a36191cde6894fd7c67299093727804865845a4 Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Thu, 29 Oct 2026 14:07:58 +0530
-Subject: [PATCH 11/23] goodix581a: retain more SIGFM match candidates
-
----
- libfprint/sigfm/sigfm.cpp | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/libfprint/sigfm/sigfm.cpp b/libfprint/sigfm/sigfm.cpp
-index 26806ac..718035c 100644
---- a/libfprint/sigfm/sigfm.cpp
-+++ b/libfprint/sigfm/sigfm.cpp
-@@ -110,7 +110,11 @@ struct deserializer<SigfmImgInfo> : public std::true_type {
+@@ -110,10 +110,31 @@ struct deserializer<SigfmImgInfo> : public std::true_type {
  } // namespace bin
  
  namespace {
 -constexpr auto distance_match = 0.75;
+-constexpr auto length_match = 0.12;
 +/* The 80x64 581a captures produce few distinctive SIFT descriptors across
-+ * separate presses. Keep more Lowe-ratio candidates here; the reciprocal
-+ * match and geometric-consistency stages below still reject outliers.
++ * separate presses. Keep more Lowe-ratio candidates here; the reciprocal,
++ * scale, rotation and translation checks below still reject outliers.
 + */
 +constexpr auto distance_match = 0.90;
- constexpr auto length_match = 0.12;
- constexpr auto angle_match = 0.12;
- constexpr auto min_match = 4;
--- 
-2.56.0
-
-
-From 52b02a7b51463fb8eed4b3d1b951ce35f9fe325b Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Thu, 29 Oct 2026 15:48:19 +0530
-Subject: [PATCH 12/23] goodix581a: compare matches at common finger scale
-
----
- libfprint/sigfm/sigfm.cpp | 68 ++++++++++++++++++++++++++++++---------
- 1 file changed, 53 insertions(+), 15 deletions(-)
-
-diff --git a/libfprint/sigfm/sigfm.cpp b/libfprint/sigfm/sigfm.cpp
-index 718035c..58168f7 100644
---- a/libfprint/sigfm/sigfm.cpp
-+++ b/libfprint/sigfm/sigfm.cpp
-@@ -115,7 +115,13 @@ namespace {
-  * match and geometric-consistency stages below still reject outliers.
-  */
- constexpr auto distance_match = 0.90;
--constexpr auto length_match = 0.12;
-+/* Compare pairwise scales with the robust common scale for the press. This
-+ * allows a consistent change in apparent finger size while still rejecting
++/* Pairwise vectors must share the press-wide scale. The tolerance allows a
++ * consistent pressure-related change in apparent finger size but rejects
 + * local distortions that do not fit one global transform.
 + */
 +constexpr auto length_match = 0.20;
 +constexpr auto min_pair_scale = 0.70;
 +constexpr auto max_pair_scale = 1.43;
  constexpr auto angle_match = 0.12;
- constexpr auto min_match = 4;
+-constexpr auto min_match = 4;
++/* After removing rotation and scale, genuine correspondences share a
++ * translation. Four pixels is roughly one ridge pitch on this sensor.
++ */
++constexpr auto translation_match = 4.0;
++constexpr auto min_match = 8;
++/* A stage only counts when at least eight reciprocal matches agree on one
++ * similarity transform and those inliers are at least 20% of all matches.
++ * On labelled 581a captures genuine presses put 15-28 matches on the common
++ * transform; wrong fingers never exceeded five.
++ */
++constexpr auto min_translation_inliers = 8;
++constexpr auto min_translation_ratio = 0.20;
  constexpr auto sift_nfeatures = 0;
-@@ -336,9 +342,15 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-                                    matches_unique.end()};
- 
-         /* Compare pairwise displacement vectors instead of absolute points,
--         * so translation is ignored while scale and rotation remain bounded.
-+         * so translation is ignored. Estimate one common scale for this press
-+         * before filtering pairs: skin pressure can change apparent finger
-+         * size, while inconsistent local scales still indicate bad matches.
-          */
--        std::vector<angle> angles;
-+        struct pair_geometry {
-+            double scale_ratio;
-+            double rotation;
-+        };
-+        std::vector<pair_geometry> pair_geometries;
-         for (std::size_t j = 0; j < matches.size(); j++) {
-             match match_1 = matches[j];
-             for (std::size_t k = j + 1; k < matches.size(); k++) {
-@@ -355,20 +367,46 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-                 if (length_1 < 3.0 || length_2 < 3.0)
-                     continue;
- 
--                if (1 - std::min(length_1, length_2) /
--                            std::max(length_1, length_2) <=
--                    length_match) {
--
--                    const double dot = x1 * x2 + y1 * y2;
--                    const double cross = x1 * y2 - y1 * x2;
--                    angles.emplace_back(std::atan2(cross, dot));
--                }
-+                const double dot = x1 * x2 + y1 * y2;
-+                const double cross = x1 * y2 - y1 * x2;
-+                pair_geometries.push_back({length_2 / length_1,
-+                                           std::atan2(cross, dot)});
-             }
-         }
- 
-+        if (pair_geometries.size() < min_match) {
-+            std::fprintf(stderr, "SIGFM pair: %zu reciprocal matches produced only %zu usable vectors (need %d)\n",
-+                         matches.size(), pair_geometries.size(), min_match);
-+            return 0;
-+        }
-+
-+        std::vector<double> scale_ratios;
-+        scale_ratios.reserve(pair_geometries.size());
-+        for (const auto& geometry : pair_geometries)
-+            scale_ratios.push_back(geometry.scale_ratio);
-+
-+        const auto median_iter = scale_ratios.begin() + scale_ratios.size() / 2;
-+        std::nth_element(scale_ratios.begin(), median_iter, scale_ratios.end());
-+        const double median_scale = *median_iter;
-+        if (median_scale < min_pair_scale || median_scale > max_pair_scale) {
-+            std::fprintf(stderr, "SIGFM pair: implausible common scale %.3f\n",
-+                         median_scale);
-+            return 0;
-+        }
-+
-+        std::vector<angle> angles;
-+        for (const auto& geometry : pair_geometries) {
-+            const double scale_similarity =
-+                1.0 - std::min(geometry.scale_ratio, median_scale) /
-+                          std::max(geometry.scale_ratio, median_scale);
-+            if (scale_similarity <= length_match)
-+                angles.emplace_back(geometry.rotation);
-+        }
-+
-         if (angles.size() < min_match) {
--            std::fprintf(stderr, "SIGFM pair: %zu reciprocal matches produced only %zu length-compatible vectors (need %d)\n",
--                         matches.size(), angles.size(), min_match);
-+            std::fprintf(stderr, "SIGFM pair: %zu vectors, common scale %.3f, only %zu scale-consistent (need %d)\n",
-+                         pair_geometries.size(), median_scale, angles.size(),
-+                         min_match);
-             return 0;
-         }
- 
-@@ -384,8 +422,8 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-                 }
-             }
-         }
--        std::fprintf(stderr, "SIGFM pair: reciprocal=%d, unique=%zu, geometric=%zu, score=%d\n",
--                     nb_matched, matches.size(), angles.size(), count);
-+        std::fprintf(stderr, "SIGFM pair: reciprocal=%d, unique=%zu, common-scale=%.3f, geometric=%zu, score=%d\n",
-+                     nb_matched, matches.size(), median_scale, angles.size(), count);
-         return count;
+ constexpr auto sift_octave_layers = 3;
+ constexpr auto sift_contrast_threshold = 0.04;
+@@ -134,10 +155,6 @@ struct match {
+                std::tie(right.p1.y, right.p1.x, right.p2.y, right.p2.x);
      }
-     catch (const cv::Exception& e) {
--- 
-2.56.0
-
-
-From c1996f9cfda0a1d4444b4d65a736aff75d5c869e Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Thu, 29 Oct 2026 16:04:38 +0530
-Subject: [PATCH 13/23] goodix581a: report SIGFM matching diagnostics by stage
-
----
- libfprint/fpi-image-device.c |  11 +++-
- libfprint/sigfm/sigfm.cpp    | 104 ++++++++++++++++++++++++++---------
- libfprint/sigfm/sigfm.hpp    |   4 +-
- 3 files changed, 90 insertions(+), 29 deletions(-)
-
-diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
-index d9cb197..2e6e389 100644
---- a/libfprint/fpi-image-device.c
-+++ b/libfprint/fpi-image-device.c
-@@ -618,7 +618,10 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                       if (gallery_info)
-                         {
-                           valid_stages++;
--                          int score = sigfm_match_score (info, gallery_info);
-+                          g_autofree char *match_context =
-+                            g_strdup_printf ("verify stage %d", stage_index);
-+                          int score = sigfm_match_score (info, gallery_info,
-+                                                        match_context);
-                           if (score > max_score)
-                             max_score = score;
-                           if (score >= 40)
-@@ -699,7 +702,11 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                       if (gallery_info)
-                         {
-                           valid_stages++;
--                          int score = sigfm_match_score (info, gallery_info);
-+                          g_autofree char *match_context =
-+                            g_strdup_printf ("identify template %u stage %d",
-+                                             t, stage_index);
-+                          int score = sigfm_match_score (info, gallery_info,
-+                                                        match_context);
-                           if (score > max_score)
-                             max_score = score;
-                           if (score >= 40)
-diff --git a/libfprint/sigfm/sigfm.cpp b/libfprint/sigfm/sigfm.cpp
-index 58168f7..f529881 100644
---- a/libfprint/sigfm/sigfm.cpp
-+++ b/libfprint/sigfm/sigfm.cpp
-@@ -268,13 +268,16 @@ SigfmImgInfo* sigfm_extract(const SigfmPix* pix, int width, int height)
+ };
+-struct angle {
+-    double radians;
+-    angle(double radians_) : radians{radians_} {}
+-};
+ } // namespace
+ 
+ SigfmImgInfo* sigfm_copy_info(SigfmImgInfo* info)
+@@ -258,12 +275,15 @@ SigfmImgInfo* sigfm_extract(const SigfmPix* pix, int width, int height)
      }
  }
  
@@ -4321,186 +3831,262 @@ index 58168f7..f529881 100644
          enrolled->descriptors.empty() ||
          frame->keypoints.size() != static_cast<std::size_t>(frame->descriptors.rows) ||
          enrolled->keypoints.size() != static_cast<std::size_t>(enrolled->descriptors.rows)) {
--        std::fprintf(stderr, "SIGFM pair: invalid feature data (probe=%d, template=%d)\n",
-+        std::fprintf(stderr, "SIGFM match [%s]: invalid feature data (probe=%d, template=%d)\n",
-+                     label,
-                      frame ? frame->descriptors.rows : 0,
-                      enrolled ? enrolled->descriptors.rows : 0);
++        std::fprintf(stderr, "SIGFM match [%s]: invalid feature data\n", label);
          return 0;
-@@ -289,7 +292,9 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-         bfm->knnMatch(frame->descriptors, enrolled->descriptors, points, 2);
-         std::vector<int> candidate_positions(enrolled->descriptors.rows, -1);
-         std::vector<int> candidate_indices;
-+        std::vector<double> descriptor_ratios;
-         cv::Mat candidate_descriptors;
-+        int ratio_passes = 0;
+     }
  
-         for (const auto& pts : points) {
-             if (pts.size() < 2) {
-@@ -297,17 +302,38 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-             }
- 
-             const cv::DMatch& match_1 = pts.at(0);
--            if (match_1.distance < distance_match * pts.at(1).distance &&
--                candidate_positions[match_1.trainIdx] < 0) {
--                candidate_positions[match_1.trainIdx] = candidate_indices.size();
--                candidate_indices.push_back(match_1.trainIdx);
--                candidate_descriptors.push_back(enrolled->descriptors.row(match_1.trainIdx));
-+            const double second_distance = pts.at(1).distance;
-+            const double ratio = second_distance > 0.0
-+                                     ? match_1.distance / second_distance
-+                                     : std::numeric_limits<double>::infinity();
-+            descriptor_ratios.push_back(ratio);
-+            if (match_1.distance < distance_match * pts.at(1).distance) {
-+                ratio_passes++;
-+                if (candidate_positions[match_1.trainIdx] < 0) {
-+                    candidate_positions[match_1.trainIdx] = candidate_indices.size();
-+                    candidate_indices.push_back(match_1.trainIdx);
-+                    candidate_descriptors.push_back(enrolled->descriptors.row(match_1.trainIdx));
-+                }
-             }
+@@ -293,13 +313,14 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
          }
  
-+        double ratio_median = 0.0;
-+        double ratio_p90 = 0.0;
-+        if (!descriptor_ratios.empty()) {
-+            std::sort(descriptor_ratios.begin(), descriptor_ratios.end());
-+            ratio_median = descriptor_ratios[descriptor_ratios.size() / 2];
-+            ratio_p90 = descriptor_ratios[(descriptor_ratios.size() - 1) * 90 / 100];
-+        }
-+
-+        std::fprintf(stderr,
-+                     "SIGFM match [%s]: descriptors probe=%d template=%d knn=%zu ratio-pass=%d unique-candidates=%zu ratio-p50=%.3f p90=%.3f threshold=%.2f\n",
-+                     label, frame->descriptors.rows, enrolled->descriptors.rows,
-+                     points.size(), ratio_passes, candidate_indices.size(),
-+                     ratio_median, ratio_p90, distance_match);
-+
          if (candidate_indices.size() < min_match) {
--            std::fprintf(stderr, "SIGFM pair: only %zu ratio-test candidates (need %d)\n",
--                         candidate_indices.size(), min_match);
-+            std::fprintf(stderr, "SIGFM match [%s]: only %zu ratio-test candidates (need %d)\n",
++            std::fprintf(stderr, "SIGFM match [%s]: only %zu ratio candidates (need %d)\n",
 +                         label, candidate_indices.size(), min_match);
              return 0;
          }
  
-@@ -334,8 +360,8 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
+         std::vector<std::vector<cv::DMatch>> backward;
+         bfm->knnMatch(candidate_descriptors, frame->descriptors, backward, 1);
+         std::set<match> matches_unique;
+-        int nb_matched = 0;
+         for (const auto& pts : points) {
+             if (pts.size() < 2) {
+                 continue;
+@@ -315,65 +336,189 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
+                 matches_unique.emplace(
+                     match{frame->keypoints.at(match_1.queryIdx).pt,
+                           enrolled->keypoints.at(match_1.trainIdx).pt});
+-                nb_matched++;
              }
          }
-         if (nb_matched < min_match) {
--            std::fprintf(stderr, "SIGFM pair: only %d reciprocal matches from %zu candidates (need %d)\n",
--                         nb_matched, candidate_indices.size(), min_match);
-+            std::fprintf(stderr, "SIGFM match [%s]: reciprocal=%d from %zu unique candidates (need %d)\n",
-+                         label, nb_matched, candidate_indices.size(), min_match);
-             return 0;
-         }
+-        if (nb_matched < min_match) {
+-            return 0;
+-        }
          std::vector<match> matches{matches_unique.begin(),
-@@ -375,8 +401,9 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-         }
+                                    matches_unique.end()};
++        if (matches.size() < min_match) {
++            std::fprintf(stderr, "SIGFM match [%s]: reciprocal=%zu (need %d)\n",
++                         label, matches.size(), min_match);
++            return 0;
++        }
  
-         if (pair_geometries.size() < min_match) {
--            std::fprintf(stderr, "SIGFM pair: %zu reciprocal matches produced only %zu usable vectors (need %d)\n",
--                         matches.size(), pair_geometries.size(), min_match);
-+            std::fprintf(stderr, "SIGFM match [%s]: reciprocal=%d unique=%zu usable-vectors=%zu (need %d)\n",
-+                         label, nb_matched, matches.size(),
-+                         pair_geometries.size(), min_match);
-             return 0;
-         }
+-        /* Compare pairwise displacement vectors instead of absolute points,
+-         * so translation is ignored while scale and rotation remain bounded.
++        /* Compare pairwise displacement vectors instead of absolute points.
++         * Estimate one common scale for the press first: skin pressure changes
++         * apparent finger size, while random local scales do not fit one
++         * global transform.
+          */
+-        std::vector<angle> angles;
++        struct pair_geometry {
++            std::size_t first;
++            std::size_t second;
++            double scale;
++            double rotation;
++        };
++        std::vector<pair_geometry> pair_geometries;
+         for (std::size_t j = 0; j < matches.size(); j++) {
+-            match match_1 = matches[j];
+             for (std::size_t k = j + 1; k < matches.size(); k++) {
+-                match match_2 = matches[k];
+-
+-                const double x1 = match_1.p1.x - match_2.p1.x;
+-                const double y1 = match_1.p1.y - match_2.p1.y;
+-                const double x2 = match_1.p2.x - match_2.p2.x;
+-                const double y2 = match_1.p2.y - match_2.p2.y;
+-
++                const double x1 = matches[j].p1.x - matches[k].p1.x;
++                const double y1 = matches[j].p1.y - matches[k].p1.y;
++                const double x2 = matches[j].p2.x - matches[k].p2.x;
++                const double y2 = matches[j].p2.y - matches[k].p2.y;
+                 const double length_1 = std::hypot(x1, y1);
+                 const double length_2 = std::hypot(x2, y2);
  
-@@ -385,12 +412,14 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-         for (const auto& geometry : pair_geometries)
-             scale_ratios.push_back(geometry.scale_ratio);
+                 if (length_1 < 3.0 || length_2 < 3.0)
+                     continue;
  
--        const auto median_iter = scale_ratios.begin() + scale_ratios.size() / 2;
--        std::nth_element(scale_ratios.begin(), median_iter, scale_ratios.end());
--        const double median_scale = *median_iter;
+-                if (1 - std::min(length_1, length_2) /
+-                            std::max(length_1, length_2) <=
+-                    length_match) {
++                pair_geometries.push_back(
++                    {j, k, length_2 / length_1,
++                     std::atan2(x1 * y2 - y1 * x2, x1 * x2 + y1 * y2)});
++            }
++        }
+ 
+-                    const double dot = x1 * x2 + y1 * y2;
+-                    const double cross = x1 * y2 - y1 * x2;
+-                    angles.emplace_back(std::atan2(cross, dot));
+-                }
++        if (pair_geometries.size() < static_cast<std::size_t>(min_match)) {
++            std::fprintf(stderr, "SIGFM match [%s]: usable vectors=%zu (need %d)\n",
++                         label, pair_geometries.size(), min_match);
++            return 0;
++        }
++
++        std::vector<double> scale_ratios;
++        scale_ratios.reserve(pair_geometries.size());
++        for (const auto& geometry : pair_geometries)
++            scale_ratios.push_back(geometry.scale);
 +        std::sort(scale_ratios.begin(), scale_ratios.end());
-+        const double scale_p10 = scale_ratios[(scale_ratios.size() - 1) * 10 / 100];
 +        const double median_scale = scale_ratios[scale_ratios.size() / 2];
-+        const double scale_p90 = scale_ratios[(scale_ratios.size() - 1) * 90 / 100];
-         if (median_scale < min_pair_scale || median_scale > max_pair_scale) {
--            std::fprintf(stderr, "SIGFM pair: implausible common scale %.3f\n",
--                         median_scale);
-+            std::fprintf(stderr, "SIGFM match [%s]: implausible scale p10=%.3f median=%.3f p90=%.3f allowed=%.2f..%.2f\n",
-+                         label, scale_p10, median_scale, scale_p90,
-+                         min_pair_scale, max_pair_scale);
-             return 0;
-         }
- 
-@@ -404,12 +433,29 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-         }
- 
-         if (angles.size() < min_match) {
--            std::fprintf(stderr, "SIGFM pair: %zu vectors, common scale %.3f, only %zu scale-consistent (need %d)\n",
--                         pair_geometries.size(), median_scale, angles.size(),
--                         min_match);
-+            std::fprintf(stderr, "SIGFM match [%s]: vectors=%zu scale-p10=%.3f median=%.3f p90=%.3f scale-consistent=%zu (need %d) tolerance=%.2f\n",
-+                         label, pair_geometries.size(), scale_p10, median_scale,
-+                         scale_p90, angles.size(), min_match, length_match);
-             return 0;
-         }
- 
-+        int best_rotation_support = 0;
++        if (median_scale < min_pair_scale || median_scale > max_pair_scale) {
++            std::fprintf(stderr,
++                         "SIGFM match [%s]: implausible scale %.3f (allowed %.2f..%.2f)\n",
++                         label, median_scale, min_pair_scale, max_pair_scale);
++            return 0;
++        }
++
++        std::vector<pair_geometry> consistent_pairs;
++        for (const auto& geometry : pair_geometries) {
++            const double scale_similarity =
++                1.0 - std::min(geometry.scale, median_scale) /
++                          std::max(geometry.scale, median_scale);
++            if (scale_similarity <= length_match)
++                consistent_pairs.push_back(geometry);
++        }
++
++        if (consistent_pairs.size() < static_cast<std::size_t>(min_match)) {
++            std::fprintf(stderr,
++                         "SIGFM match [%s]: scale-consistent vectors=%zu (need %d)\n",
++                         label, consistent_pairs.size(), min_match);
++            return 0;
++        }
++
++        /* Find the dominant rotation and refine its centre from its inliers. */
 +        double dominant_rotation = 0.0;
-+        for (const auto& candidate_angle : angles) {
++        int rotation_support = 0;
++        for (const auto& candidate : consistent_pairs) {
 +            int support = 0;
-+            for (const auto& other_angle : angles) {
-+                const double delta = std::remainder(candidate_angle.radians -
-+                                                        other_angle.radians,
-+                                                    2.0 * M_PI);
-+                if (std::abs(delta) <= angle_match)
++            for (const auto& other : consistent_pairs) {
++                if (std::abs(std::remainder(candidate.rotation - other.rotation,
++                                            2.0 * M_PI)) <= angle_match)
 +                    support++;
 +            }
-+            if (support > best_rotation_support) {
-+                best_rotation_support = support;
-+                dominant_rotation = candidate_angle.radians;
++            if (support > rotation_support) {
++                rotation_support = support;
++                dominant_rotation = candidate.rotation;
 +            }
 +        }
 +
-         int count = 0;
-         for (std::size_t j = 0; j < angles.size(); j++) {
-             const angle& angle_1 = angles[j];
-@@ -422,20 +468,26 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled)
-                 }
++        double sin_sum = 0.0;
++        double cos_sum = 0.0;
++        for (const auto& other : consistent_pairs) {
++            if (std::abs(std::remainder(other.rotation - dominant_rotation,
++                                        2.0 * M_PI)) <= angle_match) {
++                sin_sum += std::sin(other.rotation);
++                cos_sum += std::cos(other.rotation);
++            }
++        }
++        if (sin_sum != 0.0 || cos_sum != 0.0)
++            dominant_rotation = std::atan2(sin_sum, cos_sum);
++
++        std::vector<char> participates(matches.size(), 0);
++        rotation_support = 0;
++        for (const auto& pair : consistent_pairs) {
++            if (std::abs(std::remainder(pair.rotation - dominant_rotation,
++                                        2.0 * M_PI)) <= angle_match) {
++                participates[pair.first] = 1;
++                participates[pair.second] = 1;
++                rotation_support++;
              }
          }
--        std::fprintf(stderr, "SIGFM pair: reciprocal=%d, unique=%zu, common-scale=%.3f, geometric=%zu, score=%d\n",
--                     nb_matched, matches.size(), median_scale, angles.size(), count);
-+        std::fprintf(stderr, "SIGFM match [%s]: ratio-passes=%d unique-candidates=%zu reciprocal=%d unique=%zu scale=[%.3f,%.3f,%.3f] consistent=%zu rotation-support=%d/%zu at %.1fdeg threshold=%.3frad score=%d\n",
-+                     label, ratio_passes, candidate_indices.size(), nb_matched,
-+                     matches.size(), scale_p10, median_scale, scale_p90,
-+                     angles.size(), best_rotation_support, angles.size(),
-+                     dominant_rotation * 180.0 / M_PI, angle_match, count);
-         return count;
-     }
-     catch (const cv::Exception& e) {
--        std::fprintf(stderr, "SIGFM pair: OpenCV matching failed: %s\n", e.what());
+ 
+-        if (angles.size() < min_match) {
++        if (rotation_support < min_match) {
++            std::fprintf(stderr,
++                         "SIGFM match [%s]: rotation support=%d (need %d)\n",
++                         label, rotation_support, min_match);
+             return 0;
+         }
+ 
+-        int count = 0;
+-        for (std::size_t j = 0; j < angles.size(); j++) {
+-            const angle& angle_1 = angles[j];
+-            for (std::size_t k = j + 1; k < angles.size(); k++) {
+-                const angle& angle_2 = angles[k];
+-                const double delta = std::remainder(angle_1.radians - angle_2.radians,
+-                                                    2.0 * M_PI);
+-                if (std::abs(delta) <= angle_match) {
+-                    count += 1;
+-                }
++        /* Rotation and scale alone still leave translation free, and unrelated
++         * presses can coincidentally share a rotation cluster. Project every
++         * participating match through the common rotation and scale; genuine
++         * correspondences land on the same translation, while chance matches
++         * scatter. Count the largest translation cluster.
++         */
++        const double cos_theta = std::cos(dominant_rotation) * median_scale;
++        const double sin_theta = std::sin(dominant_rotation) * median_scale;
++        std::vector<cv::Point2f> translations;
++        for (std::size_t i = 0; i < matches.size(); i++) {
++            if (!participates[i])
++                continue;
++            const double rotated_x = cos_theta * matches[i].p1.x -
++                                     sin_theta * matches[i].p1.y;
++            const double rotated_y = sin_theta * matches[i].p1.x +
++                                     cos_theta * matches[i].p1.y;
++            translations.push_back(
++                {static_cast<float>(matches[i].p2.x - rotated_x),
++                 static_cast<float>(matches[i].p2.y - rotated_y)});
++        }
++
++        int translation_inliers = 0;
++        for (const auto& candidate : translations) {
++            int inliers = 0;
++            for (const auto& other : translations) {
++                if (std::hypot(candidate.x - other.x, candidate.y - other.y) <=
++                    translation_match)
++                    inliers++;
+             }
++            if (inliers > translation_inliers)
++                translation_inliers = inliers;
+         }
+-        return count;
++
++        const double inlier_ratio =
++            static_cast<double>(translation_inliers) /
++            static_cast<double>(matches.size());
++        const bool accepted = translation_inliers >= min_translation_inliers &&
++                              inlier_ratio >= min_translation_ratio;
++
++        std::fprintf(stderr,
++                     "SIGFM match [%s]: matches=%zu scale=%.3f rotation-support=%d "
++                     "translation-inliers=%d/%zu ratio=%.3f accepted=%d "
++                     "rotation=%.1fdeg score=%d\n",
++                     label, matches.size(), median_scale, rotation_support,
++                     translation_inliers, matches.size(), inlier_ratio,
++                     accepted, dominant_rotation * 180.0 / M_PI,
++                     accepted ? translation_inliers : 0);
++
++        return accepted ? translation_inliers : 0;
++    }
++    catch (const cv::Exception& e) {
 +        std::fprintf(stderr, "SIGFM match [%s]: OpenCV matching failed: %s\n",
 +                     label, e.what());
-         return -1;
-     }
-     catch (const std::exception& e) {
--        std::fprintf(stderr, "SIGFM pair: matching failed: %s\n", e.what());
++        return -1;
++    }
++    catch (const std::exception& e) {
 +        std::fprintf(stderr, "SIGFM match [%s]: matching failed: %s\n",
 +                     label, e.what());
-         return -1;
++        return -1;
      }
      catch (...) {
--        std::fprintf(stderr, "SIGFM pair: matching failed with an unknown exception\n");
-+        std::fprintf(stderr, "SIGFM match [%s]: matching failed with an unknown exception\n",
-+                     label);
++        std::fprintf(stderr, "SIGFM match [%s]: matching failed\n", label);
          return -1;
      }
  }
 diff --git a/libfprint/sigfm/sigfm.hpp b/libfprint/sigfm/sigfm.hpp
-index 7443baa..1ff6e81 100644
+index 7443baa..ca4e3f0 100644
 --- a/libfprint/sigfm/sigfm.hpp
 +++ b/libfprint/sigfm/sigfm.hpp
-@@ -54,9 +54,11 @@ void sigfm_free_info(SigfmImgInfo* info);
+@@ -54,9 +54,12 @@ void sigfm_free_info(SigfmImgInfo* info);
   *
   * @param frame Print to be checked
   * @param enrolled Canonical print to verify against
-+ * @param context Short label included in diagnostic messages
-  * @return int Non-negative match score; zero means reject or matching failed.
+- * @return int Non-negative match score; zero means reject or matching failed.
++ * @param context Short label used in diagnostics (may be NULL)
++ * @return int Number of matches agreeing on one similarity transform, or zero
++ *             when the stage is rejected or matching failed.
   */
 -int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled);
 +int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled,
@@ -4512,641 +4098,31 @@ index 7443baa..1ff6e81 100644
 2.56.0
 
 
-From f620cd5f2dcf290c3ec087350666aed17c6df05b Mon Sep 17 00:00:00 2001
+From c1cd27cd96ca8d64f9861f1330a15db157a22453 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Thu, 29 Oct 2026 16:18:16 +0530
-Subject: [PATCH 14/23] goodix581a: apply SIGFM geometric score threshold
+Date: Sat, 14 Nov 2026 13:33:06 +0530
+Subject: [PATCH 10/10] goodix581a: add opt-in diagnostic frame capture
 
----
- libfprint/fpi-image-device.c | 8 ++++----
- libfprint/sigfm/sigfm.hpp    | 6 ++++++
- 2 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
-index 2e6e389..42ea495 100644
---- a/libfprint/fpi-image-device.c
-+++ b/libfprint/fpi-image-device.c
-@@ -624,7 +624,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                                                         match_context);
-                           if (score > max_score)
-                             max_score = score;
--                          if (score >= 40)
-+                          if (score >= SIGFM_MATCH_SCORE_THRESHOLD)
-                             matched_stages++;
-                           g_message ("SIGFM verify: stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
-                                      stage_index, sz,
-@@ -640,7 +640,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                   g_variant_unref (stage_bytes);
-                 }
- 
--              if (max_score >= 70 || (max_score >= 45 && matched_stages >= 2))
-+              if (max_score >= SIGFM_MATCH_SCORE_THRESHOLD)
-                 result = FPI_MATCH_SUCCESS;
-               else
-                 result = FPI_MATCH_FAIL;
-@@ -709,7 +709,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                                                         match_context);
-                           if (score > max_score)
-                             max_score = score;
--                          if (score >= 40)
-+                          if (score >= SIGFM_MATCH_SCORE_THRESHOLD)
-                             matched_stages++;
-                           g_message ("SIGFM identify: template %u stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
-                                      t, stage_index, sz,
-@@ -728,7 +728,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-               g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_score=%d, matched_stages=%d",
-                          t, stage_index, valid_stages, max_score, matched_stages);
- 
--              if (max_score >= 70 || (max_score >= 45 && matched_stages >= 2))
-+              if (max_score >= SIGFM_MATCH_SCORE_THRESHOLD)
-                 {
-                   matched_template = tmpl;
-                   break;
-diff --git a/libfprint/sigfm/sigfm.hpp b/libfprint/sigfm/sigfm.hpp
-index 1ff6e81..d01bbd9 100644
---- a/libfprint/sigfm/sigfm.hpp
-+++ b/libfprint/sigfm/sigfm.hpp
-@@ -25,6 +25,12 @@
- extern "C" {
- #endif
- typedef unsigned char SigfmPix;
-+
-+/* SIGFM returns the count of mutually consistent geometric hypotheses.
-+ * The reference matcher accepts a comparison once five hypotheses agree.
-+ */
-+#define SIGFM_MATCH_SCORE_THRESHOLD 5
-+
- /**
-  * @brief Contains information used by the sigfm algorithm for matching
-  * @details Get one from sigfm_extract() and make sure to clean it up with sigfm_free_info()
--- 
-2.56.0
-
-
-From f84328e8b2217166d6c22a32a9a00df89d196a5d Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Thu, 29 Oct 2026 16:29:07 +0530
-Subject: [PATCH 15/23] goodix581a: require corroboration across enrollment
- stages
-
----
- libfprint/fpi-image-device.c | 4 ++--
- libfprint/sigfm/sigfm.hpp    | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
-index 42ea495..e9640f9 100644
---- a/libfprint/fpi-image-device.c
-+++ b/libfprint/fpi-image-device.c
-@@ -640,7 +640,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                   g_variant_unref (stage_bytes);
-                 }
- 
--              if (max_score >= SIGFM_MATCH_SCORE_THRESHOLD)
-+              if (matched_stages >= 2)
-                 result = FPI_MATCH_SUCCESS;
-               else
-                 result = FPI_MATCH_FAIL;
-@@ -728,7 +728,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-               g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_score=%d, matched_stages=%d",
-                          t, stage_index, valid_stages, max_score, matched_stages);
- 
--              if (max_score >= SIGFM_MATCH_SCORE_THRESHOLD)
-+              if (matched_stages >= 2)
-                 {
-                   matched_template = tmpl;
-                   break;
-diff --git a/libfprint/sigfm/sigfm.hpp b/libfprint/sigfm/sigfm.hpp
-index d01bbd9..06d799b 100644
---- a/libfprint/sigfm/sigfm.hpp
-+++ b/libfprint/sigfm/sigfm.hpp
-@@ -27,7 +27,7 @@ extern "C" {
- typedef unsigned char SigfmPix;
- 
- /* SIGFM returns the count of mutually consistent geometric hypotheses.
-- * The reference matcher accepts a comparison once five hypotheses agree.
-+ * Five is the per-stage vote cutoff; the caller also requires two stages.
-  */
- #define SIGFM_MATCH_SCORE_THRESHOLD 5
- 
--- 
-2.56.0
-
-
-From 95230b64e020536af3dd7745e2c08a84b5a6410e Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Thu, 29 Oct 2026 16:39:25 +0530
-Subject: [PATCH 16/23] goodix581a: average eight scan frames
-
----
- libfprint/drivers/goodixtls/goodix581a.h | 3 ++-
- tests/test-goodix581a-frame-layout.c     | 7 ++++---
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/libfprint/drivers/goodixtls/goodix581a.h b/libfprint/drivers/goodixtls/goodix581a.h
-index f53676e..69d7996 100644
---- a/libfprint/drivers/goodixtls/goodix581a.h
-+++ b/libfprint/drivers/goodixtls/goodix581a.h
-@@ -15,7 +15,8 @@
- #define GOODIX_581A_STREAM_ROWS 64
- #define GOODIX_581A_STREAM_COLUMNS 80
- #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
--#define GOODIX_581A_AVERAGE_FRAMES 4
-+/* Initial capture data at tcode 0x0010 needed about eight frames to settle. */
-+#define GOODIX_581A_AVERAGE_FRAMES 8
- /* 80x64 packed sensor samples plus the four-byte footer used by this device. */
- #define GOODIX_581A_RAW_FRAME_SIZE 7684
- 
-diff --git a/tests/test-goodix581a-frame-layout.c b/tests/test-goodix581a-frame-layout.c
-index 57b1402..1fb34ec 100644
---- a/tests/test-goodix581a-frame-layout.c
-+++ b/tests/test-goodix581a-frame-layout.c
-@@ -50,6 +50,7 @@ test_frame_average (void)
-     g_new (GoodixTls5xxPix, GOODIX_581A_FRAME_SIZE);
-   g_autofree GoodixTls5xxPix *average =
-     g_new (GoodixTls5xxPix, GOODIX_581A_FRAME_SIZE);
-+  const guint expected_average = 10 * (1 + GOODIX_581A_AVERAGE_FRAMES) / 2;
- 
-   for (guint frame_index = 1; frame_index <= GOODIX_581A_AVERAGE_FRAMES;
-        frame_index++)
-@@ -60,9 +61,9 @@ test_frame_average (void)
-     }
- 
-   goodix_581a_finish_average (average, sum, GOODIX_581A_AVERAGE_FRAMES);
--  g_assert_cmpuint (average[0], ==, 25);
--  g_assert_cmpuint (average[GOODIX_581A_FRAME_SIZE / 2], ==, 25);
--  g_assert_cmpuint (average[GOODIX_581A_FRAME_SIZE - 1], ==, 25);
-+  g_assert_cmpuint (average[0], ==, expected_average);
-+  g_assert_cmpuint (average[GOODIX_581A_FRAME_SIZE / 2], ==, expected_average);
-+  g_assert_cmpuint (average[GOODIX_581A_FRAME_SIZE - 1], ==, expected_average);
- }
- 
- int
--- 
-2.56.0
-
-
-From f15349e809cb90414fea88d1617529017866b883 Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Wed, 11 Nov 2026 15:50:56 +0530
-Subject: [PATCH 17/23] goodixtls: handle partial writes and packed handshake
- flights
-
----
- libfprint/drivers/goodixtls/goodix.c    | 33 +++++++++--
- libfprint/drivers/goodixtls/goodixtls.c | 76 ++++++++++++++++++++++---
- 2 files changed, 98 insertions(+), 11 deletions(-)
-
-diff --git a/libfprint/drivers/goodixtls/goodix.c b/libfprint/drivers/goodixtls/goodix.c
-index 7fea3cd..ed36601 100644
---- a/libfprint/drivers/goodixtls/goodix.c
-+++ b/libfprint/drivers/goodixtls/goodix.c
-@@ -1247,10 +1247,12 @@ on_goodix_tls_read_handshake (FpDevice *dev, guint8 *data,
- 
-   int sent = goodix_tls_client_write (priv->tls_hop, data, length);
- 
--  if (sent < 0)
-+  if (sent != length)
-     {
-+      fp_err ("failed to forward device handshake record bytes=%u written=%d",
-+              length, sent);
-       fpi_ssm_mark_failed (ssm, g_error_new (g_io_error_quark (), sent,
--                                             "failed to sent data to "
-+                                             "failed to send data to "
-                                              "tls server"));
-       return;
-     }
-@@ -1403,7 +1405,17 @@ on_goodix_request_tls_connection (FpDevice *dev, guint8 *data,
-   FpiDeviceGoodixTlsPrivate *priv =
-     fpi_device_goodixtls_get_instance_private (self);
- 
--  goodix_tls_client_write (priv->tls_hop, data, length);
-+  int written = goodix_tls_client_write (priv->tls_hop, data, length);
-+  if (written != length)
-+    {
-+      fp_err ("failed to forward initial device handshake bytes=%u written=%d",
-+              length, written);
-+      on_tls_successfully_established (
-+        dev, NULL,
-+        g_error_new (G_IO_ERROR, G_IO_ERROR_FAILED,
-+                     "Failed to forward initial TLS handshake to server"));
-+      return;
-+    }
- 
-   do_tls_handshake (dev);
- }
-@@ -1492,7 +1504,20 @@ goodix_tls_ready_image_handler (FpDevice *dev, guint8 *data,
-       tls_len = length - 9;
-     }
- 
--  goodix_tls_client_write (priv->tls_hop, tls_data, tls_len);
-+  int written = goodix_tls_client_write (priv->tls_hop, tls_data, tls_len);
-+  if (written != tls_len)
-+    {
-+      fp_err ("failed to forward encrypted command bytes=%u written=%d",
-+              tls_len, written);
-+      callback (dev,
-+                NULL,
-+                0,
-+                cb_info->user_data,
-+                g_error_new (G_IO_ERROR, G_IO_ERROR_FAILED,
-+                             "Failed to forward TLS command to server"));
-+      g_free (cb_info);
-+      return;
-+    }
- 
-   const guint16 size = -1;
-   guint8 *buff = malloc (size);
-diff --git a/libfprint/drivers/goodixtls/goodixtls.c b/libfprint/drivers/goodixtls/goodixtls.c
-index 9c7ccc7..3e63d21 100644
---- a/libfprint/drivers/goodixtls/goodixtls.c
-+++ b/libfprint/drivers/goodixtls/goodixtls.c
-@@ -30,6 +30,7 @@
- #include <pthread.h>
- #include <signal.h>
- #include <string.h>
-+#include <unistd.h>
- #include <sys/socket.h>
- 
- #include "drivers_api.h"
-@@ -102,7 +103,21 @@ tls_server_config_ctx (SSL_CTX *ctx)
- int
- goodix_tls_client_write (GoodixTlsServer *self, guint8 *data, guint16 length)
- {
--  return write (self->client_fd, data, length * sizeof (guint8));
-+  size_t offset = 0;
-+
-+  while (offset < length)
-+    {
-+      ssize_t written = write (self->client_fd, data + offset, length - offset);
-+
-+      if (written < 0 && errno == EINTR)
-+        continue;
-+      if (written <= 0)
-+        return written < 0 ? -errno : -EPIPE;
-+
-+      offset += written;
-+    }
-+
-+  return offset;
- }
- static int
- read_exact (int fd, guint8 *buf, size_t count, int timeout_ms)
-@@ -137,6 +152,55 @@ read_one_record (int fd, guint8 *buf, size_t max_len, int timeout_ms)
-   return 5 + plen;
- }
- 
-+/* Return TRUE if the collected TLS records contain a handshake message of
-+ * @type.  Handshake messages may be packed together in one record or split
-+ * across records, so parse the concatenated handshake payload instead of
-+ * assuming one message per record.
-+ */
-+static gboolean
-+tls_records_contain_handshake_type (const guint8 *data, int total, guint8 type)
-+{
-+  g_autoptr(GByteArray) handshake = g_byte_array_new ();
-+  gboolean found = FALSE;
-+  int offset = 0;
-+
-+  while (offset + 5 <= total)
-+    {
-+      const guint8 *record = data + offset;
-+      guint16 record_len = (record[3] << 8) | record[4];
-+
-+      if (offset + 5 + record_len > total)
-+        break;
-+
-+      if (record[0] == 0x16)
-+        g_byte_array_append (handshake, record + 5, record_len);
-+
-+      offset += 5 + record_len;
-+    }
-+
-+  gsize pos = 0;
-+  while (pos + 4 <= handshake->len)
-+    {
-+      guint8 msg_type = handshake->data[pos];
-+      guint32 msg_len = ((guint32) handshake->data[pos + 1] << 16) |
-+                        ((guint32) handshake->data[pos + 2] << 8) |
-+                        handshake->data[pos + 3];
-+
-+      if (msg_type == type)
-+        {
-+          found = TRUE;
-+          break;
-+        }
-+
-+      if (msg_len > handshake->len - pos - 4)
-+        break;
-+
-+      pos += 4 + msg_len;
-+    }
-+
-+  return found;
-+}
-+
- int
- goodix_tls_client_read (GoodixTlsServer *self, guint8 *data, guint16 length)
- {
-@@ -151,13 +215,11 @@ goodix_tls_client_read (GoodixTlsServer *self, guint8 *data, guint16 length)
-   /* Check if this is ServerHello (0x16, handshake type 0x02) which requires reading until ServerHelloDone (type 0x0E) */
-   if (data[0] == 0x16 && rec_len > 5 && data[5] == 0x02)
-     {
--      while (total < length)
-+      while (total < length &&
-+             !tls_records_contain_handshake_type (data, total, 0x0e))
-         {
--          /* If the last record was ServerHelloDone (type 0x16, handshake msg 0x0E), flight 1 is complete */
--          if (rec_len > 5 && data[total - rec_len] == 0x16 && data[total - rec_len + 5] == 0x0e)
--            break;
--
--          rec_len = read_one_record (self->client_fd, data + total, length - total, timeout_ms);
-+          rec_len = read_one_record (self->client_fd, data + total,
-+                                     length - total, timeout_ms);
-           if (rec_len <= 0)
-             break;
-           total += rec_len;
--- 
-2.56.0
-
-
-From 15fa8e3169e03e596dec86cfe27bb76d79474aa3 Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Wed, 11 Nov 2026 15:50:59 +0530
-Subject: [PATCH 18/23] goodix581a: validate SIGFM stages and tighten match
- acceptance
-
----
- libfprint/fpi-image-device.c | 56 +++++++++++++++++++++++++++++-------
- libfprint/sigfm/sigfm.cpp    |  8 ++++++
- libfprint/sigfm/sigfm.hpp    | 16 +++++++++--
- 3 files changed, 67 insertions(+), 13 deletions(-)
-
-diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
-index e9640f9..797584d 100644
---- a/libfprint/fpi-image-device.c
-+++ b/libfprint/fpi-image-device.c
-@@ -508,11 +508,14 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
- 
-   SigfmImgInfo *info = sigfm_extract (img_data, width, height);
-   int kpts = sigfm_keypoints_count (info);
--  g_message ("SIGFM: extracted %d keypoints from %dx%d image", kpts, width, height);
-+  int descs = sigfm_descriptors_count (info);
-+  g_message ("SIGFM: extracted %d keypoints and %d descriptors from %dx%d image",
-+             kpts, descs, width, height);
- 
--  if (kpts < 6)
-+  if (kpts < 6 || descs < 4)
-     {
--      g_warning ("SIGFM: too few keypoints (%d < 6), requesting retry", kpts);
-+      g_warning ("SIGFM: too few keypoints/descriptors (%d/%d), requesting retry",
-+                 kpts, descs);
-       if (info)
-         sigfm_free_info (info);
-       info = NULL;
-@@ -597,6 +600,11 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-               g_warning ("SIGFM verify: template has no raw data!");
-               result = FPI_MATCH_ERROR;
-             }
-+          else if (!g_variant_is_of_type (template_var, G_VARIANT_TYPE ("aay")))
-+            {
-+              g_warning ("SIGFM verify: template has unexpected raw data type");
-+              result = FPI_MATCH_ERROR;
-+            }
-           else
-             {
-               int max_score = 0;
-@@ -610,8 +618,15 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-               while ((stage_bytes = g_variant_iter_next_value (&iter)) != NULL)
-                 {
-                   gsize sz;
--                  const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
-                   stage_index++;
-+                  if (!g_variant_is_of_type (stage_bytes, G_VARIANT_TYPE ("ay")))
-+                    {
-+                      g_warning ("SIGFM verify: stage %d is not a byte array", stage_index);
-+                      g_variant_unref (stage_bytes);
-+                      continue;
-+                    }
-+
-+                  const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
-                   if (b && sz > 0)
-                     {
-                       SigfmImgInfo *gallery_info = sigfm_deserialize_binary (b, (int) sz);
-@@ -624,7 +639,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                                                         match_context);
-                           if (score > max_score)
-                             max_score = score;
--                          if (score >= SIGFM_MATCH_SCORE_THRESHOLD)
-+                          if (score >= SIGFM_MATCH_STAGE_SCORE_THRESHOLD)
-                             matched_stages++;
-                           g_message ("SIGFM verify: stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
-                                      stage_index, sz,
-@@ -640,7 +655,8 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                   g_variant_unref (stage_bytes);
-                 }
- 
--              if (matched_stages >= 2)
-+              if (max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
-+                  matched_stages >= SIGFM_MATCH_MIN_STAGES)
-                 result = FPI_MATCH_SUCCESS;
-               else
-                 result = FPI_MATCH_FAIL;
-@@ -661,11 +677,13 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-       g_autoptr(FpPrint) probe_print = fp_print_new (device);
-       fpi_print_set_type (probe_print, FPI_PRINT_RAW);
- 
-+      gboolean fatal_error = error != NULL && error->domain != FP_DEVICE_RETRY;
-+
-       if (!error || error->domain == FP_DEVICE_RETRY)
-         fpi_device_verify_report (device, result, g_steal_pointer (&probe_print), g_steal_pointer (&error));
- 
-       fp_image_device_maybe_complete_action (self, g_steal_pointer (&error));
--      if (error)
-+      if (fatal_error)
-         fpi_image_device_deactivate (self, TRUE);
-     }
-   else if (action == FPI_DEVICE_ACTION_IDENTIFY)
-@@ -682,6 +700,11 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-               GVariant *template_var = fpi_print_get_raw_data (tmpl);
-               if (!template_var)
-                 continue;
-+              if (!g_variant_is_of_type (template_var, G_VARIANT_TYPE ("aay")))
-+                {
-+                  g_warning ("SIGFM identify: template %u has unexpected raw data type", t);
-+                  continue;
-+                }
- 
-               int max_score = 0;
-               int matched_stages = 0;
-@@ -694,8 +717,16 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-               while ((stage_bytes = g_variant_iter_next_value (&iter)) != NULL)
-                 {
-                   gsize sz;
--                  const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
-                   stage_index++;
-+                  if (!g_variant_is_of_type (stage_bytes, G_VARIANT_TYPE ("ay")))
-+                    {
-+                      g_warning ("SIGFM identify: template %u stage %d is not a byte array",
-+                                 t, stage_index);
-+                      g_variant_unref (stage_bytes);
-+                      continue;
-+                    }
-+
-+                  const uint8_t *b = (const uint8_t *) g_variant_get_fixed_array (stage_bytes, &sz, 1);
-                   if (b && sz > 0)
-                     {
-                       SigfmImgInfo *gallery_info = sigfm_deserialize_binary (b, (int) sz);
-@@ -709,7 +740,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                                                         match_context);
-                           if (score > max_score)
-                             max_score = score;
--                          if (score >= SIGFM_MATCH_SCORE_THRESHOLD)
-+                          if (score >= SIGFM_MATCH_STAGE_SCORE_THRESHOLD)
-                             matched_stages++;
-                           g_message ("SIGFM identify: template %u stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
-                                      t, stage_index, sz,
-@@ -728,7 +759,8 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-               g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_score=%d, matched_stages=%d",
-                          t, stage_index, valid_stages, max_score, matched_stages);
- 
--              if (matched_stages >= 2)
-+              if (max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
-+                  matched_stages >= SIGFM_MATCH_MIN_STAGES)
-                 {
-                   matched_template = tmpl;
-                   break;
-@@ -742,11 +774,13 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-       g_autoptr(FpPrint) probe_print = fp_print_new (device);
-       fpi_print_set_type (probe_print, FPI_PRINT_RAW);
- 
-+      gboolean fatal_error = error != NULL && error->domain != FP_DEVICE_RETRY;
-+
-       if (!error || error->domain == FP_DEVICE_RETRY)
-         fpi_device_identify_report (device, matched_template, g_steal_pointer (&probe_print), g_steal_pointer (&error));
- 
-       fp_image_device_maybe_complete_action (self, g_steal_pointer (&error));
--      if (error)
-+      if (fatal_error)
-         fpi_image_device_deactivate (self, TRUE);
-     }
- }
-diff --git a/libfprint/sigfm/sigfm.cpp b/libfprint/sigfm/sigfm.cpp
-index f529881..0bb5871 100644
---- a/libfprint/sigfm/sigfm.cpp
-+++ b/libfprint/sigfm/sigfm.cpp
-@@ -174,6 +174,14 @@ int sigfm_keypoints_count(SigfmImgInfo* info)
-     return info->keypoints.size();
- }
- 
-+int sigfm_descriptors_count(SigfmImgInfo* info)
-+{
-+    if (info == nullptr) {
-+        return 0;
-+    }
-+    return info->descriptors.rows;
-+}
-+
- unsigned char* sigfm_serialize_binary(SigfmImgInfo* info, int* outlen)
- {
-     if (outlen != nullptr) {
-diff --git a/libfprint/sigfm/sigfm.hpp b/libfprint/sigfm/sigfm.hpp
-index 06d799b..3c674b5 100644
---- a/libfprint/sigfm/sigfm.hpp
-+++ b/libfprint/sigfm/sigfm.hpp
-@@ -27,9 +27,13 @@ extern "C" {
- typedef unsigned char SigfmPix;
- 
- /* SIGFM returns the count of mutually consistent geometric hypotheses.
-- * Five is the per-stage vote cutoff; the caller also requires two stages.
-+ * These are provisional acceptance thresholds, not calibrated error rates.
-+ * A stage must reach the first score to count towards consensus; one stage
-+ * reaching the second score is sufficient on its own.
-  */
--#define SIGFM_MATCH_SCORE_THRESHOLD 5
-+#define SIGFM_MATCH_STAGE_SCORE_THRESHOLD 20
-+#define SIGFM_MATCH_STRONG_SCORE_THRESHOLD 45
-+#define SIGFM_MATCH_MIN_STAGES 2
- 
- /**
-  * @brief Contains information used by the sigfm algorithm for matching
-@@ -93,6 +97,14 @@ SigfmImgInfo* sigfm_deserialize_binary(const unsigned char* bytes, int len);
- 
- int sigfm_keypoints_count(SigfmImgInfo* info);
- 
-+/**
-+ * @brief Number of descriptors stored alongside the keypoints
-+ *
-+ * @param info Image information, or NULL
-+ * @return int Descriptor count; zero when info is NULL or empty
-+ */
-+int sigfm_descriptors_count(SigfmImgInfo* info);
-+
- /**
-  * @brief Copy an SigfmImgInfo
-  *
--- 
-2.56.0
-
-
-From 3a4b9699923445282a2fa9b829c82fd205cd58d7 Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Wed, 11 Nov 2026 15:51:02 +0530
-Subject: [PATCH 19/23] goodix581a: cancel a superseded scan state machine
-
----
- libfprint/drivers/goodixtls/goodix581a.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
-index e8c7339..cb27a99 100644
---- a/libfprint/drivers/goodixtls/goodix581a.c
-+++ b/libfprint/drivers/goodixtls/goodix581a.c
-@@ -565,6 +565,17 @@ dev_581a_change_state (FpImageDevice *img_dev, FpiImageDeviceState state)
-   if (state == FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_ON)
-     {
-       fp_dbg ("581a entering AWAIT_FINGER_ON state");
-+
-+      if (self->scan_ssm)
-+        {
-+          FpiSsm *previous = self->scan_ssm;
-+          self->scan_ssm = NULL;
-+          fp_warn ("581a: superseding an existing scan state machine");
-+          fpi_ssm_mark_failed (previous,
-+                               g_error_new (G_IO_ERROR, G_IO_ERROR_CANCELLED,
-+                                            "Superseded by a new scan"));
-+        }
-+
-       self->scan_ssm = fpi_ssm_new (dev, scan_581a_run_state, SCAN_581A_NUM_STATES);
-       fpi_ssm_start (self->scan_ssm, scan_581a_complete);
-     }
--- 
-2.56.0
-
-
-From 03f89ae9b5e30d0c67493e857165b6ddf97710ed Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Fri, 13 Nov 2026 10:37:11 +0530
-Subject: [PATCH 20/23] goodix581a: add opt-in diagnostic frame capture
-
-Set GOODIX_581A_DUMP_DIR to save the exact 8-bit image passed to SIGFM.
-This makes it possible to tune matcher thresholds against real presses
-without adding permanent logging or changing the default image pipeline.
+Set GOODIX_581A_DUMP_DIR to a writable directory to save the exact 8-bit
+image that SIGFM receives. The hook is off by default and sits after image
+processing, so it cannot change capture or matching behaviour. This makes it
+possible to calibrate future matcher thresholds against real presses instead
+of relying on journal scores alone.
 ---
  libfprint/drivers/goodixtls/goodix581a.c | 34 ++++++++++++++++++++++++
  1 file changed, 34 insertions(+)
 
 diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
-index cb27a99..670dcc6 100644
+index 88e387a..514d9ca 100644
 --- a/libfprint/drivers/goodixtls/goodix581a.c
 +++ b/libfprint/drivers/goodixtls/goodix581a.c
-@@ -83,6 +83,39 @@ goodix_581a_decode_frame (GoodixTls5xxPix *frame, guint32 frame_size,
-     frame[goodix_581a_stream_to_image_index (i)] = stream[i];
+@@ -270,6 +270,39 @@ compare_ints (const void *a, const void *b)
+   return (arg1 > arg2) - (arg1 < arg2);
  }
  
 +/* Optional diagnostic capture. Set GOODIX_581A_DUMP_DIR to a writable
 + * directory to save the exact 8-bit image that SIGFM receives. This is off by
-+ * default; it is useful when tuning matching thresholds against real presses.
++ * default and does not change the capture or matching path.
 + */
 +static void
 +goodix_581a_dump_frame (const guint8 *data)
@@ -5177,10 +4153,10 @@ index cb27a99..670dcc6 100644
 +    fp_warn ("581a: failed to save diagnostic frame %s", path);
 +}
 +
- /* One scan action captures a Mode 1 ambient reference, waits for FDT touch,
-  * captures Mode 5, then waits for finger-up. Keep the baseline across touches
-  * in an enrollment action so samples share the same reference.
-@@ -453,6 +486,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+ static void
+ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
+                     gpointer user_data, GError *error)
+@@ -401,6 +434,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
  
    fp_dbg ("581a: Frame processed, reporting native 80x64 image captured for SIGFM!");
    img->ppmm = 500.0 / 25.4;
@@ -5188,629 +4164,6 @@ index cb27a99..670dcc6 100644
    fpi_image_device_image_captured (FP_IMAGE_DEVICE (dev), img);
  
    if (!self->scan_ssm)
--- 
-2.56.0
-
-
-From e2284450186d16519adc91a757997c7cf792b252 Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Fri, 13 Nov 2026 10:51:04 +0530
-Subject: [PATCH 21/23] goodix581a: restore authentic tcode and high-pass ridge
- pipeline
-
-The authentic Windows capture (scratch/xiaomi_real_config.bin, used by
-tools/capture_finger_xiaomi.py) uses image tcode 0x0100 and shows clear
-dermal ridges. A later change silently replaced it with tcode 0x0010,
-which produces low-contrast noise; averaging eight frames could not
-recover any ridge structure, so SIGFM only ever saw noise.
-
-Restore the verified 256-byte config (tcode 0x0100, checksum 0x74a1) and
-restore the 3x3 high-pass on the flat-fielded residual before percentile
-normalization. This matches the userspace pipeline that produced the
-known-good ridge captures instead of scaling the image by slow baseline
-drift.
----
- libfprint/drivers/goodixtls/goodix581a.c | 55 ++++++++++++++++--------
- libfprint/drivers/goodixtls/goodix581a.h | 10 +++--
- tests/test-goodix581a-frame-layout.c     |  4 +-
- 3 files changed, 45 insertions(+), 24 deletions(-)
-
-diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
-index 670dcc6..5bcabfc 100644
---- a/libfprint/drivers/goodixtls/goodix581a.c
-+++ b/libfprint/drivers/goodixtls/goodix581a.c
-@@ -424,9 +424,6 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
-     }
- 
-   gint32 residual[GOODIX_581A_FRAME_SIZE];
--  gint32 active_vals[GOODIX_581A_FRAME_SIZE];
--  int n_active = 0;
--
-   for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
-     {
-       for (int x = 0; x < GOODIX_581A_WIDTH; x++)
-@@ -434,31 +431,53 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
-           int idx = y * GOODIX_581A_WIDTH + x;
-           const double baseline = self->calibration_img ? self->calibration_img[idx] : 0;
-           residual[idx] = raw_frame[idx] - (gint32) (gain * baseline + offset);
--
--          if (x >= 2 && x < GOODIX_581A_WIDTH - 2 &&
--              y >= 2 && y < GOODIX_581A_HEIGHT - 2)
--            {
--              active_vals[n_active++] = residual[idx];
--            }
-         }
-     }
- 
--  /* Use the signed, flat-fielded difference before any high-pass operation.
--   * 20 counts is a provisional separation point from early 581a captures;
--   * validate it across more devices and repeated air/finger frames.
-+  /* The flat-fielded residual still contains slow baseline drift and the
-+   * sensor's illumination gradient. High-pass it with a 3x3 box filter so
-+   * that ridge detail, not drift, sets the normalization range. This mirrors
-+   * the known-good userspace capture that produced visible dermal ridges.
-    */
-+  gint32 highpass[GOODIX_581A_FRAME_SIZE];
-+  gint32 active_vals[GOODIX_581A_FRAME_SIZE];
-+  int n_active = 0;
-+
-+  for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
-+    {
-+      for (int x = 0; x < GOODIX_581A_WIDTH; x++)
-+        {
-+          gint32 blur_sum = 0;
-+          for (int dy = -1; dy <= 1; dy++)
-+            for (int dx = -1; dx <= 1; dx++)
-+              {
-+                const int sy = CLAMP (y + dy, 0, GOODIX_581A_HEIGHT - 1);
-+                const int sx = CLAMP (x + dx, 0, GOODIX_581A_WIDTH - 1);
-+                blur_sum += residual[sy * GOODIX_581A_WIDTH + sx];
-+              }
-+
-+          highpass[y * GOODIX_581A_WIDTH + x] =
-+            residual[y * GOODIX_581A_WIDTH + x] - blur_sum / 9;
-+        }
-+    }
-+
-+  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
-+    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
-+      active_vals[n_active++] = highpass[y * GOODIX_581A_WIDTH + x];
-+
-   gint32 p5 = 0, p95 = 0;
-   gboolean has_usable_contrast = FALSE;
-   if (n_active > 50)
-     {
-       qsort (active_vals, n_active, sizeof (gint32), compare_ints);
--      p5 = active_vals[n_active * 5 / 100];
--      p95 = active_vals[n_active * 95 / 100];
--      has_usable_contrast = p95 - p5 >= 20;
-+      p5 = active_vals[n_active * 3 / 100];
-+      p95 = active_vals[n_active * 97 / 100];
-+      has_usable_contrast = p95 - p5 >= 12;
-     }
- 
--  fp_dbg ("581a: Ridge contrast range: p5=%d, p95=%d, active=%d pixels, usable=%d",
--          p5, p95, n_active, has_usable_contrast);
-+  fp_dbg ("581a: gain=%.4f offset=%.1f ridge high-pass p3=%d p97=%d "
-+          "active=%d pixels, usable=%d",
-+          gain, offset, p5, p95, n_active, has_usable_contrast);
- 
-   FpImage *img = fp_image_new (GOODIX_581A_WIDTH, GOODIX_581A_HEIGHT);
-   img->flags |= FPI_IMAGE_PARTIAL;
-@@ -476,7 +495,7 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
-             }
-           else
-             {
--              gint32 val = (residual[idx] - p5) * 255 / (p95 - p5);
-+              gint32 val = (highpass[idx] - p5) * 255 / (p95 - p5);
-               if (val < 0) val = 0;
-               if (val > 255) val = 255;
-               img->data[idx] = (guint8) (255 - val);
-diff --git a/libfprint/drivers/goodixtls/goodix581a.h b/libfprint/drivers/goodixtls/goodix581a.h
-index 69d7996..1e01a20 100644
---- a/libfprint/drivers/goodixtls/goodix581a.h
-+++ b/libfprint/drivers/goodixtls/goodix581a.h
-@@ -15,7 +15,7 @@
- #define GOODIX_581A_STREAM_ROWS 64
- #define GOODIX_581A_STREAM_COLUMNS 80
- #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
--/* Initial capture data at tcode 0x0010 needed about eight frames to settle. */
-+/* Average eight scans to suppress per-frame sensor noise. */
- #define GOODIX_581A_AVERAGE_FRAMES 8
- /* 80x64 packed sensor samples plus the four-byte footer used by this device. */
- #define GOODIX_581A_RAW_FRAME_SIZE 7684
-@@ -46,7 +46,9 @@ goodix_581a_finish_average (GoodixTls5xxPix *average, const guint32 *sum,
-     average[i] = (sum[i] + frame_count / 2) / frame_count;
- }
- 
--// Xiaomi GM168 config using full-width image tcode 0x0010; checksum is 0x64a2.
-+// Xiaomi GM168 config exactly as captured from the Windows driver. The
-+// image tcode is 0x0100; this is the setting that produces usable ridge
-+// contrast. Checksum is 0x74a1.
- static const guint8 goodix_581a_config[256] = {
-   0x58, 0x11, 0x60, 0x71, 0x2c, 0x9d, 0x2c, 0xc9, 0x1c, 0xe5, 0x18, 0xfd, 0x00, 0xfd, 0x00, 0xfd,
-   0x03, 0xba, 0x00, 0x01, 0x80, 0xca, 0x00, 0x04, 0x00, 0x84, 0x00, 0xc0, 0xb3, 0x86, 0x00, 0xbb,
-@@ -62,8 +64,8 @@ static const guint8 goodix_581a_config[256] = {
-   0x01, 0x56, 0x00, 0x04, 0x20, 0x58, 0x00, 0x03, 0x00, 0x32, 0x00, 0x0c, 0x02, 0x66, 0x00, 0x00,
-   0x02, 0x7c, 0x00, 0x00, 0x58, 0x82, 0x00, 0x80, 0x19, 0x2a, 0x01, 0x08, 0x00, 0x5c, 0x00, 0x00,
-   0x01, 0x54, 0x00, 0x00, 0x01, 0x62, 0x00, 0x08, 0x04, 0x64, 0x00, 0x10, 0x00, 0x66, 0x00, 0x00,
--  0x02, 0x7c, 0x00, 0x00, 0x58, 0x2a, 0x01, 0x08, 0x00, 0x5c, 0x00, 0x10, 0x00, 0x52, 0x00, 0x08,
--  0x00, 0x54, 0x00, 0x00, 0x01, 0x66, 0x00, 0x00, 0x02, 0x7c, 0x00, 0x00, 0x58, 0x00, 0xa2, 0x64
-+  0x02, 0x7c, 0x00, 0x00, 0x58, 0x2a, 0x01, 0x08, 0x00, 0x5c, 0x00, 0x00, 0x01, 0x52, 0x00, 0x08,
-+  0x00, 0x54, 0x00, 0x00, 0x01, 0x66, 0x00, 0x00, 0x02, 0x7c, 0x00, 0x00, 0x58, 0x00, 0xa1, 0x74
- };
- 
- // 36-byte FDT down threshold payload for hardware touch interrupt
-diff --git a/tests/test-goodix581a-frame-layout.c b/tests/test-goodix581a-frame-layout.c
-index 1fb34ec..bf2fcfc 100644
---- a/tests/test-goodix581a-frame-layout.c
-+++ b/tests/test-goodix581a-frame-layout.c
-@@ -37,9 +37,9 @@ test_sensor_config (void)
-   const guint16 tcode = goodix_581a_config[0xeb] |
-                         (goodix_581a_config[0xec] << 8);
- 
--  g_assert_cmpuint (tcode, ==, 0x0010);
-+  g_assert_cmpuint (tcode, ==, 0x0100);
-   g_assert_cmpuint (stored_checksum, ==, checksum);
--  g_assert_cmpuint (stored_checksum, ==, 0x64a2);
-+  g_assert_cmpuint (stored_checksum, ==, 0x74a1);
- }
- 
- static void
--- 
-2.56.0
-
-
-From 15e6408bdd07059f44a7c6c87783de03a92ae985 Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Fri, 13 Nov 2026 11:01:41 +0530
-Subject: [PATCH 22/23] goodix581a: match the verified single-frame capture
- pipeline
-
-Hardware testing with tcode 0x0100 restored still produced very few SIFT
-keypoints (6-11 per enrollment stage) and verifier frames with 0-8, so
-SIGFM kept asking for a retry and could not match.
-
-Two differences remained from the userspace capture that produced visible
-ridges: it subtracts the ambient baseline directly, and it reads exactly
-one Mode 5 frame after the touch event. A least-squares gain fit can
-absorb part of the finger's capacitive modulation, and reading more Mode 5
-frames after the first can mix ambient/idle data into the average.
-
-Subtract the baseline directly, capture one scan frame, and log the raw
-and high-pass amplitude in the journal at message level so tuning does not
-require debug logging.
----
- libfprint/drivers/goodixtls/goodix581a.c | 85 +++++++++++++++++++-----
- libfprint/drivers/goodixtls/goodix581a.h |  5 ++
- 2 files changed, 75 insertions(+), 15 deletions(-)
-
-diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
-index 5bcabfc..1a8a17f 100644
---- a/libfprint/drivers/goodixtls/goodix581a.c
-+++ b/libfprint/drivers/goodixtls/goodix581a.c
-@@ -372,10 +372,10 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
-   goodix_581a_accumulate_frame (self->scan_sum, frame);
-   self->scan_frame_count++;
- 
--  if (self->scan_frame_count < GOODIX_581A_AVERAGE_FRAMES)
-+  if (self->scan_frame_count < GOODIX_581A_SCAN_FRAMES)
-     {
-       fp_dbg ("581a: Mode 5 frame %u/%u",
--              self->scan_frame_count, GOODIX_581A_AVERAGE_FRAMES);
-+              self->scan_frame_count, GOODIX_581A_SCAN_FRAMES);
-       goodix_tls_read_image (dev, goodix_581a_get_image_mode5,
-                              sizeof (goodix_581a_get_image_mode5),
-                              on_581a_mode5_read, ssm);
-@@ -384,14 +384,13 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
- 
-   GoodixTls5xxPix raw_frame[GOODIX_581A_FRAME_SIZE];
-   goodix_581a_finish_average (raw_frame, self->scan_sum,
--                              GOODIX_581A_AVERAGE_FRAMES);
-+                              GOODIX_581A_SCAN_FRAMES);
-   g_clear_pointer (&self->scan_sum, g_free);
-   self->scan_frame_count = 0;
- 
--  /* Fit a gain and offset from the untouched baseline to this scan. Keeping
--   * the residual signed preserves both ridge polarities and accommodates
--   * sensor gain drift. Ignore pixels which are zero in both frames (inactive
--   * columns at some sensor tcodes) when fitting the flat field.
-+  /* Subtract the ambient baseline directly, exactly like the verified
-+   * userspace capture. A fitted gain/offset can absorb part of the finger's
-+   * capacitive modulation, so it is only computed below for diagnostics.
-    */
-   double sum_baseline = 0.0;
-   double sum_scan = 0.0;
-@@ -429,19 +428,21 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
-       for (int x = 0; x < GOODIX_581A_WIDTH; x++)
-         {
-           int idx = y * GOODIX_581A_WIDTH + x;
--          const double baseline = self->calibration_img ? self->calibration_img[idx] : 0;
--          residual[idx] = raw_frame[idx] - (gint32) (gain * baseline + offset);
-+          const gint32 baseline = self->calibration_img ? self->calibration_img[idx] : 0;
-+          residual[idx] = raw_frame[idx] - baseline;
-         }
-     }
- 
--  /* The flat-fielded residual still contains slow baseline drift and the
--   * sensor's illumination gradient. High-pass it with a 3x3 box filter so
-+  /* The baseline-subtracted residual still contains slow baseline drift and
-+   * the sensor's illumination gradient. High-pass it with a 3x3 box filter so
-    * that ridge detail, not drift, sets the normalization range. This mirrors
-    * the known-good userspace capture that produced visible dermal ridges.
-    */
-   gint32 highpass[GOODIX_581A_FRAME_SIZE];
-   gint32 active_vals[GOODIX_581A_FRAME_SIZE];
-+  gint32 residual_vals[GOODIX_581A_FRAME_SIZE];
-   int n_active = 0;
-+  int n_residual = 0;
- 
-   for (int y = 0; y < GOODIX_581A_HEIGHT; y++)
-     {
-@@ -463,9 +464,13 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
- 
-   for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
-     for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
--      active_vals[n_active++] = highpass[y * GOODIX_581A_WIDTH + x];
-+      {
-+        active_vals[n_active++] = highpass[y * GOODIX_581A_WIDTH + x];
-+        residual_vals[n_residual++] = residual[y * GOODIX_581A_WIDTH + x];
-+      }
- 
-   gint32 p5 = 0, p95 = 0;
-+  gint32 r5 = 0, r95 = 0;
-   gboolean has_usable_contrast = FALSE;
-   if (n_active > 50)
-     {
-@@ -474,10 +479,60 @@ on_581a_mode5_read (FpDevice *dev, guint8 *data, guint16 length,
-       p95 = active_vals[n_active * 97 / 100];
-       has_usable_contrast = p95 - p5 >= 12;
-     }
-+  if (n_residual > 50)
-+    {
-+      qsort (residual_vals, n_residual, sizeof (gint32), compare_ints);
-+      r5 = residual_vals[n_residual * 5 / 100];
-+      r95 = residual_vals[n_residual * 95 / 100];
-+    }
- 
--  fp_dbg ("581a: gain=%.4f offset=%.1f ridge high-pass p3=%d p97=%d "
--          "active=%d pixels, usable=%d",
--          gain, offset, p5, p95, n_active, has_usable_contrast);
-+  /* g_message so these numbers show up in the journal without requiring a
-+   * libfprint debug build during a hardware tuning session. The lag-1 spatial
-+   * autocorrelation distinguishes coherent ridge structure (positive, roughly
-+   * 0.2-0.9) from per-pixel noise (near zero).
-+   */
-+  double hp_mean = 0.0, hp_var = 0.0, hp_cov_x = 0.0, hp_cov_y = 0.0;
-+  int n_ac = 0, n_x = 0, n_y = 0;
-+  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
-+    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
-+      {
-+        hp_mean += highpass[y * GOODIX_581A_WIDTH + x];
-+        n_ac++;
-+      }
-+  hp_mean /= n_ac > 0 ? n_ac : 1;
-+
-+  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
-+    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
-+      {
-+        const double t = highpass[y * GOODIX_581A_WIDTH + x] - hp_mean;
-+        hp_var += t * t;
-+      }
-+  for (int y = 2; y < GOODIX_581A_HEIGHT - 2; y++)
-+    for (int x = 2; x < GOODIX_581A_WIDTH - 3; x++)
-+      {
-+        const int idx = y * GOODIX_581A_WIDTH + x;
-+        hp_cov_x += (highpass[idx] - hp_mean) * (highpass[idx + 1] - hp_mean);
-+        n_x++;
-+      }
-+  for (int y = 2; y < GOODIX_581A_HEIGHT - 3; y++)
-+    for (int x = 2; x < GOODIX_581A_WIDTH - 2; x++)
-+      {
-+        const int idx = y * GOODIX_581A_WIDTH + x;
-+        hp_cov_y += (highpass[idx] - hp_mean) *
-+                    (highpass[idx + GOODIX_581A_WIDTH] - hp_mean);
-+        n_y++;
-+      }
-+
-+  const double ac_x = n_x > 0 && hp_var > 0 ? (hp_cov_x / n_x) / (hp_var / n_ac) : 0.0;
-+  const double ac_y = n_y > 0 && hp_var > 0 ? (hp_cov_y / n_y) / (hp_var / n_ac) : 0.0;
-+
-+  g_message ("581a capture: baseline=%.1f scan=%.1f fit_gain=%.4f fit_offset=%.1f "
-+             "residual[p5=%d p95=%d] highpass[p3=%d p97=%d] ac_x=%.3f ac_y=%.3f "
-+             "usable=%d",
-+             n_fit ? sum_baseline / n_fit : 0.0,
-+             n_fit ? sum_scan / n_fit : 0.0,
-+             gain, offset, r5, r95, p5, p95, ac_x, ac_y,
-+             has_usable_contrast);
- 
-   FpImage *img = fp_image_new (GOODIX_581A_WIDTH, GOODIX_581A_HEIGHT);
-   img->flags |= FPI_IMAGE_PARTIAL;
-diff --git a/libfprint/drivers/goodixtls/goodix581a.h b/libfprint/drivers/goodixtls/goodix581a.h
-index 1e01a20..f1f44df 100644
---- a/libfprint/drivers/goodixtls/goodix581a.h
-+++ b/libfprint/drivers/goodixtls/goodix581a.h
-@@ -17,6 +17,11 @@
- #define GOODIX_581A_FRAME_SIZE (GOODIX_581A_WIDTH * GOODIX_581A_HEIGHT)
- /* Average eight scans to suppress per-frame sensor noise. */
- #define GOODIX_581A_AVERAGE_FRAMES 8
-+/* The verified userspace capture reads a single Mode 5 frame after the touch
-+ * event. Reading further frames can mix in ambient/idle data and dilute the
-+ * ridge signal, so capture exactly one by default.
-+ */
-+#define GOODIX_581A_SCAN_FRAMES 1
- /* 80x64 packed sensor samples plus the four-byte footer used by this device. */
- #define GOODIX_581A_RAW_FRAME_SIZE 7684
- 
--- 
-2.56.0
-
-
-From 4340af07bf98538409ee97f973299c0e68c0bfbc Mon Sep 17 00:00:00 2001
-From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
-Date: Fri, 13 Nov 2026 11:12:29 +0530
-Subject: [PATCH 23/23] sigfm: score the dominant rotation and reject weak
- consensus
-
-Verification started accepting wrong fingers once genuine presses produced
-enough SIFT keypoints. The score was the cause: it counted every pair of
-pairwise-vector rotations within the tolerance, i.e. roughly C(K, 2) for K
-scale-consistent vectors. K grows with the number of mostly-spurious
-descriptor matches, so an impostor stage could accumulate a large score
-without any rotation dominating. On the 581a captures this is not
-hypothetical: chance alone predicts about 3.8% of pairs inside the 0.12 rad
-window, and a stage with 100+ vectors clears the old 45-point gate.
-
-Score a stage by the number of vectors that agree on the dominant rotation
-instead, after refining that rotation from the circular mean of its inliers.
-Require both 20 inliers and at least 20% of the scale-consistent vectors;
-otherwise the stage scores zero. Raise the reciprocal-match floor from 4 to 8.
-
-The thresholds come from replaying the exact diagnostic frames captured during
-a labelled hardware test: three successful genuine presses produced dominant
-clusters of 123, 123 and 281 inliers, while three presses of a different finger
-never exceeded 18. A poor genuine press reached only 25 raw inliers at a 13%
-ratio and was correctly asked to press again. Accept three stages at 20 inliers
-or one stage at 25, which separates that set with margin.
-
-Log the inlier ratio and chance level next to the support count.
----
- libfprint/fpi-image-device.c | 28 ++++++-------
- libfprint/sigfm/sigfm.cpp    | 77 +++++++++++++++++++++++++++++-------
- libfprint/sigfm/sigfm.hpp    | 21 ++++++----
- 3 files changed, 90 insertions(+), 36 deletions(-)
-
-diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
-index 797584d..bdc48b5 100644
---- a/libfprint/fpi-image-device.c
-+++ b/libfprint/fpi-image-device.c
-@@ -607,7 +607,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-             }
-           else
-             {
--              int max_score = 0;
-+              int max_support = 0;
-               int matched_stages = 0;
-               int valid_stages = 0;
-               int stage_index = 0;
-@@ -637,11 +637,11 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                             g_strdup_printf ("verify stage %d", stage_index);
-                           int score = sigfm_match_score (info, gallery_info,
-                                                         match_context);
--                          if (score > max_score)
--                            max_score = score;
-+                          if (score > max_support)
-+                            max_support = score;
-                           if (score >= SIGFM_MATCH_STAGE_SCORE_THRESHOLD)
-                             matched_stages++;
--                          g_message ("SIGFM verify: stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
-+                          g_message ("SIGFM verify: stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, support=%d",
-                                      stage_index, sz,
-                                      sigfm_keypoints_count (gallery_info), score);
-                           sigfm_free_info (gallery_info);
-@@ -655,14 +655,14 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                   g_variant_unref (stage_bytes);
-                 }
- 
--              if (max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
-+              if (max_support >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
-                   matched_stages >= SIGFM_MATCH_MIN_STAGES)
-                 result = FPI_MATCH_SUCCESS;
-               else
-                 result = FPI_MATCH_FAIL;
- 
--              g_message ("SIGFM verify: stages=%d, valid=%d, max_score=%d, matched_stages=%d -> %s",
--                         stage_index, valid_stages, max_score, matched_stages,
-+              g_message ("SIGFM verify: stages=%d, valid=%d, max_support=%d, matched_stages=%d -> %s",
-+                         stage_index, valid_stages, max_support, matched_stages,
-                          result == FPI_MATCH_SUCCESS ? "MATCH" : "NO_MATCH");
-             }
-         }
-@@ -706,7 +706,7 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                   continue;
-                 }
- 
--              int max_score = 0;
-+              int max_support = 0;
-               int matched_stages = 0;
-               int valid_stages = 0;
-               int stage_index = 0;
-@@ -738,11 +738,11 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                                              t, stage_index);
-                           int score = sigfm_match_score (info, gallery_info,
-                                                         match_context);
--                          if (score > max_score)
--                            max_score = score;
-+                          if (score > max_support)
-+                            max_support = score;
-                           if (score >= SIGFM_MATCH_STAGE_SCORE_THRESHOLD)
-                             matched_stages++;
--                          g_message ("SIGFM identify: template %u stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, score=%d",
-+                          g_message ("SIGFM identify: template %u stage %d: bytes=%" G_GSIZE_FORMAT ", keypoints=%d, support=%d",
-                                      t, stage_index, sz,
-                                      sigfm_keypoints_count (gallery_info), score);
-                           sigfm_free_info (gallery_info);
-@@ -756,10 +756,10 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
-                   g_variant_unref (stage_bytes);
-                 }
- 
--              g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_score=%d, matched_stages=%d",
--                         t, stage_index, valid_stages, max_score, matched_stages);
-+              g_message ("SIGFM identify: template %u: stages=%d, valid=%d, max_support=%d, matched_stages=%d",
-+                         t, stage_index, valid_stages, max_support, matched_stages);
- 
--              if (max_score >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
-+              if (max_support >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD ||
-                   matched_stages >= SIGFM_MATCH_MIN_STAGES)
-                 {
-                   matched_template = tmpl;
-diff --git a/libfprint/sigfm/sigfm.cpp b/libfprint/sigfm/sigfm.cpp
-index 0bb5871..f37c432 100644
---- a/libfprint/sigfm/sigfm.cpp
-+++ b/libfprint/sigfm/sigfm.cpp
-@@ -123,7 +123,16 @@ constexpr auto length_match = 0.20;
- constexpr auto min_pair_scale = 0.70;
- constexpr auto max_pair_scale = 1.43;
- constexpr auto angle_match = 0.12;
--constexpr auto min_match = 4;
-+constexpr auto min_match = 8;
-+/* A genuine press puts a meaningful fraction of its scale-consistent pairwise
-+ * vectors on one common rotation. Under an unrelated press the pairwise
-+ * rotations cluster too, but the cluster stays small: labelled 581a captures
-+ * reached at most 18 inliers for a wrong finger, versus 25-307 for a genuine
-+ * one. Require a floor of 20 inliers and a 20% ratio, so a stage rich in
-+ * random matches cannot trade volume for consensus.
-+ */
-+constexpr auto min_support = 20;
-+constexpr auto min_support_ratio = 0.20;
- constexpr auto sift_nfeatures = 0;
- constexpr auto sift_octave_layers = 3;
- constexpr auto sift_contrast_threshold = 0.04;
-@@ -447,6 +456,11 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled,
-             return 0;
-         }
- 
-+        /* Find the dominant rotation, then re-estimate its centre from the
-+         * circular mean of its inliers and recount. The refinement keeps the
-+         * support estimate stable when the seed angle sits near the edge of
-+         * the tolerance window.
-+         */
-         int best_rotation_support = 0;
-         double dominant_rotation = 0.0;
-         for (const auto& candidate_angle : angles) {
-@@ -464,24 +478,57 @@ int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled,
-             }
-         }
- 
--        int count = 0;
--        for (std::size_t j = 0; j < angles.size(); j++) {
--            const angle& angle_1 = angles[j];
--            for (std::size_t k = j + 1; k < angles.size(); k++) {
--                const angle& angle_2 = angles[k];
--                const double delta = std::remainder(angle_1.radians - angle_2.radians,
--                                                    2.0 * M_PI);
--                if (std::abs(delta) <= angle_match) {
--                    count += 1;
--                }
-+        double sin_sum = 0.0;
-+        double cos_sum = 0.0;
-+        for (const auto& other_angle : angles) {
-+            const double delta = std::remainder(other_angle.radians -
-+                                                    dominant_rotation,
-+                                                2.0 * M_PI);
-+            if (std::abs(delta) <= angle_match) {
-+                sin_sum += std::sin(other_angle.radians);
-+                cos_sum += std::cos(other_angle.radians);
-             }
-         }
--        std::fprintf(stderr, "SIGFM match [%s]: ratio-passes=%d unique-candidates=%zu reciprocal=%d unique=%zu scale=[%.3f,%.3f,%.3f] consistent=%zu rotation-support=%d/%zu at %.1fdeg threshold=%.3frad score=%d\n",
-+        if (sin_sum != 0.0 || cos_sum != 0.0)
-+            dominant_rotation = std::atan2(sin_sum, cos_sum);
-+
-+        int support = 0;
-+        for (const auto& other_angle : angles) {
-+            const double delta = std::remainder(other_angle.radians -
-+                                                    dominant_rotation,
-+                                                2.0 * M_PI);
-+            if (std::abs(delta) <= angle_match)
-+                support++;
-+        }
-+
-+        const double support_ratio = angles.empty()
-+                                         ? 0.0
-+                                         : static_cast<double>(support) /
-+                                               static_cast<double>(angles.size());
-+        /* Chance level: a random pair of rotations lands inside the tolerance
-+         * with probability 2 * angle_match / (2 * pi).
-+         */
-+        const double chance_ratio = angle_match / M_PI;
-+        const bool support_ok = support >= min_support &&
-+                                support_ratio >= min_support_ratio;
-+
-+        std::fprintf(stderr,
-+                     "SIGFM match [%s]: ratio-passes=%d unique-candidates=%zu reciprocal=%d unique=%zu scale=[%.3f,%.3f,%.3f] consistent=%zu rotation-support=%d/%zu ratio=%.3f chance=%.3f accepted=%d at %.1fdeg threshold=%.3frad score=%d\n",
-                      label, ratio_passes, candidate_indices.size(), nb_matched,
-                      matches.size(), scale_p10, median_scale, scale_p90,
--                     angles.size(), best_rotation_support, angles.size(),
--                     dominant_rotation * 180.0 / M_PI, angle_match, count);
--        return count;
-+                     angles.size(), support, angles.size(), support_ratio,
-+                     chance_ratio, support_ok, dominant_rotation * 180.0 / M_PI,
-+                     angle_match, support_ok ? support : 0);
-+
-+        if (!support_ok) {
-+            std::fprintf(stderr,
-+                         "SIGFM match [%s]: rotation support %d/%zu (ratio %.3f, need %d and %.2f)\n",
-+                         label, support, angles.size(), support_ratio,
-+                         min_support, min_support_ratio);
-+            return 0;
-+        }
-+
-+        return support;
-     }
-     catch (const cv::Exception& e) {
-         std::fprintf(stderr, "SIGFM match [%s]: OpenCV matching failed: %s\n",
-diff --git a/libfprint/sigfm/sigfm.hpp b/libfprint/sigfm/sigfm.hpp
-index 3c674b5..a01e4af 100644
---- a/libfprint/sigfm/sigfm.hpp
-+++ b/libfprint/sigfm/sigfm.hpp
-@@ -26,14 +26,20 @@ extern "C" {
- #endif
- typedef unsigned char SigfmPix;
- 
--/* SIGFM returns the count of mutually consistent geometric hypotheses.
-- * These are provisional acceptance thresholds, not calibrated error rates.
-- * A stage must reach the first score to count towards consensus; one stage
-- * reaching the second score is sufficient on its own.
-+/* SIGFM scores a stage by the number of scale-consistent pairwise vectors
-+ * that agree on one dominant rotation (the inlier support), after requiring
-+ * at least 20% of them to agree. Unrelated presses produce a much smaller
-+ * cluster; a stage below 20 inliers is rejected inside the matcher and
-+ * reported as score zero.
-+ *
-+ * A stage counts towards consensus at the first score. Verification succeeds
-+ * when three stages corroborate each other or when one stage reaches the
-+ * second score on its own. These thresholds are deliberately conservative
-+ * because accepting a wrong finger is worse than asking for another press.
-  */
- #define SIGFM_MATCH_STAGE_SCORE_THRESHOLD 20
--#define SIGFM_MATCH_STRONG_SCORE_THRESHOLD 45
--#define SIGFM_MATCH_MIN_STAGES 2
-+#define SIGFM_MATCH_STRONG_SCORE_THRESHOLD 25
-+#define SIGFM_MATCH_MIN_STAGES 3
- 
- /**
-  * @brief Contains information used by the sigfm algorithm for matching
-@@ -65,7 +71,8 @@ void sigfm_free_info(SigfmImgInfo* info);
-  * @param frame Print to be checked
-  * @param enrolled Canonical print to verify against
-  * @param context Short label included in diagnostic messages
-- * @return int Non-negative match score; zero means reject or matching failed.
-+ * @return int Non-negative support score (mutually consistent pairwise
-+ * vectors on the dominant rotation); zero means reject or matching failed.
-  */
- int sigfm_match_score(SigfmImgInfo* frame, SigfmImgInfo* enrolled,
-                       const char* context);
 -- 
 2.56.0
 

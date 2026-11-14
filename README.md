@@ -15,10 +15,10 @@ This project integrates directly with `libfprint` and `fprintd` to deliver seaml
 
 - **Proprietary TLS 1.2 Over USB Bulk**: Implements the proprietary Goodix TLS protocol negotiation over bulk endpoints, enabling encrypted command and biometric frame transmission with stock OEM firmware.
 - **Native 80×64 12-bit ADC Decoding**: Decodes packed 6-byte chunks (7,684-byte encrypted transfer) directly into native 12-bit resolution sensor frames.
-- **Direct Baseline Subtraction + Ridge High-Pass**: Subtracts the ambient baseline directly, then applies a 3×3 high-pass before 3rd/97th percentile normalization so slow drift does not swamp ridge detail. The capture config is the authentic Windows table (image tcode `0x0100`), and each touch uses one Mode 5 frame.
+- **Signed Least-Squares Flat-Fielding**: Fits `scan ≈ gain × baseline + offset` and keeps the signed residual, so both ridge polarities survive and gain/offset drift between the ambient reference and the touch is absorbed. The contrast check runs directly on that signed residual. The capture uses the authentic hardware config (image tcode `0x0100`) and one Mode 5 frame per touch; asking the sensor for further Mode 5 frames after the first returns idle data and dilutes the ridges.
 - **SIGFM (SIFT-based Geometric Matcher)**: Replaces traditional minutiae (NBIS / Bozorth3) with a continuous gradient orientation matcher tailored for compact ($3.25\text{ mm} \times 4.06\text{ mm}$) sensors.
 - **Feature matching**: Uses CLAHE, SIFT descriptors, reciprocal ratio-filtered matches, and pairwise geometry. These settings are heuristics; the repository does not include a representative genuine/impostor dataset to validate error rates.
-- **Multi-touch enrollment**: Stores up to 12 enrollment samples; a stage counts only when at least 20 of its scale-consistent pairwise vectors agree on one dominant rotation and those inliers are at least 20% of the total, and verification requires either three such stages or one stage with support of at least 25. This policy has not been statistically calibrated for this sensor and user population.
+- **Multi-touch enrollment**: Stores up to 12 enrollment samples; a stage counts only when at least 8 reciprocal matches agree on one rotation, scale and translation and those inliers are at least 20% of all matches, and verification requires either three such stages or one stage with at least 12 inliers. This policy has not been statistically calibrated for this sensor and user population.
 - **SELinux Hardening**: Fully documented analysis and remediation for Intel TBB sysctl AVC alerts under Fedora / RHEL.
 
 ---
@@ -59,9 +59,9 @@ For developers, security researchers, and package maintainers, the architecture 
 2. **[Cryptography & Proprietary TLS Protocol](docs/02_CRYPTO_AND_TLS_PROTOCOL.md)**
    - Neodyme CVE-2023-45866 analysis, TLS 1.2 handshake over bulk endpoints, PSK derivation, and record encapsulation.
 3. **[Image Decoding & Preprocessing Pipeline](docs/03_IMAGE_PIPELINE_AND_DECODING.md)**
-   - 12-bit nibble unpacking math, Mode 1 baseline vs Mode 5 scan, averaged ambient baseline, single-frame Mode 5 capture, direct baseline subtraction, 3×3 ridge high-pass, and 3rd/97th percentile normalization.
+   - 12-bit nibble unpacking math, Mode 1 baseline vs Mode 5 scan, single-frame capture for both phases, signed least-squares flat-fielding, and 5th/95th percentile normalization.
 4. **[Biometric Matching Engine: SIGFM & SIFT Tuning](docs/04_MATCHING_ENGINE_SIGFM.md)**
-   - Why NIST Bozorth3 failed on 80×64 sensors, CLAHE parameter tuning, SIFT initial blur $\sigma = 1.2$, Lowe's ratio test $0.90$, dominant-rotation support with a 20% inlier floor, and the two-stage / strong-stage acceptance policy.
+   - Why NIST Bozorth3 failed on 80×64 sensors, CLAHE parameter tuning, SIFT initial blur $\sigma = 1.2$, Lowe's ratio test $0.90$, scale-aware pairwise geometry, rotation-plus-translation consensus with an 8-inlier/20% stage gate, and the three-stage / strong-stage acceptance policy.
 5. **[System Integration, Concurrency & SELinux Hardening](docs/05_SYSTEM_INTEGRATION_AND_SELINUX.md)**
    - Concurrency SSM state flow, Intel TBB sysctl AVC analysis, and the scope of the Fedora/RHEL policy workaround.
 6. **[Build & Installation Guide](docs/06_BUILD_AND_INSTALLATION_GUIDE.md)**
@@ -85,7 +85,7 @@ For developers, security researchers, and package maintainers, the architecture 
 ├── driver/                                # Goodix 581a driver source & standalone patch
 │   ├── goodix581a.c                       # C driver implementation (SSM, FDT, Mode 1/5)
 │   ├── goodix581a.h                       # Device registers, 256B AFE config, FDT tables
-│   ├── goodix581a-sigfm.patch             # Nineteen-commit git-am series for the GoodixTLS community base
+│   ├── goodix581a-sigfm.patch             # Ten-commit git-am series for the GoodixTLS community base
 │   └── sigfm/                             # SIGFM SIFT matcher module (C++)
 │       ├── sigfm.cpp
 │       ├── sigfm.hpp

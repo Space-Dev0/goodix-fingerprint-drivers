@@ -25,10 +25,10 @@ When Bozorth3 attempts to match two 5-minutiae sets:
 
 To solve the small-area limitation, we integrated **SIGFM** (Scale-Invariant Feature Transform Fingerprint Matcher).
 
-The 581a driver uses the authentic Windows-driver configuration table
-(image tcode `0x0100`), averages eight frames for the ambient baseline, and
-captures a single Mode 5 frame per touch. This is the configuration and
-capture path that produced visible dermal ridges in the userspace capture.
+The 581a driver uses the authentic hardware configuration table (image tcode
+`0x0100`) and captures one Mode 1 ambient frame and one Mode 5 touch frame per
+press. This is the configuration and capture path that produced visible dermal
+ridges in the userspace capture.
 
 Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ridge flow as continuous local gradient texture. Every ridge bifurcation, curvature transition, frequency change, and ridge termination generates high-dimensional (128-byte) gradient orientation histograms.
 
@@ -45,16 +45,16 @@ Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ri
 |  [SIFT Feature Detector] (sigma=1.2, contrastThreshold=0.04)           |
 |          |                                                              |
 |          v                                                              |
-|  [128-D Descriptors]    (roughly 140-195 ridge keypoints on current captures)
+|  [128-D Descriptors]    (typically dozens of ridge keypoints per press) |
 |          |                                                              |
 |          v                                                              |
 |  [k-NN Descriptor Match] (Lowe's ratio test threshold = 0.90)           |
 |          |                                                              |
 |          v                                                              |
-|  [Geometric Verification](Pairwise relative vectors: len=12%, ang=12%)  |
+|  [Geometric Verification](common scale, rotation, then translation)     |
 |          |                                                              |
 |          v                                                              |
-|  [Match Decision]        (support >= 20 and >= 20%; 3 stages or one >= 25)
+|  [Match Decision]        (inliers >= 8 and >= 20%; 3 stages or one >= 12)
 +-------------------------------------------------------------------------+
 ```
 
@@ -108,36 +108,30 @@ while rejecting pairwise scales that disagree with the common transform.
 For each pair of correspondences, the matcher estimates rotation from the
 probe vector to the enrolled vector using `atan2(cross, dot)`. Pair hypotheses
 agree when their wrapped angular difference is at most `angle_match`
-(`0.12` radians).
+(`0.12` radians). The matcher finds the dominant rotation and refines it from
+the circular mean of its inliers.
 
-Rather than counting every pair of angles that happens to agree, the matcher
-finds the dominant rotation, refines its centre from the circular mean of its
-inliers, and counts how many hypotheses lie within `angle_match` of it. That
-count is the stage score.
+Rotation alone is not enough. Unrelated presses can coincidentally share a
+rotation cluster, and the original score counted every agreeing pair, so a
+stage rich in mostly-spurious matches could pass on volume alone. After the
+common scale and rotation are fixed, the matcher projects every participating
+match through that transform:
 
-The earlier implementation counted *all* consistent angle pairs. That value
-grows steeply with the number of mostly-spurious descriptor matches, so a large
-impostor stage could accumulate a high score even when no rotation dominated.
-On an 80×64 sensor, where descriptors are weak, that is exactly what caused
-wrong fingers to be accepted.
+$$\mathbf{t}_i = \mathbf{q}_i - s R(\theta)\,\mathbf{p}_i$$
 
-For unrelated presses the pairwise rotations are not uniform, so a fixed ratio
-alone is not sufficient: on labelled 581a captures a wrong finger reached a 24%
-inlier ratio, but only 17-18 vectors in its largest cluster. The absolute size
-of the dominant cluster separates the two populations much better. A genuine
-press reached 25-281 inliers in the captures used for tuning, while the wrong
-finger never exceeded 18.
+Genuine correspondences all map to the same translation $\mathbf{t}$, while
+chance matches scatter across the image. The stage score is the size of the
+largest translation cluster, measured with a tolerance of four pixels (about
+one ridge pitch on this sensor).
 
-The 581a port therefore requires a stage to have at least `20` agreeing
-vectors, with at least `20%` of its scale-consistent vectors on the dominant
-rotation; otherwise the stage scores zero. Verification succeeds with
-`SIGFM_MATCH_MIN_STAGES` (`3`) corroborating stages or one stage reaching
-`SIGFM_MATCH_STRONG_SCORE_THRESHOLD` (`25`).
+A stage only counts when at least `8` reciprocal matches agree on the
+transform and those inliers are at least `20%` of all reciprocal matches.
+Verification succeeds with `SIGFM_MIN_STAGES` (`3`) corroborating stages or one
+stage reaching `SIGFM_STRONG_INLIERS` (`12`).
 
-In a labelled test, three successful genuine presses scored 123, 123 and 281
-inliers and were accepted; three presses of a different finger scored at most
-18 and were rejected. A poor genuine press that only reached 25 raw inliers at
-a 13% ratio was rejected and required another press.
+In a labelled test, three successful genuine presses scored 14, 16 and 24
+inliers and were accepted; three presses of a different finger scored zero in
+every stage. A poor genuine press also scored zero and required another press.
 
 The cutoffs remain provisional: they come from a small labelled set on one
 device and are not a measured false-accept rate.
@@ -148,12 +142,16 @@ device and are not a measured false-accept rate.
 
 ```c
 /* Three corroborating stages, or one strongly supported stage. */
-if (matched_stages >= SIGFM_MATCH_MIN_STAGES ||
-    max_support >= SIGFM_MATCH_STRONG_SCORE_THRESHOLD)
+if (matched_stages >= SIGFM_MIN_STAGES ||
+    max_inliers >= SIGFM_STRONG_INLIERS)
     result = FPI_MATCH_SUCCESS;
 else
     result = FPI_MATCH_FAIL;
 ```
+
+`SIGFM_STAGE_MIN_INLIERS` (`8`) is the per-stage gate; `SIGFM_STRONG_INLIERS`
+(`12`) is the single-stage path; `SIGFM_MIN_STAGES` (`3`) is the corroboration
+path.
 
 ### 4.1 12-Stage Multi-Angle Enrollment
 
@@ -166,13 +164,12 @@ the whole fingertip.
 
 ## 5. Threshold validation
 
-The `20`-inlier cutoff for counting towards consensus, the 20% inlier-ratio
-floor, the `3`-stage requirement, and the `25` strong-stage cutoff are
-provisional acceptance thresholds, not a calibrated security boundary. A
-single stage reaching `25` may also accept a match, so a false accept only
-needs one unusually strong impostor comparison. Before relying on this policy,
-collect repeated genuine comparisons across separate sessions and impostor
-comparisons across distinct fingers. Report false match and false non-match
-rates; include the sensor, enrollment procedure, image preprocessing, and
-number of comparisons. A tiny sample cannot establish a low false-accept
-probability.
+The `8`-inlier per-stage cutoff, the 20% inlier-ratio floor, the `3`-stage
+requirement, and the `12` strong-stage cutoff are provisional acceptance
+thresholds, not a calibrated security boundary. A single stage reaching `12`
+may also accept a match, so a false accept only needs one unusually strong
+impostor comparison. Before relying on this policy, collect repeated genuine
+comparisons across separate sessions and impostor comparisons across distinct
+fingers. Report false match and false non-match rates; include the sensor,
+enrollment procedure, image preprocessing, and number of comparisons. A tiny
+sample cannot establish a low false-accept probability.
