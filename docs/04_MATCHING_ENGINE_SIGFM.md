@@ -128,11 +128,12 @@ one ridge pitch on this sensor).
 A stage only counts when at least `8` reciprocal matches agree on the
 transform and those inliers are at least `20%` of all reciprocal matches.
 Verification succeeds with `SIGFM_MIN_STAGES` (`3`) corroborating stages or one
-stage reaching `SIGFM_STRONG_INLIERS` (`12`).
+stage reaching `SIGFM_STRONG_INLIERS` (`10`).
 
-In a labelled test, three successful genuine presses scored 14, 16 and 24
-inliers and were accepted; three presses of a different finger scored zero in
-every stage. A poor genuine press also scored zero and required another press.
+In a labelled test, ten genuine presses scored up to 27 inliers and ten presses
+of different fingers never exceeded seven. Genuine presses that scored five or
+six were rejected; those presses overlap the enrolled gallery too weakly to be
+told apart from an impostor.
 
 The cutoffs remain provisional: they come from a small labelled set on one
 device and are not a measured false-accept rate.
@@ -151,23 +152,42 @@ else
 ```
 
 `SIGFM_STAGE_MIN_INLIERS` (`8`) is the per-stage gate; `SIGFM_STRONG_INLIERS`
-(`12`) is the single-stage path; `SIGFM_MIN_STAGES` (`3`) is the corroboration
+(`10`) is the single-stage path; `SIGFM_MIN_STAGES` (`3`) is the corroboration
 path.
 
-### 4.1 12-Stage Multi-Angle Enrollment
+### 4.1 Duplicate Press Rejection
+
+A stage that simply repeats an earlier placement adds nothing to gallery
+coverage, and the verifier's per-swipe success rate depends on the gallery
+covering the area the finger actually touches. During enrollment every new
+press is matched against the stages already stored. If it reaches
+`SIGFM_ENROLL_DUPLICATE_INLIERS` (`16`) against any of them, the press is
+discarded and the user is asked to move the finger to a different area:
+
+```
+SIGFM enroll: candidate similarity to stage 4: 21
+SIGFM enroll: rejecting near-duplicate press (stage 4, score=21); requesting a new placement
+```
+
+The cutoff is twice the best score any wrong finger reached, so only a repeat
+of the same placement is rejected. On the labelled enrollment set this would
+have discarded three of twelve presses, replacing near-identical stages with
+new coverage.
+
+### 4.2 12-Stage Multi-Angle Enrollment
 
 The sensor sees only a small part of the finger. For the 12 enrollment touches,
 keep the pad centered and vary placement only slightly; lift fully between
 touches. Large shifts, edge-only presses, and deliberate rotations reduce
-overlap between probe and template. The verifier now needs three separate
-stages to corroborate a match, so repeatable coverage matters more than touring
-the whole fingertip.
+overlap between probe and template. Duplicate rejection asks for a new
+placement when two presses are effectively the same, so slight variation
+between presses is now required rather than optional.
 
 ## 5. Threshold validation
 
 The `8`-inlier per-stage cutoff, the 20% inlier-ratio floor, the `3`-stage
-requirement, and the `12` strong-stage cutoff are provisional acceptance
-thresholds, not a calibrated security boundary. A single stage reaching `12`
+requirement, and the `10` strong-stage cutoff are provisional acceptance
+thresholds, not a calibrated security boundary. A single stage reaching `10`
 may also accept a match, so a false accept only needs one unusually strong
 impostor comparison. Before relying on this policy, collect repeated genuine
 comparisons across separate sessions and impostor comparisons across distinct

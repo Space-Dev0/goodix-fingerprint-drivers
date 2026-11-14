@@ -1,7 +1,7 @@
-From 9378470b8a120cc88e09ed4043ed155f3d13d940 Mon Sep 17 00:00:00 2001
+From ec2f40d7fd4c06be806fc017625e1e8ac8faf705 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/11] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/12] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2379,10 +2379,10 @@ index fa27507..8e5de6b 100644
 2.56.0
 
 
-From 4b2dbe48e45ecd7af7842fd04d767d16f1a021f7 Mon Sep 17 00:00:00 2001
+From a252283431f6dc360076d001318f1dfae81bb9ad Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/11] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/12] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2661,10 +2661,10 @@ index f19b377..6e5b5df 100644
 2.56.0
 
 
-From 07d909bed4e0c14891d98c6d81b260c652026736 Mon Sep 17 00:00:00 2001
+From aa6d59f0cb4571087a6caa76e686205da08f425d Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/11] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/12] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2865,10 +2865,10 @@ index 671a2b6..7443baa 100644
 2.56.0
 
 
-From eb03f5603acbf19fb9f71efac9bd626439af49bd Mon Sep 17 00:00:00 2001
+From 7ade1c182632586b105a673a7eaedf05c32f2cb1 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/11] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/12] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2948,10 +2948,10 @@ index 9b5c3d9..73f889d 100644
 2.56.0
 
 
-From d30b0739bc4cc595ff241ba7cae41e7bd6396dcf Mon Sep 17 00:00:00 2001
+From 1a165f4eea415e34fbcde6274509fa314b0fa7c5 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/11] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/12] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3016,10 +3016,10 @@ index b726b67..d010035 100644
 2.56.0
 
 
-From 87525b3672551383eca82ad90b071b2381b3ce97 Mon Sep 17 00:00:00 2001
+From d7104fabc45b6f02609bbe9ad1de5e97d7fe003b Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/11] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/12] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3071,10 +3071,10 @@ index f2bf17d..f2332df 100644
 2.56.0
 
 
-From dcf65d7acf974a29131fe57cefbfd9960b57d336 Mon Sep 17 00:00:00 2001
+From 3abd1144fdde6c317344e205f64331c66b20de0b Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/11] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/12] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3309,10 +3309,10 @@ index 215ef53..9c7ccc7 100644
 2.56.0
 
 
-From 6408e0bd49cbf286c59f9f56544a5158904f2906 Mon Sep 17 00:00:00 2001
+From 14b2b3380d7484e63a3e50adc29a9a8b0ffc48e0 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/11] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/12] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3623,10 +3623,10 @@ index 0000000..bfb0677
 2.56.0
 
 
-From 5d1cc3c7411b958a9f8d3580867b78bb3823bede Mon Sep 17 00:00:00 2001
+From 101ee357df0f168b55aaf6397882d7d79231c71e Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:30:05 +0530
-Subject: [PATCH 09/11] sigfm: verify one similarity transform, not just
+Subject: [PATCH 09/12] sigfm: verify one similarity transform, not just
  rotation
 
 Wrong fingers were still accepted after the dominant-rotation score landed.
@@ -4098,10 +4098,10 @@ index 7443baa..ca4e3f0 100644
 2.56.0
 
 
-From 1846ce2db84496a7c50159b41a7d10c95ff14136 Mon Sep 17 00:00:00 2001
+From 94c146bb8a62edeb8192656dba3531092430225b Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:33:06 +0530
-Subject: [PATCH 10/11] goodix581a: add opt-in diagnostic frame capture
+Subject: [PATCH 10/12] goodix581a: add opt-in diagnostic frame capture
 
 Set GOODIX_581A_DUMP_DIR to a writable directory to save the exact 8-bit
 image that SIGFM receives. The hook is off by default and sits after image
@@ -4168,10 +4168,10 @@ index 88e387a..514d9ca 100644
 2.56.0
 
 
-From 469d57ecd8657c880c84fb6b35a8f228ef0cd0a4 Mon Sep 17 00:00:00 2001
+From aa59580f0b009a89d799470e89ffb1f18d81c1ea Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:58:01 +0530
-Subject: [PATCH 11/11] goodix581a: restore the verified ridge high-pass
+Subject: [PATCH 11/12] goodix581a: restore the verified ridge high-pass
  pipeline
 
 The no-high-pass flat field left only ~70-120 SIFT keypoints per press, and
@@ -4354,6 +4354,139 @@ index 514d9ca..a56fd55 100644
                if (val < 0) val = 0;
                if (val > 255) val = 255;
                img->data[idx] = (guint8) (255 - val);
+-- 
+2.56.0
+
+
+From facadfa404553d939149da90fe0d010716beb86e Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 20:57:36 +0530
+Subject: [PATCH 12/12] sigfm: tighten duplicate enrollment, accept modest
+ strong stages
+
+A labelled hardware run on 2026-11-14 pressed ten times with the enrolled
+finger and ten times with different fingers. Genuine presses reached 5, 5, 6,
+6, 10, 12, 15, 17, 18 and 27 inliers; impostor presses never exceeded 7. Five
+genuine swipes were accepted and all ten impostor swipes were rejected.
+
+Lower the single-stage cutoff from 12 to 10 inliers so the 10-inlier genuine
+press is accepted while keeping a three-inlier margin over the strongest
+impostor evidence. The four rejected genuine presses scored 5-6 and are
+statistically indistinguishable from impostors, so no threshold change can
+accept them; their capture coherence was normal, which points at gallery
+coverage rather than scoring.
+
+Reject near-duplicate enrollment presses: a press scoring 16 or more inliers
+against an already stored stage repeats an existing placement and adds no
+coverage. On the labelled enrollment set this would have replaced three of
+twelve stages. Re-enrollment is required because the acceptance policy and the
+gallery composition both changed.
+---
+ libfprint/fpi-image-device.c | 73 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 69 insertions(+), 4 deletions(-)
+
+diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
+index bcf7b31..46bca16 100644
+--- a/libfprint/fpi-image-device.c
++++ b/libfprint/fpi-image-device.c
+@@ -28,14 +28,20 @@
+ /* SIGFM scores a stage by the number of matches that agree on one rotation,
+  * scale and translation. A stage needs eight such inliers to count towards
+  * consensus. Verification succeeds with one strongly supported stage or three
+- * corroborating stages. On labelled 581a captures genuine presses scored
+- * 15-28, while wrong fingers never exceeded five; these cutoffs therefore
+- * leave a wide margin without accepting a single chance cluster.
++ * corroborating stages. On labelled 581a captures genuine presses scored up to
++ * 27, while ten different-finger presses never exceeded seven; these cutoffs
++ * therefore leave a margin without accepting a single chance cluster.
+  */
+ #define SIGFM_STAGE_MIN_INLIERS 8
+-#define SIGFM_STRONG_INLIERS 12
++#define SIGFM_STRONG_INLIERS 10
+ #define SIGFM_MIN_STAGES 3
+ 
++/* A new enrollment press scoring this well against an already stored stage is
++ * almost certainly the same placement, so it adds nothing to gallery coverage.
++ * It is twice the best score any wrong finger reached in hardware testing.
++ */
++#define SIGFM_ENROLL_DUPLICATE_INLIERS 16
++
+ /**
+  * SECTION: fpi-image-device
+  * @title: Internal FpImageDevice
+@@ -496,6 +502,49 @@ fpi_image_device_report_finger_status (FpImageDevice *self,
+  * including e.g. an enroll operation which captures multiple images during
+  * one session.
+  */
++/* Reject a press that is nearly identical to an already stored enrollment
++ * stage: it would only duplicate existing coverage. The threshold is well above
++ * what any wrong finger scored, so only repeated placements are discarded.
++ */
++static gboolean
++sigfm_enroll_stage_is_duplicate (SigfmImgInfo *info,
++                                 GPtrArray *enroll_features,
++                                 guint *matched_stage,
++                                 gint *matched_score)
++{
++  for (guint i = 0; i < enroll_features->len; i++)
++    {
++      GBytes *stage = g_ptr_array_index (enroll_features, i);
++      gsize stage_len = 0;
++      const guint8 *stage_data = g_bytes_get_data (stage, &stage_len);
++      SigfmImgInfo *previous = sigfm_deserialize_binary (
++        stage_data, stage_len <= G_MAXINT ? (gint) stage_len : 0);
++
++      if (!previous)
++        {
++          g_warning ("SIGFM enroll: could not decode stored stage %u for duplicate check",
++                     i + 1);
++          continue;
++        }
++
++      g_autofree gchar *stage_label = g_strdup_printf ("enroll duplicate stage %u", i + 1);
++      gint score = sigfm_match_score (info, previous, stage_label);
++      sigfm_free_info (previous);
++
++      g_message ("SIGFM enroll: candidate similarity to stage %u: %d",
++                 i + 1, score);
++
++      if (score >= SIGFM_ENROLL_DUPLICATE_INLIERS)
++        {
++          *matched_stage = i + 1;
++          *matched_score = score;
++          return TRUE;
++        }
++    }
++
++  return FALSE;
++}
++
+ static void
+ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+ {
+@@ -538,6 +587,22 @@ fpi_image_device_sigfm_process (FpImageDevice *self, FpImage *image)
+       if (!priv->enroll_features)
+         priv->enroll_features = g_ptr_array_new_with_free_func ((GDestroyNotify) g_bytes_unref);
+ 
++      if (!error && info && priv->enroll_features->len > 0)
++        {
++          guint matched_stage = 0;
++          gint matched_score = 0;
++
++          if (sigfm_enroll_stage_is_duplicate (info, priv->enroll_features,
++                                               &matched_stage, &matched_score))
++            {
++              g_warning ("SIGFM enroll: rejecting near-duplicate press (stage %u, score=%d); requesting a new placement",
++                         matched_stage, matched_score);
++              error = fpi_device_retry_new_msg (
++                FP_DEVICE_RETRY_GENERAL,
++                "This press is too similar to an earlier one. Move your finger to cover a different area.");
++            }
++        }
++
+       if (!error && info)
+         {
+           int out_len = 0;
 -- 
 2.56.0
 
