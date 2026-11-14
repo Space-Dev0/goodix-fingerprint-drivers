@@ -1,6 +1,6 @@
 # libfprint patch series
 
-`goodix581a-sigfm.patch` is a ten-commit `git format-patch` series for the
+`goodix581a-sigfm.patch` is an eleven-commit `git format-patch` series for the
 GoodixTLS community tree. Its base is
 `goodix-fp-linux-dev/libfprint` commit
 `c343b69` (`chore: update email on license headers`).

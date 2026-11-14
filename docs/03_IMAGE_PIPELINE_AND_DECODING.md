@@ -66,35 +66,41 @@ The GM168 sensor supports two operational scan modes:
 
 ---
 
-## 3. Signed Least-Squares Flat-Fielding
+## 3. Baseline Subtraction and Ridge High-Pass
 
-Raw capacitive readings have low-frequency DC variations and thermal drift. The driver models the ambient baseline $B$ and the touch scan $S$ with a linear gain and offset:
+Raw capacitive readings have low-frequency DC variations and thermal drift. The driver subtracts the untouched ambient baseline directly:
 
-$$\text{Residual}(x, y) = S(x, y) - (g \cdot B(x, y) + o)$$
+$$\text{Residual}(x, y) = S(x, y) - B(x, y)$$
 
-The gain $g$ and offset $o$ are fitted by least squares over every pixel that is non-zero in at least one frame, which excludes inactive columns. Keeping the residual signed preserves both ridge crests and valleys; a one-sided `max(B - S, 0)` would clip one polarity. The fit also absorbs gain and offset drift between the ambient reference and the touch.
+where $B$ is the ambient reference and $S$ is the active touch scan. Keeping the residual signed preserves both ridge crests and valleys; a one-sided `max(B - S, 0)` would clip one polarity.
+
+A least-squares gain and offset are also fitted over pixels that are non-zero in at least one frame, which excludes inactive columns. They are reported in the journal for diagnostics only: applying them would absorb part of the finger's capacitive modulation and suppress ridge contrast.
+
+A 3×3 box high-pass then removes the remaining slow baseline drift and illumination gradient, which would otherwise dominate the normalization range:
+
+$$\text{HighPass}(x, y) = \text{Residual}(x, y) - \frac{1}{9}\sum_{dy=-1}^{1}\sum_{dx=-1}^{1}\text{Residual}(x+dx, y+dy)$$
 
 Only one Mode 1 ambient frame and one Mode 5 touch frame are used per capture. The first Mode 5 frame after the FDT touch event contains the finger; asking this device for further Mode 5 frames can return idle data and average the ridge signal away. On this hardware, multi-frame averaging produced a noise-only image even though single frames showed clear ridges.
 
-No high-pass filter is applied. The flat-fielded residual is used directly for contrast measurement and normalization; filtering it further would remove ridge signal at this sensor's ~9–10 px pitch.
+This is the image path that produced the validated captures, with roughly 140–195 SIFT keypoints per press. The journal also reports the lag-1 spatial autocorrelation (`ac_x`, `ac_y`) as a quick coherence check: coherent ridges give positive values, while noise stays near zero.
 
 ---
 
 ## 4. Dynamic Percentile Contrast Stretching
 
-To ensure invariant dynamic range across skin types (dry vs moist), the driver computes the **5th percentile ($p_5$)** and **95th percentile ($p_{95}$)** of the signed residual over active non-boundary pixels:
+To ensure invariant dynamic range across skin types (dry vs moist), the driver computes the **3rd percentile ($p_3$)** and **97th percentile ($p_{97}$)** of the high-passed active non-boundary pixels:
 
 ```c
 qsort (active_vals, n_active, sizeof (gint32), compare_ints);
-p5 = active_vals[n_active * 5 / 100];
-p95 = active_vals[n_active * 95 / 100];
-has_usable_contrast = (p95 - p5 >= 20);
+p3 = active_vals[n_active * 3 / 100];
+p97 = active_vals[n_active * 97 / 100];
+has_usable_contrast = (p97 - p3 >= 12);
 ```
 
-When $p_{95} - p_5 \ge 20$, the residual is stretched onto 8-bit grayscale:
+When $p_{97} - p_3 \ge 12$, the high-passed residual is stretched onto 8-bit grayscale:
 
-$$\text{Pixel}_{\text{out}}(x, y) = 255 - \text{clamp}\left( \frac{\text{Residual}(x, y) - p_5}{p_{95} - p_5} \times 255,\ 0,\ 255 \right)$$
+$$\text{Pixel}_{\text{out}}(x, y) = 255 - \text{clamp}\left( \frac{\text{HighPass}(x, y) - p_3}{p_{97} - p_3} \times 255,\ 0,\ 255 \right)$$
 
-The cutoff of 20 counts is provisional: it separates air from a finger on the captures used for tuning, but it has not been measured across a large device population.
+The cutoff of 12 counts is provisional: it separates air from a finger on the captures used for tuning, but it has not been measured across a large device population.
 
 Edges within 2 pixels of the perimeter are masked to 255 (white) to eliminate boundary edge artifacts.

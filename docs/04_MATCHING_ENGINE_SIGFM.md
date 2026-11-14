@@ -27,8 +27,9 @@ To solve the small-area limitation, we integrated **SIGFM** (Scale-Invariant Fea
 
 The 581a driver uses the authentic hardware configuration table (image tcode
 `0x0100`) and captures one Mode 1 ambient frame and one Mode 5 touch frame per
-press. This is the configuration and capture path that produced visible dermal
-ridges in the userspace capture.
+press. It subtracts the ambient baseline directly and applies a 3×3 high-pass
+before the percentile stretch. This is the configuration and capture path that
+produced visible dermal ridges in the userspace capture.
 
 Instead of reducing the entire image to sparse minutiae dots, SIFT treats the ridge flow as continuous local gradient texture. Every ridge bifurcation, curvature transition, frequency change, and ridge termination generates high-dimensional (128-byte) gradient orientation histograms.
 
