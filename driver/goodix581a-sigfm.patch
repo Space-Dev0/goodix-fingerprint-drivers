@@ -1,7 +1,7 @@
 From c814393770d4f4cf6e10fea67e4cf9779d6a3b03 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/16] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/17] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2382,7 +2382,7 @@ index fa27507..8e5de6b 100644
 From a450421b6081c38d93533e4b141095dd50ed6451 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/16] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/17] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2664,7 +2664,7 @@ index f19b377..6e5b5df 100644
 From a782a558c3d84bd6007113f254c677f409e9a56c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/16] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/17] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2868,7 +2868,7 @@ index 671a2b6..7443baa 100644
 From fd4017960618708eecc2891896f14add21381ab2 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/16] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/17] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2951,7 +2951,7 @@ index 9b5c3d9..73f889d 100644
 From d3f5398f2f33b31bff8afd2d5ef29ac1306f4574 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/16] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/17] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3019,7 +3019,7 @@ index b726b67..d010035 100644
 From 7a7c77572d08c599ee687852e785e2c8a6d55119 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/16] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/17] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3074,7 +3074,7 @@ index f2bf17d..f2332df 100644
 From 569248769d2f1b00eecaf1a37b54f4db36525102 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/16] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/17] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3312,7 +3312,7 @@ index 215ef53..9c7ccc7 100644
 From bf047660caee8d5972cd78c32c84b7d6b734bbb3 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/16] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/17] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3626,7 +3626,7 @@ index 0000000..bfb0677
 From 45bb4d8b9c4a94b33b751a01fed1a3f461c17173 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:30:05 +0530
-Subject: [PATCH 09/16] sigfm: verify one similarity transform, not just
+Subject: [PATCH 09/17] sigfm: verify one similarity transform, not just
  rotation
 
 Wrong fingers were still accepted after the dominant-rotation score landed.
@@ -4101,7 +4101,7 @@ index 7443baa..ca4e3f0 100644
 From d432ef7e091158377980f4160aba99ad99d032c6 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:33:06 +0530
-Subject: [PATCH 10/16] goodix581a: add opt-in diagnostic frame capture
+Subject: [PATCH 10/17] goodix581a: add opt-in diagnostic frame capture
 
 Set GOODIX_581A_DUMP_DIR to a writable directory to save the exact 8-bit
 image that SIGFM receives. The hook is off by default and sits after image
@@ -4171,7 +4171,7 @@ index 88e387a..514d9ca 100644
 From 00e4f01be8b5028de641265d41420c6bc68ee6fa Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:58:01 +0530
-Subject: [PATCH 11/16] goodix581a: restore the verified ridge high-pass
+Subject: [PATCH 11/17] goodix581a: restore the verified ridge high-pass
  pipeline
 
 The no-high-pass flat field left only ~70-120 SIFT keypoints per press, and
@@ -4361,7 +4361,7 @@ index 514d9ca..a56fd55 100644
 From 004b3ad70d3689926c4e918685b5f8e76ecf8704 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 20:57:36 +0530
-Subject: [PATCH 12/16] sigfm: tighten duplicate enrollment, accept modest
+Subject: [PATCH 12/17] sigfm: tighten duplicate enrollment, accept modest
  strong stages
 
 A labelled hardware run on 2026-11-14 pressed ten times with the enrolled
@@ -4494,7 +4494,7 @@ index bcf7b31..46bca16 100644
 From f96debd5017ced59e08d82b9fb42ee887b66726c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 22:24:12 +0530
-Subject: [PATCH 13/16] goodix581a: enlarge the gallery and retry partial
+Subject: [PATCH 13/17] goodix581a: enlarge the gallery and retry partial
  captures
 
 Duplicate rejection raised the genuine acceptance rate from 5/10 to 16/20 in
@@ -4655,7 +4655,7 @@ index 46bca16..b7b45e2 100644
 From b655e602cae34882eff1d88684efbbca72ff78c1 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 22:56:45 +0530
-Subject: [PATCH 14/16] sigfm: accept nine-inlier stages
+Subject: [PATCH 14/17] sigfm: accept nine-inlier stages
 
 The 20-stage gallery changed the evidence distribution. Across the labelled
 run on 2026-11-14, 20 genuine presses scored 8, 8, 9, 9, 11-20 and 27 inliers,
@@ -4703,7 +4703,7 @@ index b7b45e2..4df3a0e 100644
 From a164dae8cd4d085dcb0af0aa6de8c85a94ef1469 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 17 Nov 2026 13:34:45 +0530
-Subject: [PATCH 15/16] libfprint: include stdint.h for SIGFM stage decoding
+Subject: [PATCH 15/17] libfprint: include stdint.h for SIGFM stage decoding
 
 The stage bookkeeping added for the 581a casts a fixed-array payload to
 uint8_t, but the file never included <stdint.h>. Fedora's glib headers
@@ -4739,7 +4739,7 @@ index 4df3a0e..2c7e5a8 100644
 From 5aef6a3380bbcbc4886866f3417dc781d93802aa Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 17 Nov 2026 14:38:08 +0530
-Subject: [PATCH 16/16] goodixtls: propagate and recover from TLS handshake
+Subject: [PATCH 16/17] goodixtls: propagate and recover from TLS handshake
  failures
 
 SSL_accept() runs in the serve thread, so activation never saw its
@@ -5067,6 +5067,145 @@ index 80480a6..9a385c0 100644
  /**
   * @brief Read a message from the server side of the TLS connection.
   *  i.e. decrypt the message last written with goodix_tls_client_write()
+-- 
+2.56.1
+
+
+From c054f09dd180baccdf68af07ccf93700bb6d3de8 Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Wed, 18 Nov 2026 00:33:12 +0530
+Subject: [PATCH 17/17] goodix581a: reset the USB port after a failed TLS
+ handshake
+
+A rejected handshake can leave the sensor in a state where every later
+handshake fails with the same OpenSSL error, and the protocol reset
+command at the start of activation does not clear it. On a 27c6:581a
+that state survived warm reboots and only ended after a USB port reset
+followed by up to about a minute of recovery time.
+
+Perform that port reset from the activation retry, including releasing
+and re-claiming the interface, so users do not have to unplug or
+power-cycle the machine by hand. The immediate retry may still fail
+while the sensor recovers; the final error now says that the sensor
+keeps rejecting the handshake and that a power cycle is the fallback.
+---
+ libfprint/drivers/goodixtls/goodix.c     | 29 ++++++++++++++++++++++++
+ libfprint/drivers/goodixtls/goodix.h     | 15 ++++++++++++
+ libfprint/drivers/goodixtls/goodix581a.c | 23 ++++++++++++++++---
+ 3 files changed, 64 insertions(+), 3 deletions(-)
+
+diff --git a/libfprint/drivers/goodixtls/goodix.c b/libfprint/drivers/goodixtls/goodix.c
+index e46eab4..a87eb97 100644
+--- a/libfprint/drivers/goodixtls/goodix.c
++++ b/libfprint/drivers/goodixtls/goodix.c
+@@ -1196,6 +1196,35 @@ goodix_dev_deinit (FpDevice *dev, GError **error)
+                                          class->interface, 0, error);
+ }
+ 
++gboolean
++goodix_usb_reset (FpDevice *dev, GError **error)
++{
++  FpiDeviceGoodixTls *self = FPI_DEVICE_GOODIXTLS (dev);
++  FpiDeviceGoodixTlsClass *class = FPI_DEVICE_GOODIXTLS_GET_CLASS (self);
++  GUsbDevice *usb_dev = fpi_device_get_usb_device (dev);
++  GError *local_error = NULL;
++
++  /* The interface claim does not survive a port reset, so drop it first and
++   * claim it again afterwards.
++   */
++  g_usb_device_release_interface (usb_dev, class->interface, 0, NULL);
++
++  if (!g_usb_device_reset (usb_dev, &local_error))
++    {
++      g_propagate_error (error, local_error);
++      return FALSE;
++    }
++
++  if (!g_usb_device_claim_interface (usb_dev, class->interface, 0,
++                                     &local_error))
++    {
++      g_propagate_error (error, local_error);
++      return FALSE;
++    }
++
++  return TRUE;
++}
++
+ // ---- DEV SECTION END ----
+ 
+ // -----------------------------------------------------------------------------
+diff --git a/libfprint/drivers/goodixtls/goodix.h b/libfprint/drivers/goodixtls/goodix.h
+index efc42dd..b4a4eab 100644
+--- a/libfprint/drivers/goodixtls/goodix.h
++++ b/libfprint/drivers/goodixtls/goodix.h
+@@ -519,6 +519,21 @@ gboolean goodix_dev_deinit (FpDevice *dev,
+  */
+ void goodix_reset_state (FpDevice *dev);
+ 
++/**
++ * @brief Reset the USB device and re-claim its interface
++ *
++ * A rejected TLS handshake can leave the sensor in a state that survives the
++ * protocol reset command: every later handshake fails the same way until the
++ * sensor sees a USB port reset. This performs that reset and restores the
++ * interface claim so the driver can keep using the device.
++ *
++ * @param dev
++ * @param error
++ * @return gboolean TRUE if the device was reset and re-claimed
++ */
++gboolean goodix_usb_reset (FpDevice *dev,
++                           GError  **error);
++
+ // ---- DEV SECTION END ----
+ 
+ // -----------------------------------------------------------------------------
+diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
+index 0217650..f081bdf 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.c
++++ b/libfprint/drivers/goodixtls/goodix581a.c
+@@ -194,21 +194,38 @@ activate_complete (FpiSsm *ssm, FpDevice *dev, GError *error)
+    */
+   if (self->activate_retries < 1)
+     {
+-      GError *shutdown_error = NULL;
++      GError *cleanup_error = NULL;
+ 
+       self->activate_retries++;
+       g_clear_error (&error);
+       fp_warn ("581a: restarting activation after a failed TLS setup");
+ 
+-      goodix_shutdown_tls (dev, &shutdown_error);
+-      g_clear_error (&shutdown_error);
++      goodix_shutdown_tls (dev, &cleanup_error);
++      g_clear_error (&cleanup_error);
+       goodix_reset_state (dev);
+ 
++      /* A rejected handshake can leave the sensor in a state that ignores the
++       * protocol reset command, but a USB port reset clears it. Recovery may
++       * still take a few seconds, so a second failure is reported to the user.
++       */
++      if (goodix_usb_reset (dev, &cleanup_error))
++        {
++          fp_warn ("581a: reset the sensor after the failed handshake");
++        }
++      else
++        {
++          fp_warn ("581a: could not reset the sensor: %s",
++                   cleanup_error->message);
++          g_clear_error (&cleanup_error);
++        }
++
+       fpi_ssm_start (fpi_ssm_new (dev, activate_run_state, ACTIVATE_NUM_STATES),
+                      activate_complete);
+       return;
+     }
+ 
++  fp_warn ("581a: the sensor keeps rejecting the TLS handshake; power-cycle "
++           "the machine if this persists");
+   self->activate_retries = 0;
+   fpi_image_device_activate_complete (FP_IMAGE_DEVICE (dev), error);
+ }
 -- 
 2.56.1
 

@@ -194,21 +194,38 @@ activate_complete (FpiSsm *ssm, FpDevice *dev, GError *error)
    */
   if (self->activate_retries < 1)
     {
-      GError *shutdown_error = NULL;
+      GError *cleanup_error = NULL;
 
       self->activate_retries++;
       g_clear_error (&error);
       fp_warn ("581a: restarting activation after a failed TLS setup");
 
-      goodix_shutdown_tls (dev, &shutdown_error);
-      g_clear_error (&shutdown_error);
+      goodix_shutdown_tls (dev, &cleanup_error);
+      g_clear_error (&cleanup_error);
       goodix_reset_state (dev);
+
+      /* A rejected handshake can leave the sensor in a state that ignores the
+       * protocol reset command, but a USB port reset clears it. Recovery may
+       * still take a few seconds, so a second failure is reported to the user.
+       */
+      if (goodix_usb_reset (dev, &cleanup_error))
+        {
+          fp_warn ("581a: reset the sensor after the failed handshake");
+        }
+      else
+        {
+          fp_warn ("581a: could not reset the sensor: %s",
+                   cleanup_error->message);
+          g_clear_error (&cleanup_error);
+        }
 
       fpi_ssm_start (fpi_ssm_new (dev, activate_run_state, ACTIVATE_NUM_STATES),
                      activate_complete);
       return;
     }
 
+  fp_warn ("581a: the sensor keeps rejecting the TLS handshake; power-cycle "
+           "the machine if this persists");
   self->activate_retries = 0;
   fpi_image_device_activate_complete (FP_IMAGE_DEVICE (dev), error);
 }
