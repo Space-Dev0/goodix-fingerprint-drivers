@@ -1,7 +1,7 @@
 From c814393770d4f4cf6e10fea67e4cf9779d6a3b03 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/15] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/16] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2382,7 +2382,7 @@ index fa27507..8e5de6b 100644
 From a450421b6081c38d93533e4b141095dd50ed6451 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/15] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/16] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2664,7 +2664,7 @@ index f19b377..6e5b5df 100644
 From a782a558c3d84bd6007113f254c677f409e9a56c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/15] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/16] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2868,7 +2868,7 @@ index 671a2b6..7443baa 100644
 From fd4017960618708eecc2891896f14add21381ab2 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/15] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/16] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2951,7 +2951,7 @@ index 9b5c3d9..73f889d 100644
 From d3f5398f2f33b31bff8afd2d5ef29ac1306f4574 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/15] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/16] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3019,7 +3019,7 @@ index b726b67..d010035 100644
 From 7a7c77572d08c599ee687852e785e2c8a6d55119 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/15] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/16] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3074,7 +3074,7 @@ index f2bf17d..f2332df 100644
 From 569248769d2f1b00eecaf1a37b54f4db36525102 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/15] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/16] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3312,7 +3312,7 @@ index 215ef53..9c7ccc7 100644
 From bf047660caee8d5972cd78c32c84b7d6b734bbb3 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/15] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/16] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3626,7 +3626,7 @@ index 0000000..bfb0677
 From 45bb4d8b9c4a94b33b751a01fed1a3f461c17173 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:30:05 +0530
-Subject: [PATCH 09/15] sigfm: verify one similarity transform, not just
+Subject: [PATCH 09/16] sigfm: verify one similarity transform, not just
  rotation
 
 Wrong fingers were still accepted after the dominant-rotation score landed.
@@ -4101,7 +4101,7 @@ index 7443baa..ca4e3f0 100644
 From d432ef7e091158377980f4160aba99ad99d032c6 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:33:06 +0530
-Subject: [PATCH 10/15] goodix581a: add opt-in diagnostic frame capture
+Subject: [PATCH 10/16] goodix581a: add opt-in diagnostic frame capture
 
 Set GOODIX_581A_DUMP_DIR to a writable directory to save the exact 8-bit
 image that SIGFM receives. The hook is off by default and sits after image
@@ -4171,7 +4171,7 @@ index 88e387a..514d9ca 100644
 From 00e4f01be8b5028de641265d41420c6bc68ee6fa Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:58:01 +0530
-Subject: [PATCH 11/15] goodix581a: restore the verified ridge high-pass
+Subject: [PATCH 11/16] goodix581a: restore the verified ridge high-pass
  pipeline
 
 The no-high-pass flat field left only ~70-120 SIFT keypoints per press, and
@@ -4361,7 +4361,7 @@ index 514d9ca..a56fd55 100644
 From 004b3ad70d3689926c4e918685b5f8e76ecf8704 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 20:57:36 +0530
-Subject: [PATCH 12/15] sigfm: tighten duplicate enrollment, accept modest
+Subject: [PATCH 12/16] sigfm: tighten duplicate enrollment, accept modest
  strong stages
 
 A labelled hardware run on 2026-11-14 pressed ten times with the enrolled
@@ -4494,7 +4494,7 @@ index bcf7b31..46bca16 100644
 From f96debd5017ced59e08d82b9fb42ee887b66726c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 22:24:12 +0530
-Subject: [PATCH 13/15] goodix581a: enlarge the gallery and retry partial
+Subject: [PATCH 13/16] goodix581a: enlarge the gallery and retry partial
  captures
 
 Duplicate rejection raised the genuine acceptance rate from 5/10 to 16/20 in
@@ -4655,7 +4655,7 @@ index 46bca16..b7b45e2 100644
 From b655e602cae34882eff1d88684efbbca72ff78c1 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 22:56:45 +0530
-Subject: [PATCH 14/15] sigfm: accept nine-inlier stages
+Subject: [PATCH 14/16] sigfm: accept nine-inlier stages
 
 The 20-stage gallery changed the evidence distribution. Across the labelled
 run on 2026-11-14, 20 genuine presses scored 8, 8, 9, 9, 11-20 and 27 inliers,
@@ -4703,7 +4703,7 @@ index b7b45e2..4df3a0e 100644
 From a164dae8cd4d085dcb0af0aa6de8c85a94ef1469 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 17 Nov 2026 13:34:45 +0530
-Subject: [PATCH 15/15] libfprint: include stdint.h for SIGFM stage decoding
+Subject: [PATCH 15/16] libfprint: include stdint.h for SIGFM stage decoding
 
 The stage bookkeeping added for the 581a casts a fixed-array payload to
 uint8_t, but the file never included <stdint.h>. Fedora's glib headers
@@ -4732,6 +4732,341 @@ index 4df3a0e..2c7e5a8 100644
  #include "fpi-log.h"
  
  #include "fp-image-device-private.h"
+-- 
+2.56.1
+
+
+From 5aef6a3380bbcbc4886866f3417dc781d93802aa Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Tue, 17 Nov 2026 14:38:08 +0530
+Subject: [PATCH 16/16] goodixtls: propagate and recover from TLS handshake
+ failures
+
+SSL_accept() runs in the serve thread, so activation never saw its
+result: a rejected sensor Finished was only logged, the driver reported
+"handshake successfully established", and the first image command
+instead received a TLS request and failed as "Command timed out: 0x20".
+
+Record the handshake result in GoodixTlsServer and wait for it at the
+last stage. On failure forward the alert OpenSSL produced and return the
+real error so the caller reports a TLS problem instead of an image
+timeout. Also fail activation when the server cannot be initialised or
+its thread cannot be started, instead of continuing with a dead session.
+
+Retry activation once from the 581a driver after a failed handshake.
+Activation begins with a NOP and a reset command, which recovers a
+sensor left in a stale TLS state; a second failure is reported as is.
+---
+ libfprint/drivers/goodixtls/goodix.c     | 46 +++++++++++++++---
+ libfprint/drivers/goodixtls/goodix581a.c | 37 +++++++++++++--
+ libfprint/drivers/goodixtls/goodixtls.c  | 60 ++++++++++++++++++++++--
+ libfprint/drivers/goodixtls/goodixtls.h  | 20 ++++++++
+ 4 files changed, 149 insertions(+), 14 deletions(-)
+
+diff --git a/libfprint/drivers/goodixtls/goodix.c b/libfprint/drivers/goodixtls/goodix.c
+index 7fea3cd..e46eab4 100644
+--- a/libfprint/drivers/goodixtls/goodix.c
++++ b/libfprint/drivers/goodixtls/goodix.c
+@@ -27,6 +27,7 @@
+ #include <glib.h>
+ #include <gusb.h>
+ #include <openssl/ssl.h>
++#include <poll.h>
+ #include <pthread.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -1359,9 +1360,41 @@ tls_handshake_run (FpiSsm *ssm, FpDevice *dev)
+     }
+   else if (stage == TLS_HANDSHAKE_STAGE_CHANGE_CIPHER_S)
+     {
+-      fp_dbg ("Reading to proxy back");
++      GError *err = NULL;
+       guint8 buff[1024];
+-      int size = goodix_tls_client_read (priv->tls_hop, buff, sizeof (buff));
++      int size;
++
++      /* The device cannot be trusted to complete the handshake even though it
++       * sent every expected record: SSL_accept() may still reject its
++       * Finished. Wait for the server thread, otherwise a fatal alert would be
++       * forwarded and the activation would continue with a dead TLS session.
++       */
++      if (!goodix_tls_server_wait_handshake (priv->tls_hop, 3000, &err))
++        {
++          /* Forward the alert OpenSSL produced, if any, so the sensor sees the
++           * same termination a rejected handshake would normally cause.
++           */
++          struct pollfd pfd = {
++            .fd = priv->tls_hop->client_fd,
++            .events = POLLIN,
++          };
++
++          if (poll (&pfd, 1, 100) > 0)
++            {
++              GError *send_err = NULL;
++
++              size = goodix_tls_client_read (priv->tls_hop, buff, sizeof (buff));
++              if (size > 0)
++                goodix_send_tls_records (dev, buff, size, &send_err);
++              g_clear_error (&send_err);
++            }
++
++          fpi_ssm_mark_failed (ssm, err);
++          return;
++        }
++
++      fp_dbg ("Reading to proxy back");
++      size = goodix_tls_client_read (priv->tls_hop, buff, sizeof (buff));
+       if (size < 0)
+         {
+           fpi_ssm_mark_failed (ssm, g_error_new (g_io_error_quark (), size,
+@@ -1370,7 +1403,6 @@ tls_handshake_run (FpiSsm *ssm, FpDevice *dev)
+ 
+           return;
+         }
+-      GError *err = NULL;
+       if (!goodix_send_tls_records (dev, buff, size, &err))
+         {
+           fpi_ssm_mark_failed (ssm, err);
+@@ -1396,7 +1428,7 @@ on_goodix_request_tls_connection (FpDevice *dev, guint8 *data,
+   if (error)
+     {
+       fp_err ("failed to get tls handshake: %s", error->message);
+-      goodix_send_tls_successfully_established (FP_DEVICE (dev), NULL, NULL);
++      on_tls_successfully_established (dev, NULL, error);
+       return;
+     }
+   FpiDeviceGoodixTls *self = FPI_DEVICE_GOODIXTLS (user_data);
+@@ -1415,6 +1447,7 @@ goodix_tls_ready (GoodixTlsServer *server, GError *err, gpointer dev)
+     {
+       fp_err ("failed to init tls server: %s, code: %d", err->message,
+               err->code);
++      on_tls_successfully_established (dev, NULL, err);
+       return;
+     }
+   goodix_send_request_tls_connection (FP_DEVICE (dev),
+@@ -1429,7 +1462,7 @@ goodix_tls_init (FpDevice *dev, GoodixNoneCallback callback, gpointer user_data)
+   FpiDeviceGoodixTlsPrivate *priv =
+     fpi_device_goodixtls_get_instance_private (self);
+   g_assert (priv->tls_hop == NULL);
+-  priv->tls_hop = malloc (sizeof (GoodixTlsServer));
++  priv->tls_hop = g_new0 (GoodixTlsServer, 1);
+ 
+   if (!priv->tls_ready_callback)
+     priv->tls_ready_callback = malloc (sizeof (GoodixCallbackInfo));
+@@ -1440,8 +1473,7 @@ goodix_tls_init (FpDevice *dev, GoodixNoneCallback callback, gpointer user_data)
+   GError *err = NULL;
+   if (!goodix_tls_server_init (priv->tls_hop, &err))
+     {
+-      fp_err ("failed to init tls server, error: %s, code: %d", err->message,
+-              err->code);
++      goodix_tls_ready (s, err, self);
+       return;
+     }
+ 
+diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
+index 19128f7..0217650 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.c
++++ b/libfprint/drivers/goodixtls/goodix581a.c
+@@ -30,6 +30,7 @@ struct _FpiDeviceGoodixTls581a
+ 
+   GoodixTls5xxPix *calibration_img;
+   FpiSsm *scan_ssm;
++  guint activate_retries;
+ };
+ 
+ G_DECLARE_FINAL_TYPE (FpiDeviceGoodixTls581a, fpi_device_goodixtls581a, FPI,
+@@ -173,24 +174,52 @@ activate_run_state (FpiSsm *ssm, FpDevice *dev)
+ static void
+ activate_complete (FpiSsm *ssm, FpDevice *dev, GError *error)
+ {
++  FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
++
+   if (!error)
+     {
++      self->activate_retries = 0;
+       fp_dbg ("581a activation successfully completed!");
+       fpi_image_device_activate_complete (FP_IMAGE_DEVICE (dev), NULL);
++      return;
+     }
+-  else
++
++  fp_err ("581a failed during activation: %s (code: %d)", error->message,
++          error->code);
++
++  /* A rejected TLS handshake leaves the sensor's session unusable until the
++   * next reset. Retry once: activation starts with a NOP and a reset command,
++   * which recovers a transient failure and only costs one extra attempt when
++   * the sensor stays wedged.
++   */
++  if (self->activate_retries < 1)
+     {
+-      fp_err ("581a failed during activation: %s (code: %d)", error->message,
+-              error->code);
+-      fpi_image_device_activate_complete (FP_IMAGE_DEVICE (dev), error);
++      GError *shutdown_error = NULL;
++
++      self->activate_retries++;
++      g_clear_error (&error);
++      fp_warn ("581a: restarting activation after a failed TLS setup");
++
++      goodix_shutdown_tls (dev, &shutdown_error);
++      g_clear_error (&shutdown_error);
++      goodix_reset_state (dev);
++
++      fpi_ssm_start (fpi_ssm_new (dev, activate_run_state, ACTIVATE_NUM_STATES),
++                     activate_complete);
++      return;
+     }
++
++  self->activate_retries = 0;
++  fpi_image_device_activate_complete (FP_IMAGE_DEVICE (dev), error);
+ }
+ 
+ static void
+ dev_activate (FpImageDevice *img_dev)
+ {
+   FpDevice *dev = FP_DEVICE (img_dev);
++  FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
+ 
++  self->activate_retries = 0;
+   fpi_ssm_start (fpi_ssm_new (dev, activate_run_state, ACTIVATE_NUM_STATES),
+                  activate_complete);
+ }
+diff --git a/libfprint/drivers/goodixtls/goodixtls.c b/libfprint/drivers/goodixtls/goodixtls.c
+index 9c7ccc7..31d184e 100644
+--- a/libfprint/drivers/goodixtls/goodixtls.c
++++ b/libfprint/drivers/goodixtls/goodixtls.c
+@@ -211,12 +211,50 @@ goodix_tls_init_serve (void *me)
+       char err_buf[256] = {0};
+       ERR_error_string_n (e, err_buf, sizeof (err_buf));
+       fp_err ("server ready failed (retr=%d, ssl_err=%d): %s", retr, ssl_err, err_buf);
++
++      g_strlcpy (self->handshake_error, err_buf, sizeof (self->handshake_error));
++      g_atomic_int_set (&self->handshake_state, -1);
+     }
+   else
+-    fp_dbg ("TLS connection ready");
++    {
++      fp_dbg ("TLS connection ready");
++      g_atomic_int_set (&self->handshake_state, 1);
++    }
+   return NULL;
+ }
+ 
++gboolean
++goodix_tls_server_wait_handshake (GoodixTlsServer *self, guint timeout_ms,
++                                  GError **error)
++{
++  guint waited_ms = 0;
++
++  while (g_atomic_int_get (&self->handshake_state) == 0 &&
++         waited_ms < timeout_ms)
++    {
++      g_usleep (10 * 1000);
++      waited_ms += 10;
++    }
++
++  switch (g_atomic_int_get (&self->handshake_state))
++    {
++    case 1:
++      return TRUE;
++
++    case -1:
++      g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED,
++                   "sensor rejected the TLS handshake (%s)",
++                   self->handshake_error[0] ? self->handshake_error
++                                            : "no OpenSSL detail");
++      return FALSE;
++
++    default:
++      g_set_error (error, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
++                   "TLS handshake did not finish within %u ms", timeout_ms);
++      return FALSE;
++    }
++}
++
+ gboolean
+ goodix_tls_server_deinit (GoodixTlsServer *self, GError **error)
+ {
+@@ -233,7 +271,11 @@ goodix_tls_server_deinit (GoodixTlsServer *self, GError **error)
+       self->client_fd = -1;
+     }
+ 
+-  pthread_join (self->serve_thread, NULL);
++  if (self->serve_thread_started)
++    {
++      pthread_join (self->serve_thread, NULL);
++      self->serve_thread_started = FALSE;
++    }
+ 
+   if (self->ssl_layer)
+     {
+@@ -254,6 +296,11 @@ goodix_tls_server_deinit (GoodixTlsServer *self, GError **error)
+ gboolean
+ goodix_tls_server_init (GoodixTlsServer *self, GError **error)
+ {
++  self->sock_fd = -1;
++  self->client_fd = -1;
++  g_atomic_int_set (&self->handshake_state, 0);
++  self->handshake_error[0] = '\0';
++
+   SSL_load_error_strings ();
+   OpenSSL_add_ssl_algorithms ();
+   SSL_library_init ();
+@@ -283,7 +330,14 @@ goodix_tls_server_init (GoodixTlsServer *self, GError **error)
+   tls_config_ssl (self->ssl_layer);
+   SSL_set_fd (self->ssl_layer, self->sock_fd);
+ 
+-  pthread_create (&self->serve_thread, 0, goodix_tls_init_serve, self);
++  self->serve_thread_started = TRUE;
++  if (pthread_create (&self->serve_thread, 0, goodix_tls_init_serve, self) != 0)
++    {
++      self->serve_thread_started = FALSE;
++      g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED,
++                   "failed to start the TLS server thread");
++      return FALSE;
++    }
+ 
+   return TRUE;
+ }
+diff --git a/libfprint/drivers/goodixtls/goodixtls.h b/libfprint/drivers/goodixtls/goodixtls.h
+index 80480a6..9a385c0 100644
+--- a/libfprint/drivers/goodixtls/goodixtls.h
++++ b/libfprint/drivers/goodixtls/goodixtls.h
+@@ -44,6 +44,14 @@ typedef struct _GoodixTlsServer
+   int       client_fd;
+ 
+   pthread_t serve_thread;
++  gboolean  serve_thread_started;
++
++  /* Result of the handshake started by goodix_tls_server_init(), written by
++   * the serve thread: 0 while SSL_accept() is running, 1 once it completed
++   * and -1 when it failed. Read with g_atomic_int_get().
++   */
++  gint      handshake_state;
++  gchar     handshake_error[256];
+ } GoodixTlsServer;
+ 
+ /**
+@@ -56,6 +64,18 @@ typedef struct _GoodixTlsServer
+ gboolean goodix_tls_server_init (GoodixTlsServer *self,
+                                  GError         **error);
+ 
++/**
++ * @brief Wait for the TLS handshake started by goodix_tls_server_init()
++ *
++ * @param self server context
++ * @param timeout_ms how long to wait for SSL_accept() to finish
++ * @param error set when the handshake failed or did not finish in time
++ * @return gboolean TRUE when the handshake completed
++ */
++gboolean goodix_tls_server_wait_handshake (GoodixTlsServer *self,
++                                           guint            timeout_ms,
++                                           GError         **error);
++
+ /**
+  * @brief Read a message from the server side of the TLS connection.
+  *  i.e. decrypt the message last written with goodix_tls_client_write()
 -- 
 2.56.1
 

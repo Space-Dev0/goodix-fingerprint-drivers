@@ -84,6 +84,22 @@ static const guint8 goodix_581a_psk[] = {
 };
 ```
 
+### 3.2 Handshake Failure Handling
+
+`SSL_accept()` runs in the TLS serve thread, so activation waits for its result
+at the last handshake stage instead of assuming success. If the MCU's `Finished`
+record fails decryption (for example `error:1C800066:Provider routines::cipher
+operation failed`), the driver forwards the alert OpenSSL generated and reports
+the handshake error. Without this check activation would continue on a dead
+session, the MCU would answer the first image request with a TLS-request
+command (`0xd0`), and the run would surface as `Command timed out: 0x20`.
+
+A rejected handshake can leave the MCU in a stale TLS state that survives a
+plain re-activation. The 581a driver therefore retries activation once; the
+retry starts with a NOP and a reset command, which restores a usable session.
+If the sensor keeps rejecting the handshake, a USB port reset (or a full
+power-off) is needed.
+
 ---
 
 ## 4. Encrypted Data Transmission & Decryption

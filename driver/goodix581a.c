@@ -30,6 +30,7 @@ struct _FpiDeviceGoodixTls581a
 
   GoodixTls5xxPix *calibration_img;
   FpiSsm *scan_ssm;
+  guint activate_retries;
 };
 
 G_DECLARE_FINAL_TYPE (FpiDeviceGoodixTls581a, fpi_device_goodixtls581a, FPI,
@@ -173,24 +174,52 @@ activate_run_state (FpiSsm *ssm, FpDevice *dev)
 static void
 activate_complete (FpiSsm *ssm, FpDevice *dev, GError *error)
 {
+  FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
+
   if (!error)
     {
+      self->activate_retries = 0;
       fp_dbg ("581a activation successfully completed!");
       fpi_image_device_activate_complete (FP_IMAGE_DEVICE (dev), NULL);
+      return;
     }
-  else
+
+  fp_err ("581a failed during activation: %s (code: %d)", error->message,
+          error->code);
+
+  /* A rejected TLS handshake leaves the sensor's session unusable until the
+   * next reset. Retry once: activation starts with a NOP and a reset command,
+   * which recovers a transient failure and only costs one extra attempt when
+   * the sensor stays wedged.
+   */
+  if (self->activate_retries < 1)
     {
-      fp_err ("581a failed during activation: %s (code: %d)", error->message,
-              error->code);
-      fpi_image_device_activate_complete (FP_IMAGE_DEVICE (dev), error);
+      GError *shutdown_error = NULL;
+
+      self->activate_retries++;
+      g_clear_error (&error);
+      fp_warn ("581a: restarting activation after a failed TLS setup");
+
+      goodix_shutdown_tls (dev, &shutdown_error);
+      g_clear_error (&shutdown_error);
+      goodix_reset_state (dev);
+
+      fpi_ssm_start (fpi_ssm_new (dev, activate_run_state, ACTIVATE_NUM_STATES),
+                     activate_complete);
+      return;
     }
+
+  self->activate_retries = 0;
+  fpi_image_device_activate_complete (FP_IMAGE_DEVICE (dev), error);
 }
 
 static void
 dev_activate (FpImageDevice *img_dev)
 {
   FpDevice *dev = FP_DEVICE (img_dev);
+  FpiDeviceGoodixTls581a *self = FPI_DEVICE_GOODIXTLS581A (dev);
 
+  self->activate_retries = 0;
   fpi_ssm_start (fpi_ssm_new (dev, activate_run_state, ACTIVATE_NUM_STATES),
                  activate_complete);
 }
