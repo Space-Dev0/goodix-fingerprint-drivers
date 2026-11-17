@@ -11,7 +11,7 @@ This guide details how to build, install, configure, and use the **Goodix 27c6:5
 ```bash
 sudo dnf install -y \
     gcc gcc-c++ meson ninja-build git \
-    libusb1-devel gusb-devel glib2-devel pixman-devel \
+    libusb1-devel gusb-devel glib2-devel pixman-devel cairo-devel \
     openssl-devel opencv-devel nss-devel \
     polkit-devel systemd-devel gobject-introspection-devel \
     fprintd fprintd-pam policycoreutils-python-utils
@@ -22,7 +22,7 @@ sudo dnf install -y \
 ```bash
 sudo apt update && sudo apt install -y \
     build-essential meson ninja-build git \
-    libusb-1.0-0-dev libgusb-dev libglib2.0-dev libpixman-1-dev \
+    libusb-1.0-0-dev libgusb-dev libglib2.0-dev libpixman-1-dev libcairo2-dev \
     libssl-dev libopencv-dev libnss3-dev \
     libpolkit-gobject-1-dev libsystemd-dev libgirepository1.0-dev \
     fprintd libpam-fprintd
@@ -33,7 +33,7 @@ sudo apt update && sudo apt install -y \
 ```bash
 sudo pacman -S --needed \
     base-devel meson ninja git \
-    libusb libgusb glib2 pixman \
+    libusb libgusb glib2 pixman cairo \
     openssl opencv nss \
     polkit systemd gobject-introspection \
     fprintd

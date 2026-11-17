@@ -1,7 +1,7 @@
-From 139586db51d80939c324953234a54cdaf415c6b8 Mon Sep 17 00:00:00 2001
+From c814393770d4f4cf6e10fea67e4cf9779d6a3b03 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/14] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/15] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2376,13 +2376,13 @@ index fa27507..8e5de6b 100644
          if not imaging_dep.found()
              error('pixman is required for @0@ and possibly others'.format(driver))
 -- 
-2.56.0
+2.56.1
 
 
-From 8864cf6794a6f9100ce9eb2ca1aa8f906cea11dc Mon Sep 17 00:00:00 2001
+From a450421b6081c38d93533e4b141095dd50ed6451 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/14] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/15] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2658,13 +2658,13 @@ index f19b377..6e5b5df 100644
                  }
              }
 -- 
-2.56.0
+2.56.1
 
 
-From c8494ea567fd07639e49743332b606b8ac29e5dd Mon Sep 17 00:00:00 2001
+From a782a558c3d84bd6007113f254c677f409e9a56c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/14] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/15] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2862,13 +2862,13 @@ index 671a2b6..7443baa 100644
  unsigned char* sigfm_serialize_binary(SigfmImgInfo* info, int* outlen);
  /**
 -- 
-2.56.0
+2.56.1
 
 
-From c029fffb725419944f590b1e9c76313a45ea04f6 Mon Sep 17 00:00:00 2001
+From fd4017960618708eecc2891896f14add21381ab2 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/14] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/15] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2945,13 +2945,13 @@ index 9b5c3d9..73f889d 100644
      {
        fp_err ("581a: Touch up error: %s", error->message);
 -- 
-2.56.0
+2.56.1
 
 
-From dd7abc3a79945363a7c2f4487c209796208235bd Mon Sep 17 00:00:00 2001
+From d3f5398f2f33b31bff8afd2d5ef29ac1306f4574 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/14] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/15] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3013,13 +3013,13 @@ index b726b67..d010035 100644
    { .vid = 0x2808, .pid = 0x93a9 },
    { .vid = 0x298d, .pid = 0x2020 },
 -- 
-2.56.0
+2.56.1
 
 
-From 4cabe395379956122aed9aa0a2dba55b8e33c79f Mon Sep 17 00:00:00 2001
+From 7a7c77572d08c599ee687852e785e2c8a6d55119 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/14] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/15] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3068,13 +3068,13 @@ index f2bf17d..f2332df 100644
  }
  
 -- 
-2.56.0
+2.56.1
 
 
-From af5403b6cc888f67ac0e24dd5e02db068285a9d3 Mon Sep 17 00:00:00 2001
+From 569248769d2f1b00eecaf1a37b54f4db36525102 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/14] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/15] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3306,13 +3306,13 @@ index 215ef53..9c7ccc7 100644
  }
  
 -- 
-2.56.0
+2.56.1
 
 
-From d3d47f614200b263a4083469f1efd458ec0f4fbd Mon Sep 17 00:00:00 2001
+From bf047660caee8d5972cd78c32c84b7d6b734bbb3 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/14] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/15] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3620,13 +3620,13 @@ index 0000000..bfb0677
 +  return g_test_run ();
 +}
 -- 
-2.56.0
+2.56.1
 
 
-From 639aca936d3db7a439606fe39452f3111904b743 Mon Sep 17 00:00:00 2001
+From 45bb4d8b9c4a94b33b751a01fed1a3f461c17173 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:30:05 +0530
-Subject: [PATCH 09/14] sigfm: verify one similarity transform, not just
+Subject: [PATCH 09/15] sigfm: verify one similarity transform, not just
  rotation
 
 Wrong fingers were still accepted after the dominant-rotation score landed.
@@ -4095,13 +4095,13 @@ index 7443baa..ca4e3f0 100644
  /**
   * @brief Serialize an image info for storage
 -- 
-2.56.0
+2.56.1
 
 
-From aa7203870da35b6ad86e1f0ce12e5b2216ee81f4 Mon Sep 17 00:00:00 2001
+From d432ef7e091158377980f4160aba99ad99d032c6 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:33:06 +0530
-Subject: [PATCH 10/14] goodix581a: add opt-in diagnostic frame capture
+Subject: [PATCH 10/15] goodix581a: add opt-in diagnostic frame capture
 
 Set GOODIX_581A_DUMP_DIR to a writable directory to save the exact 8-bit
 image that SIGFM receives. The hook is off by default and sits after image
@@ -4165,13 +4165,13 @@ index 88e387a..514d9ca 100644
  
    if (!self->scan_ssm)
 -- 
-2.56.0
+2.56.1
 
 
-From 427bd4e02be31f6d984dbc55afd9211f54cd3c00 Mon Sep 17 00:00:00 2001
+From 00e4f01be8b5028de641265d41420c6bc68ee6fa Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:58:01 +0530
-Subject: [PATCH 11/14] goodix581a: restore the verified ridge high-pass
+Subject: [PATCH 11/15] goodix581a: restore the verified ridge high-pass
  pipeline
 
 The no-high-pass flat field left only ~70-120 SIFT keypoints per press, and
@@ -4355,13 +4355,13 @@ index 514d9ca..a56fd55 100644
                if (val > 255) val = 255;
                img->data[idx] = (guint8) (255 - val);
 -- 
-2.56.0
+2.56.1
 
 
-From c68236f565caa755d934000d2ed5f287bec84f58 Mon Sep 17 00:00:00 2001
+From 004b3ad70d3689926c4e918685b5f8e76ecf8704 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 20:57:36 +0530
-Subject: [PATCH 12/14] sigfm: tighten duplicate enrollment, accept modest
+Subject: [PATCH 12/15] sigfm: tighten duplicate enrollment, accept modest
  strong stages
 
 A labelled hardware run on 2026-11-14 pressed ten times with the enrolled
@@ -4488,13 +4488,13 @@ index bcf7b31..46bca16 100644
          {
            int out_len = 0;
 -- 
-2.56.0
+2.56.1
 
 
-From a982395ee6a0bc053b886d17149cffb1ca178439 Mon Sep 17 00:00:00 2001
+From f96debd5017ced59e08d82b9fb42ee887b66726c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 22:24:12 +0530
-Subject: [PATCH 13/14] goodix581a: enlarge the gallery and retry partial
+Subject: [PATCH 13/15] goodix581a: enlarge the gallery and retry partial
  captures
 
 Duplicate rejection raised the genuine acceptance rate from 5/10 to 16/20 in
@@ -4649,13 +4649,13 @@ index 46bca16..b7b45e2 100644
                g_message ("SIGFM verify: stages=%d, max_inliers=%d, "
                           "matched_stages=%d -> %s",
 -- 
-2.56.0
+2.56.1
 
 
-From 897ee30d46274f479c41a8b312987f1cbde8a1d6 Mon Sep 17 00:00:00 2001
+From b655e602cae34882eff1d88684efbbca72ff78c1 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 22:56:45 +0530
-Subject: [PATCH 14/14] sigfm: accept nine-inlier stages
+Subject: [PATCH 14/15] sigfm: accept nine-inlier stages
 
 The 20-stage gallery changed the evidence distribution. Across the labelled
 run on 2026-11-14, 20 genuine presses scored 8, 8, 9, 9, 11-20 and 27 inliers,
@@ -4697,5 +4697,41 @@ index b7b45e2..4df3a0e 100644
  
  /* A new enrollment press scoring this well against an already stored stage is
 -- 
-2.56.0
+2.56.1
+
+
+From a164dae8cd4d085dcb0af0aa6de8c85a94ef1469 Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Tue, 17 Nov 2026 13:34:45 +0530
+Subject: [PATCH 15/15] libfprint: include stdint.h for SIGFM stage decoding
+
+The stage bookkeeping added for the 581a casts a fixed-array payload to
+uint8_t, but the file never included <stdint.h>. Fedora's glib headers
+happen to pull the header in transitively, so the build passed here. On
+Debian and Linux Mint the same code fails with:
+
+  error: unknown type name 'uint8_t'
+
+Include <stdint.h> explicitly so the build does not depend on a
+transitive include from the platform's glib version.
+---
+ libfprint/fpi-image-device.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
+index 4df3a0e..2c7e5a8 100644
+--- a/libfprint/fpi-image-device.c
++++ b/libfprint/fpi-image-device.c
+@@ -18,6 +18,9 @@
+  */
+ 
+ #define FP_COMPONENT "image_device"
++
++#include <stdint.h>
++
+ #include "fpi-log.h"
+ 
+ #include "fp-image-device-private.h"
+-- 
+2.56.1
 
