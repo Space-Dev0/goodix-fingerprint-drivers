@@ -94,14 +94,21 @@ the handshake error. Without this check activation would continue on a dead
 session, the MCU would answer the first image request with a TLS-request
 command (`0xd0`), and the run would surface as `Command timed out: 0x20`.
 
-A rejected handshake can leave the MCU in a stale TLS state that survives the
-protocol reset command at the start of activation, and on a 27c6:581a that
-state can persist across warm reboots. The 581a driver therefore resets the
-USB port (releasing and re-claiming the interface) and retries activation
-once. The sensor may need up to about a minute to recover after that reset, so
-an immediate retry can still fail; in that case the error says that the sensor
-keeps rejecting the handshake. A full power-off (shutdown, unplug the charger,
-hold the power button for about 20 seconds) is the fallback.
+A rejected handshake can leave the MCU without usable TLS key state, and after
+a reboot the sensor otherwise derives its `Finished` record from stale key
+material. GM168 firmware needs its preset-PSK read (`0xE4`, tag `0xbb020001`)
+before the handshake to restore that state. The legacy 5xx and 511 drivers do
+this as `ACTIVATE_CHECK_PSK`; the 581a sequence now performs the same read as
+well and compares the returned SHA256 digest with the all-zero key the driver
+uses. Without the read a unit reproduced the failure after every restart, and
+with it the same unit handshakes on the first activation.
+
+If a handshake still fails, the 581a driver additionally resets the USB port
+(releasing and re-claiming the interface) and retries activation once. The
+sensor may need some time to recover after that reset, so an immediate retry
+can still fail; in that case the error says that the sensor keeps rejecting
+the handshake. A full power-off (shutdown, unplug the charger, hold the power
+button for about 20 seconds) is the fallback.
 
 ---
 

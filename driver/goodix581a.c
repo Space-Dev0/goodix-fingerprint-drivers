@@ -41,6 +41,8 @@ G_DEFINE_TYPE (FpiDeviceGoodixTls581a, fpi_device_goodixtls581a,
 
 enum activate_states {
   ACTIVATE_READ_AND_NOP,
+  ACTIVATE_READ_FIRMWARE,
+  ACTIVATE_CHECK_PSK,
   ACTIVATE_RESET,
   ACTIVATE_READ_REG,
   ACTIVATE_READ_OTP,
@@ -98,6 +100,72 @@ on_tls_init_ready (FpDevice *dev, gpointer user_data, GError *error)
   fpi_ssm_next_state (ssm);
 }
 
+/* SHA256 of the all-zero TLS PSK the driver hands to OpenSSL. GM168SEC
+ * exposes this digest under tag 0xbb020001, so it can be used to verify that
+ * the sensor still holds the key the handshake will use.
+ */
+static const guint8 goodix_581a_psk_hash[32] = {
+  0x66, 0x68, 0x7a, 0xad, 0xf8, 0x62, 0xbd, 0x77,
+  0x6c, 0x8f, 0xc1, 0x8b, 0x8e, 0x9f, 0x8e, 0x20,
+  0x08, 0x97, 0x14, 0x85, 0x6e, 0xe2, 0x33, 0xb3,
+  0x90, 0x2a, 0x59, 0x1d, 0x0d, 0x5f, 0x29, 0x25,
+};
+
+#define GOODIX_581A_PSK_TAG 0xbb020001
+
+static void
+on_581a_firmware_version (FpDevice *dev, gchar *firmware,
+                          gpointer user_data, GError *error)
+{
+  FpiSsm *ssm = user_data;
+
+  if (error)
+    {
+      fp_warn ("581a: firmware version query failed: %s", error->message);
+      g_clear_error (&error);
+      fpi_ssm_next_state (ssm);
+      return;
+    }
+
+  fp_dbg ("581a firmware version: %s", firmware ? firmware : "(empty)");
+  fpi_ssm_next_state (ssm);
+}
+
+static void
+on_581a_psk_read (FpDevice *dev, gboolean success, guint32 flags,
+                  guint8 *psk, guint16 length, gpointer user_data,
+                  GError *error)
+{
+  FpiSsm *ssm = user_data;
+
+  if (error)
+    {
+      /* Some firmware rejects the read in application mode. The TLS
+       * handshake is the authoritative check, so keep going.
+       */
+      fp_warn ("581a: preset PSK read failed: %s", error->message);
+      g_clear_error (&error);
+      fpi_ssm_next_state (ssm);
+      return;
+    }
+
+  if (success && flags == GOODIX_581A_PSK_TAG &&
+      length == sizeof (goodix_581a_psk_hash) && psk)
+    {
+      if (memcmp (psk, goodix_581a_psk_hash, sizeof (goodix_581a_psk_hash)))
+        fp_warn ("581a: sensor PSK differs from the driver's TLS key");
+      else
+        fp_dbg ("581a: sensor PSK matches the driver's TLS key");
+    }
+  else
+    {
+      fp_dbg ("581a: preset PSK not readable (success=%d, flags=0x%08x)",
+              success, flags);
+    }
+
+  fpi_ssm_next_state (ssm);
+}
+
 static void
 activate_run_state (FpiSsm *ssm, FpDevice *dev)
 {
@@ -116,6 +184,20 @@ activate_run_state (FpiSsm *ssm, FpDevice *dev)
     case ACTIVATE_READ_AND_NOP:
       goodix_start_read_loop (dev);
       goodix_send_nop (dev, goodixtls5xx_check_none, ssm);
+      break;
+
+    case ACTIVATE_READ_FIRMWARE:
+      goodix_send_query_firmware_version (dev, on_581a_firmware_version, ssm);
+      break;
+
+    case ACTIVATE_CHECK_PSK:
+      /* Besides validating the key, this read resets the sensor's TLS key
+       * state. Skipping it leaves a unit that was powered on after a failed
+       * session rejecting every handshake until it is power-cycled.
+       */
+      goodix_send_gm168_preset_psk_read (dev, GOODIX_581A_PSK_TAG,
+                                         sizeof (goodix_581a_psk_hash),
+                                         on_581a_psk_read, ssm);
       break;
 
     case ACTIVATE_RESET:

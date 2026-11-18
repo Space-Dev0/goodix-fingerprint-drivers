@@ -1,7 +1,7 @@
 From c814393770d4f4cf6e10fea67e4cf9779d6a3b03 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 21 Oct 2026 20:20:30 +0530
-Subject: [PATCH 01/17] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
+Subject: [PATCH 01/18] feat(drivers): add Goodix 27c6:581a (Xiaomi GM168)
  driver with SIGFM matching
 
 ---
@@ -2382,7 +2382,7 @@ index fa27507..8e5de6b 100644
 From a450421b6081c38d93533e4b141095dd50ed6451 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:01:37 +0530
-Subject: [PATCH 02/17] Improve Goodix 581a fingerprint matching: float points,
+Subject: [PATCH 02/18] Improve Goodix 581a fingerprint matching: float points,
  atan2 radians, contrast check
 
 ---
@@ -2664,7 +2664,7 @@ index f19b377..6e5b5df 100644
 From a782a558c3d84bd6007113f254c677f409e9a56c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:26:36 +0530
-Subject: [PATCH 03/17] docs & safety: add driver comments, null safety, and
+Subject: [PATCH 03/18] docs & safety: add driver comments, null safety, and
  clean docstrings
 
 ---
@@ -2868,7 +2868,7 @@ index 671a2b6..7443baa 100644
 From fd4017960618708eecc2891896f14add21381ab2 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 00:39:46 +0530
-Subject: [PATCH 04/17] goodix581a: guard scan_ssm callbacks against cancelled
+Subject: [PATCH 04/18] goodix581a: guard scan_ssm callbacks against cancelled
  SSM and clear baseline buffer
 
 ---
@@ -2951,7 +2951,7 @@ index 9b5c3d9..73f889d 100644
 From d3f5398f2f33b31bff8afd2d5ef29ac1306f4574 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Thu, 22 Oct 2026 01:01:47 +0530
-Subject: [PATCH 05/17] fix: register Goodix 581a device metadata
+Subject: [PATCH 05/18] fix: register Goodix 581a device metadata
 
 ---
  data/autosuspend.hwdb                     | 9 +++++++--
@@ -3019,7 +3019,7 @@ index b726b67..d010035 100644
 From 7a7c77572d08c599ee687852e785e2c8a6d55119 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 16:23:15 +0530
-Subject: [PATCH 06/17] goodixtls: propagate TLS handshake errors to ready
+Subject: [PATCH 06/18] goodixtls: propagate TLS handshake errors to ready
  callback and guard null callback
 
 ---
@@ -3074,7 +3074,7 @@ index f2bf17d..f2332df 100644
 From 569248769d2f1b00eecaf1a37b54f4db36525102 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 27 Oct 2026 23:35:47 +0530
-Subject: [PATCH 07/17] goodixtls: handle multi-record TLS flights and safe
+Subject: [PATCH 07/18] goodixtls: handle multi-record TLS flights and safe
  server deinit
 
 ---
@@ -3312,7 +3312,7 @@ index 215ef53..9c7ccc7 100644
 From bf047660caee8d5972cd78c32c84b7d6b734bbb3 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 28 Oct 2026 11:39:52 +0530
-Subject: [PATCH 08/17] goodix581a: correct physical 80x64 frame layout and use
+Subject: [PATCH 08/18] goodix581a: correct physical 80x64 frame layout and use
  flat-fielded residual
 
 ---
@@ -3626,7 +3626,7 @@ index 0000000..bfb0677
 From 45bb4d8b9c4a94b33b751a01fed1a3f461c17173 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:30:05 +0530
-Subject: [PATCH 09/17] sigfm: verify one similarity transform, not just
+Subject: [PATCH 09/18] sigfm: verify one similarity transform, not just
  rotation
 
 Wrong fingers were still accepted after the dominant-rotation score landed.
@@ -4101,7 +4101,7 @@ index 7443baa..ca4e3f0 100644
 From d432ef7e091158377980f4160aba99ad99d032c6 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:33:06 +0530
-Subject: [PATCH 10/17] goodix581a: add opt-in diagnostic frame capture
+Subject: [PATCH 10/18] goodix581a: add opt-in diagnostic frame capture
 
 Set GOODIX_581A_DUMP_DIR to a writable directory to save the exact 8-bit
 image that SIGFM receives. The hook is off by default and sits after image
@@ -4171,7 +4171,7 @@ index 88e387a..514d9ca 100644
 From 00e4f01be8b5028de641265d41420c6bc68ee6fa Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 13:58:01 +0530
-Subject: [PATCH 11/17] goodix581a: restore the verified ridge high-pass
+Subject: [PATCH 11/18] goodix581a: restore the verified ridge high-pass
  pipeline
 
 The no-high-pass flat field left only ~70-120 SIFT keypoints per press, and
@@ -4361,7 +4361,7 @@ index 514d9ca..a56fd55 100644
 From 004b3ad70d3689926c4e918685b5f8e76ecf8704 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 20:57:36 +0530
-Subject: [PATCH 12/17] sigfm: tighten duplicate enrollment, accept modest
+Subject: [PATCH 12/18] sigfm: tighten duplicate enrollment, accept modest
  strong stages
 
 A labelled hardware run on 2026-11-14 pressed ten times with the enrolled
@@ -4494,7 +4494,7 @@ index bcf7b31..46bca16 100644
 From f96debd5017ced59e08d82b9fb42ee887b66726c Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 22:24:12 +0530
-Subject: [PATCH 13/17] goodix581a: enlarge the gallery and retry partial
+Subject: [PATCH 13/18] goodix581a: enlarge the gallery and retry partial
  captures
 
 Duplicate rejection raised the genuine acceptance rate from 5/10 to 16/20 in
@@ -4655,7 +4655,7 @@ index 46bca16..b7b45e2 100644
 From b655e602cae34882eff1d88684efbbca72ff78c1 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Sat, 14 Nov 2026 22:56:45 +0530
-Subject: [PATCH 14/17] sigfm: accept nine-inlier stages
+Subject: [PATCH 14/18] sigfm: accept nine-inlier stages
 
 The 20-stage gallery changed the evidence distribution. Across the labelled
 run on 2026-11-14, 20 genuine presses scored 8, 8, 9, 9, 11-20 and 27 inliers,
@@ -4703,7 +4703,7 @@ index b7b45e2..4df3a0e 100644
 From a164dae8cd4d085dcb0af0aa6de8c85a94ef1469 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 17 Nov 2026 13:34:45 +0530
-Subject: [PATCH 15/17] libfprint: include stdint.h for SIGFM stage decoding
+Subject: [PATCH 15/18] libfprint: include stdint.h for SIGFM stage decoding
 
 The stage bookkeeping added for the 581a casts a fixed-array payload to
 uint8_t, but the file never included <stdint.h>. Fedora's glib headers
@@ -4739,7 +4739,7 @@ index 4df3a0e..2c7e5a8 100644
 From 5aef6a3380bbcbc4886866f3417dc781d93802aa Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Tue, 17 Nov 2026 14:38:08 +0530
-Subject: [PATCH 16/17] goodixtls: propagate and recover from TLS handshake
+Subject: [PATCH 16/18] goodixtls: propagate and recover from TLS handshake
  failures
 
 SSL_accept() runs in the serve thread, so activation never saw its
@@ -5074,7 +5074,7 @@ index 80480a6..9a385c0 100644
 From c054f09dd180baccdf68af07ccf93700bb6d3de8 Mon Sep 17 00:00:00 2001
 From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
 Date: Wed, 18 Nov 2026 00:33:12 +0530
-Subject: [PATCH 17/17] goodix581a: reset the USB port after a failed TLS
+Subject: [PATCH 17/18] goodix581a: reset the USB port after a failed TLS
  handshake
 
 A rejected handshake can leave the sensor in a state where every later
@@ -5206,6 +5206,219 @@ index 0217650..f081bdf 100644
    self->activate_retries = 0;
    fpi_image_device_activate_complete (FP_IMAGE_DEVICE (dev), error);
  }
+-- 
+2.56.1
+
+
+From 9cd589a4835790ac7b43e22c80ac4c5266540070 Mon Sep 17 00:00:00 2001
+From: Space-Dev0 <179112172+Space-Dev0@users.noreply.github.com>
+Date: Wed, 18 Nov 2026 15:18:10 +0530
+Subject: [PATCH 18/18] goodix581a: read the preset PSK before the TLS
+ handshake
+
+The GM168 keeps TLS key state that is lost on power events. After a
+reboot the sensor then derives its Finished record from a stale key and
+OpenSSL rejects it with "cipher operation failed", after which every
+handshake fails the same way. Reproduced after each restart on a
+27c6:581a: the failing image requests were the old driver hiding the
+handshake error as "Command timed out: 0x20".
+
+Reading the preset PSK (0xE4, tag 0xbb020001) before the handshake
+restores that state: with the read present a wedged unit handshakes
+immediately, without it the same unit keeps failing. The legacy 5xx and
+511 drivers already perform this read as ACTIVATE_CHECK_PSK; the 581a
+activation sequence had dropped it.
+
+Add firmware version and PSK read states at the start of activation,
+verify the digest against SHA256 of the all-zero key the driver uses and
+warn when it differs. A rejected read is not fatal because the handshake
+remains the authoritative check.
+---
+ libfprint/drivers/goodixtls/goodix.c     | 30 +++++++++
+ libfprint/drivers/goodixtls/goodix.h     | 21 ++++++
+ libfprint/drivers/goodixtls/goodix581a.c | 82 ++++++++++++++++++++++++
+ 3 files changed, 133 insertions(+)
+
+diff --git a/libfprint/drivers/goodixtls/goodix.c b/libfprint/drivers/goodixtls/goodix.c
+index a87eb97..8bdb802 100644
+--- a/libfprint/drivers/goodixtls/goodix.c
++++ b/libfprint/drivers/goodixtls/goodix.c
+@@ -1134,6 +1134,36 @@ goodix_send_preset_psk_read (FpDevice *dev, guint32 flags, guint16 length,
+                         NULL);
+ }
+ 
++/* GM168SEC uses a 16-byte 0xE4 request body in this order:
++ * length, offset, tag, reserved (all uint32 little-endian). The legacy
++ * Goodix 5xx helper above sends a different 8-byte body and is not compatible.
++ */
++void
++goodix_send_gm168_preset_psk_read (FpDevice *dev, guint32 flags,
++                                  guint32 length,
++                                  GoodixPresetPskReadCallback callback,
++                                  gpointer user_data)
++{
++  guint8 payload[4 * sizeof (guint32)] = {0};
++  guint32 field;
++  GoodixCallbackInfo *cb_info;
++
++  g_return_if_fail (callback != NULL);
++
++  field = GUINT32_TO_LE (length);
++  memcpy (payload, &field, sizeof (field));
++  field = GUINT32_TO_LE (flags);
++  memcpy (payload + 2 * sizeof (field), &field, sizeof (field));
++
++  cb_info = g_new0 (GoodixCallbackInfo, 1);
++  cb_info->callback = G_CALLBACK (callback);
++  cb_info->user_data = user_data;
++
++  goodix_send_protocol (dev, GOODIX_CMD_PRESET_PSK_READ, payload,
++                        sizeof (payload), NULL, TRUE, GOODIX_TIMEOUT, TRUE,
++                        goodix_receive_preset_psk_read, cb_info);
++}
++
+ // ---- GOODIX SEND SECTION END ----
+ 
+ // -----------------------------------------------------------------------------
+diff --git a/libfprint/drivers/goodixtls/goodix.h b/libfprint/drivers/goodixtls/goodix.h
+index b4a4eab..4446868 100644
+--- a/libfprint/drivers/goodixtls/goodix.h
++++ b/libfprint/drivers/goodixtls/goodix.h
+@@ -475,6 +475,27 @@ void goodix_send_preset_psk_read (FpDevice                   *dev,
+                                   guint16                     length,
+                                   GoodixPresetPskReadCallback callback,
+                                   gpointer                    user_data);
++
++/**
++ * @brief Read the preset PSK using the GM168 16-byte request body
++ *
++ * GM168SEC firmware expects length, offset, tag and a reserved word as four
++ * little-endian 32-bit fields, which the legacy helper above does not send.
++ * The read also brings the sensor's TLS key state back in sync after a failed
++ * handshake; without it a sensor left in that state rejects every later
++ * handshake until it is power-cycled.
++ *
++ * @param dev
++ * @param flags tag selecting the key field, 0xbb020001 for SHA256(PSK)
++ * @param length number of bytes to read
++ * @param callback
++ * @param user_data
++ */
++void goodix_send_gm168_preset_psk_read (FpDevice                   *dev,
++                                        guint32                     flags,
++                                        guint32                     length,
++                                        GoodixPresetPskReadCallback callback,
++                                        gpointer                    user_data);
+ /**
+  * @brief Request the OTP (One Time Password) from the device
+  *
+diff --git a/libfprint/drivers/goodixtls/goodix581a.c b/libfprint/drivers/goodixtls/goodix581a.c
+index f081bdf..0336877 100644
+--- a/libfprint/drivers/goodixtls/goodix581a.c
++++ b/libfprint/drivers/goodixtls/goodix581a.c
+@@ -41,6 +41,8 @@ G_DEFINE_TYPE (FpiDeviceGoodixTls581a, fpi_device_goodixtls581a,
+ 
+ enum activate_states {
+   ACTIVATE_READ_AND_NOP,
++  ACTIVATE_READ_FIRMWARE,
++  ACTIVATE_CHECK_PSK,
+   ACTIVATE_RESET,
+   ACTIVATE_READ_REG,
+   ACTIVATE_READ_OTP,
+@@ -98,6 +100,72 @@ on_tls_init_ready (FpDevice *dev, gpointer user_data, GError *error)
+   fpi_ssm_next_state (ssm);
+ }
+ 
++/* SHA256 of the all-zero TLS PSK the driver hands to OpenSSL. GM168SEC
++ * exposes this digest under tag 0xbb020001, so it can be used to verify that
++ * the sensor still holds the key the handshake will use.
++ */
++static const guint8 goodix_581a_psk_hash[32] = {
++  0x66, 0x68, 0x7a, 0xad, 0xf8, 0x62, 0xbd, 0x77,
++  0x6c, 0x8f, 0xc1, 0x8b, 0x8e, 0x9f, 0x8e, 0x20,
++  0x08, 0x97, 0x14, 0x85, 0x6e, 0xe2, 0x33, 0xb3,
++  0x90, 0x2a, 0x59, 0x1d, 0x0d, 0x5f, 0x29, 0x25,
++};
++
++#define GOODIX_581A_PSK_TAG 0xbb020001
++
++static void
++on_581a_firmware_version (FpDevice *dev, gchar *firmware,
++                          gpointer user_data, GError *error)
++{
++  FpiSsm *ssm = user_data;
++
++  if (error)
++    {
++      fp_warn ("581a: firmware version query failed: %s", error->message);
++      g_clear_error (&error);
++      fpi_ssm_next_state (ssm);
++      return;
++    }
++
++  fp_dbg ("581a firmware version: %s", firmware ? firmware : "(empty)");
++  fpi_ssm_next_state (ssm);
++}
++
++static void
++on_581a_psk_read (FpDevice *dev, gboolean success, guint32 flags,
++                  guint8 *psk, guint16 length, gpointer user_data,
++                  GError *error)
++{
++  FpiSsm *ssm = user_data;
++
++  if (error)
++    {
++      /* Some firmware rejects the read in application mode. The TLS
++       * handshake is the authoritative check, so keep going.
++       */
++      fp_warn ("581a: preset PSK read failed: %s", error->message);
++      g_clear_error (&error);
++      fpi_ssm_next_state (ssm);
++      return;
++    }
++
++  if (success && flags == GOODIX_581A_PSK_TAG &&
++      length == sizeof (goodix_581a_psk_hash) && psk)
++    {
++      if (memcmp (psk, goodix_581a_psk_hash, sizeof (goodix_581a_psk_hash)))
++        fp_warn ("581a: sensor PSK differs from the driver's TLS key");
++      else
++        fp_dbg ("581a: sensor PSK matches the driver's TLS key");
++    }
++  else
++    {
++      fp_dbg ("581a: preset PSK not readable (success=%d, flags=0x%08x)",
++              success, flags);
++    }
++
++  fpi_ssm_next_state (ssm);
++}
++
+ static void
+ activate_run_state (FpiSsm *ssm, FpDevice *dev)
+ {
+@@ -118,6 +186,20 @@ activate_run_state (FpiSsm *ssm, FpDevice *dev)
+       goodix_send_nop (dev, goodixtls5xx_check_none, ssm);
+       break;
+ 
++    case ACTIVATE_READ_FIRMWARE:
++      goodix_send_query_firmware_version (dev, on_581a_firmware_version, ssm);
++      break;
++
++    case ACTIVATE_CHECK_PSK:
++      /* Besides validating the key, this read resets the sensor's TLS key
++       * state. Skipping it leaves a unit that was powered on after a failed
++       * session rejecting every handshake until it is power-cycled.
++       */
++      goodix_send_gm168_preset_psk_read (dev, GOODIX_581A_PSK_TAG,
++                                         sizeof (goodix_581a_psk_hash),
++                                         on_581a_psk_read, ssm);
++      break;
++
+     case ACTIVATE_RESET:
+       goodix_send_protocol (dev, GOODIX_CMD_RESET, reset_payload, sizeof (reset_payload),
+                             NULL, TRUE, 500, TRUE, goodixtls5xx_check_none_cmd, ssm);
 -- 
 2.56.1
 
